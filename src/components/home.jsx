@@ -1,6 +1,7 @@
 import React from 'react';
 import Navbar from './Navbar'; // Importa el componente Navbar
 
+
 export function MenuDerecha() {
   return (
     <div>
@@ -42,3 +43,5 @@ export function Navegador() {
     </div>
   );
 }
+
+export default {MenuDerecha,Maps, Navegador};
