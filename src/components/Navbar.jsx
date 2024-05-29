@@ -10,6 +10,14 @@ function Navbar() {
         <li><a href="/AgregarAuto">Agregar Auto</a></li>
         <li><a href="/AgregarObjeto">Agregar Objeto</a></li>
         <li><a href="/Estados">Estado</a></li>
+        {/* Dropdown Vehículo */}
+        <li className="dropdown">
+          <a href="#" className="dropbtn">Vehículo</a>
+          <div className="dropdown-content">
+            <a href="/AgregarVehiculo">Agregar</a>
+            <a href="/ModificarVehiculos">Modificar</a>
+          </div>
+        </li>
       </ul>
     </nav>
   );
