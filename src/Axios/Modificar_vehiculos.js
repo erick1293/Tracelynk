@@ -195,7 +195,7 @@ const Vehiculos = () => {
                         </Form.Group>
                         <Form.Group controlId="formModelo">
                             <Form.Label>Modelo:</Form.Label>
-                            <Form.Control as="select" onChange={handleEditar} value={nuevoVehiculo.modelo} disabled={!nuevoVehiculo.marca}>
+                            <Form.Control as="select" onChange={handleModeloChange} value={nuevoVehiculo.modelo} disabled={!nuevoVehiculo.marca}>
                                 <option value="">Seleccionar</option>
                                 {Array.isArray(modelos) && modelos.map((modelo, index) => (
                                     <option key={index} value={modelo}>{modelo}</option>
