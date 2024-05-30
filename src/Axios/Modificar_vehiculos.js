@@ -17,7 +17,9 @@ const Vehiculos = () => {
         modelo: '',
         anio: '',
         transmision: '',
-        patente: ''
+        patente: '',
+        kilometrajeinicial: '',
+        kilometrajeactual: ''
     });
 
     const [showModal, setShowModal] = useState(false);
@@ -111,7 +113,9 @@ const Vehiculos = () => {
                 modelo: '',
                 anio: '',
                 transmision: '',
-                patente: ''
+                patente: '',
+                kilometrajeinicial: '',
+                kilometrajeactual: ''
             });
         } catch (error) {
             console.error('Error al editar vehículo:', error);
@@ -137,7 +141,9 @@ const Vehiculos = () => {
             v.anio.toString().includes(filtro.toLowerCase()) ||
             v.transmision.toLowerCase().includes(filtro.toLowerCase()) ||
             v.patente.toLowerCase().includes(filtro.toLowerCase()) ||
-            v.id.toLowerCase().includes(filtro.toLowerCase());
+            v.id.toLowerCase().includes(filtro.toLowerCase()) ||
+            v.kilometrajeinicial.toLowerCase().includes(filtro.toLowerCase()) ||
+            v.kilometrajeactual.toLowerCase().includes(filtro.toLowerCase());
     });
 
     if (error) {
@@ -158,6 +164,8 @@ const Vehiculos = () => {
                         <th>AÑO</th>
                         <th>Transmision</th>
                         <th>PATENTE</th>
+                        <th>kilometraje Inicial</th>
+                        <th>kilometraje Actual</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -170,6 +178,8 @@ const Vehiculos = () => {
                             <td>{v.anio}</td>
                             <td>{v.transmision}</td>
                             <td>{v.patente}</td>
+                            <td>{v.kilometrajeinicial}</td>
+                            <td>{v.kilometrajeactual}</td>
                             <td>
                                 <Button variant="primary" onClick={() => handleModificar(v.id)}>Modificar</Button>
                                 <Button variant="danger" onClick={() => handleDelete(v.id)}>Eliminar</Button>
@@ -213,10 +223,18 @@ const Vehiculos = () => {
                                 <option value="Automático">Automático</option>
                                 <option value="Manual">Manual</option>
                             </Form.Control>
-                        </Form.Group>
-                        <Form.Group controlId="formPatente">
+                            <Form.Group controlId="formPatente">
                             <Form.Label>Patente:</Form.Label>
                             <Form.Control type="text" name="patente" value={nuevoVehiculo.patente} onChange={handleEditar} />
+                        </Form.Group>
+                            <Form.Group controlId="formKilometrajeinicial">
+                            <Form.Label>Kilometraje Inicial:</Form.Label>
+                            <Form.Control type="text" name="kilometrajeinicial" value={nuevoVehiculo.kilometrajeinicial} onChange={handleEditar} />
+                        </Form.Group>
+                        <Form.Group controlId="formKilometrajeactual">
+                            <Form.Label>kilometraje Actual:</Form.Label>
+                            <Form.Control type="text" name="kilometrajeactual" value={nuevoVehiculo.kilometrajeactual} onChange={handleEditar} />
+                        </Form.Group>
                         </Form.Group>
                         <Button variant="primary" type="submit">Guardar cambios</Button>
                     </Form>

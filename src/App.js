@@ -8,7 +8,7 @@ import Estados from './components/Estados';
 import AgregarVehiculo from "./Axios/Agregar_axios"
 import ModificarVehiculos from "./Axios/Modificar_vehiculos"
 import {Navegador,Maps,MenuDerecha} from "./components/home"
-
+//import Map from "./components/Mapa/Map.html"
 function App() {
   return (
     <>
@@ -17,6 +17,8 @@ function App() {
      
         <Route path='/' element={<Navbar/>}/> 
         <Route path='/Home' element={<MenuDerecha/>}/> 
+        { //<Route path='/Map' element={<Map/>}/> 
+        }
         <Route path='/AgendarCita' element={<AgendarCita/>}/>
         <Route path='/AgregarAuto' element={<AgregarAuto/>}/>
         <Route path='/AgregarObjeto' element={<AgregarObjeto/>}/>

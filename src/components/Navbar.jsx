@@ -7,6 +7,8 @@ function Navbar() {
       <ul>
         <li><a href="/">Inicio</a></li>
         <li><a href="/Home">Home</a></li>
+       {// <li><a href="/Map">Map</a></li>
+      } 
         <li><a href="/AgendarCita">Agendar Cita</a></li>
         <li><a href="/AgregarAuto">Agregar Auto</a></li>
         <li><a href="/AgregarObjeto">Agregar Objeto</a></li>
