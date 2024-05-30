@@ -82,6 +82,7 @@ const AgregarVehiculo = ({ onAgregar }) => {
         <Modal.Body>
             {error && <p className="text-danger">{error}</p>}
             <Form onSubmit={handleSubmit}>
+            
                 <Form.Group controlId="formMarca">
                     <Form.Label>Marca:</Form.Label>
                     <Form.Control

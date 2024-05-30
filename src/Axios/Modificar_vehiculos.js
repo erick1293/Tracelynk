@@ -3,7 +3,6 @@ import axios from 'axios';
 import { Table, Button, Modal, Form, FormControl } from 'react-bootstrap';
 import Navbar from '../components/Navbar';
 
-
 const Vehiculos = () => {
     const [data, setData] = useState([]);
     const [marcas, setMarcas] = useState([]);
@@ -25,7 +24,14 @@ const Vehiculos = () => {
 
     useEffect(() => {
         fetchData();
+        fetchMarcas();
     }, []);
+
+    useEffect(() => {
+        if (nuevoVehiculo.marca) {
+            fetchModelos(nuevoVehiculo.marca);
+        }
+    }, [nuevoVehiculo.marca]);
 
     const fetchData = async () => {
         try {
@@ -47,6 +53,7 @@ const Vehiculos = () => {
             alert('Error al eliminar vehículo: ' + error.message);
         }
     };
+
     const fetchMarcas = async () => {
         try {
             const response = await axios.get('http://localhost/Tracelink/obtener_marcas.php');
@@ -64,6 +71,7 @@ const Vehiculos = () => {
             console.error('Error al obtener modelos:', error);
         }
     };
+
     const handleModificar = (vehiculoId) => {
         // Encuentra el vehículo seleccionado en los datos
         const vehiculo = data.find(v => v.id === vehiculoId);
@@ -87,6 +95,7 @@ const Vehiculos = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        console.log("Nuevo vehículo:", nuevoVehiculo); // Agregar este console.log para ver el estado actual de nuevoVehiculo
         try {
             const response = await axios.post('http://localhost/Tracelink/editar_vehiculo.php', nuevoVehiculo);
             alert(response.data.message); // Mostrar mensaje de éxito o error
@@ -108,6 +117,14 @@ const Vehiculos = () => {
             console.error('Error al editar vehículo:', error);
             alert('Error al editar vehículo: ' + error.message);
         }
+    };
+
+    const handleModeloChange = (e) => {
+        const modelo = e.target.value;
+        setNuevoVehiculo(prevState => ({
+            ...prevState,
+            modelo: modelo
+        }));
     };
 
     const handleBuscar = (e) => {
@@ -167,21 +184,21 @@ const Vehiculos = () => {
                 </Modal.Header>
                 <Modal.Body>
                     <Form onSubmit={handleSubmit}>
-                    <Form.Group controlId="formMarca">
+                        <Form.Group controlId="formMarca">
                             <Form.Label>Marca:</Form.Label>
                             <Form.Control as="select" name="marca" value={nuevoVehiculo.marca} onChange={handleEditar}>
                                 <option value="">Seleccionar</option>
-                                {marcas.map(marca => (
-                                    <option key={marca.id} value={marca.id}>{marca.nombre}</option>
+                                {Array.isArray(marcas) && marcas.map(marca => (
+                                    <option key={marca.idMarca} value={marca.Nombre_marca}>{marca.Nombre_marca}</option>
                                 ))}
                             </Form.Control>
                         </Form.Group>
                         <Form.Group controlId="formModelo">
                             <Form.Label>Modelo:</Form.Label>
-                            <Form.Control as="select" name="modelo" value={nuevoVehiculo.modelo} onChange={handleEditar} disabled={!nuevoVehiculo.marca}>
+                            <Form.Control as="select" onChange={handleEditar} value={nuevoVehiculo.modelo} disabled={!nuevoVehiculo.marca}>
                                 <option value="">Seleccionar</option>
-                                {modelos.map(modelo => (
-                                    <option key={modelo.id} value={modelo.id}>{modelo.nombre}</option>
+                                {Array.isArray(modelos) && modelos.map((modelo, index) => (
+                                    <option key={index} value={modelo}>{modelo}</option>
                                 ))}
                             </Form.Control>
                         </Form.Group>
@@ -210,3 +227,4 @@ const Vehiculos = () => {
 };
 
 export default Vehiculos;
+
