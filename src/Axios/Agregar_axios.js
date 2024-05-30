@@ -116,8 +116,7 @@ const AgregarVehiculo = ({ onAgregar }) => {
                         as="select"
                         value={transmision}
                         onChange={(e) => setTransmision(e.target.value)}
-                        required
-                    >
+                        required>
                         <option value="">Seleccionar</option>
                         <option value="Automático">Automático</option>
                         <option value="Manual">Manual</option>

@@ -33,7 +33,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             echo json_encode(["error" => "Error al eliminar vehículo: " . $conn->error]);
         }
-
         $conn->close();
         exit(); // Terminar el script después de manejar la solicitud de eliminación
     }
