@@ -110,6 +110,7 @@ const Vehiculos = () => {
         console.log("Nuevo vehículo:", nuevoVehiculo); // Agregar este console.log para ver el estado actual de nuevoVehiculo
         try {
             const response = await axios.post('http://localhost/Tracelink/editar_vehiculo.php', nuevoVehiculo);
+            console.log("Respuesta del servidor:", response.data);
             alert(response.data.message); // Mostrar mensaje de éxito o error
             // Actualizar la lista de vehículos después de editar
             fetchData();
