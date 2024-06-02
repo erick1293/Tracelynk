@@ -11,6 +11,8 @@ const AgregarVehiculo = ({ onAgregar }) => {
     const [anio, setAnio] = useState('');
     const [transmision, setTransmision] = useState('');
     const [patente, setPatente] = useState('');
+    const [kilometrajeinicial, setKilometrajeinicial] = useState('');
+    const [kilometrajeactual, setKilometrajeactual] = useState('');
     const [error, setError] = useState(null);
 
     const handleClose = () => setShow(false);
@@ -19,7 +21,7 @@ const AgregarVehiculo = ({ onAgregar }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!marca || !modelo || !anio || !transmision || !patente) {
+        if (!marca || !modelo || !anio || !transmision || !patente || !kilometrajeinicial || !kilometrajeactual) {
             setError('Todos los campos son obligatorios.');
             return;
         }
@@ -28,7 +30,9 @@ const AgregarVehiculo = ({ onAgregar }) => {
             modelo,
             anio,
             transmision,
-            patente
+            patente,
+            kilometrajeinicial,
+            kilometrajeactual
         });
 
         const response = await axios.post('/agregar_vehiculo.php', {
@@ -36,7 +40,9 @@ const AgregarVehiculo = ({ onAgregar }) => {
             modelo,
             anio,
             transmision,
-            patente
+            patente,
+            kilometrajeinicial,
+            kilometrajeactual
         });
         try {
             const response = await axios.post('/agregar_vehiculo.php', {
@@ -44,7 +50,9 @@ const AgregarVehiculo = ({ onAgregar }) => {
                 modelo,
                 anio,
                 transmision,
-                patente
+                patente,
+                kilometrajeinicial,
+                kilometrajeactual
             });
 
             // Verificar si onAgregar es una función antes de llamarla
@@ -58,6 +66,8 @@ const AgregarVehiculo = ({ onAgregar }) => {
             setAnio('');
             setTransmision('');
             setPatente('');
+            setKilometrajeinicial('');
+            setKilometrajeactual('');
             setError(null);
             handleClose();
         } catch (error) {
@@ -131,6 +141,25 @@ const AgregarVehiculo = ({ onAgregar }) => {
                         required
                     />
                 </Form.Group>
+                <Form.Group controlId="formKilometrajeinicial">
+                <Form.Label>Kilometraje Inicial:</Form.Label>
+                    <Form.Control
+                        type="text"
+                        value={kilometrajeinicial}
+                        onChange={(e) => setKilometrajeinicial(e.target.value)}
+                        required
+                    />
+                        </Form.Group>
+
+                        <Form.Group controlId="formKilometrajeactual">
+                        <Form.Label>Kilometraje Actual:</Form.Label>
+                    <Form.Control
+                        type="text"
+                        value={kilometrajeactual}
+                        onChange={(e) => setKilometrajeactual(e.target.value)}
+                        required
+                    />
+                        </Form.Group>
                 <Button variant="primary" type="submit">
                     Agregar
                 </Button>
