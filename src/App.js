@@ -6,14 +6,14 @@ import AgregarObjeto from './components/AgregarObjeto';
 import Estados from './components/Estados';
 import AgregarVehiculo from "./Axios/Agregar_axios"
 import ModificarVehiculos from "./Axios/Modificar_vehiculos"
-
+import Inicio from "./components/Inicio"
 
 function App() {
   return (
     <>
       <BrowserRouter>
       <Routes>
-        <Route path='/' element={<Navbar/>}/> 
+        <Route path='/inicio' element={<Inicio/>}/> 
         <Route path='/AgendarCita' element={<AgendarCita/>}/>
         <Route path='/AgregarObjeto' element={<AgregarObjeto/>}/>
         <Route path='/Estados' element={<Estados/>}/> 

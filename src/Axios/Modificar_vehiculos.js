@@ -94,7 +94,7 @@ const Vehiculos = () => {
             console.error('Vehículo no encontrado:', vehiculoId);
         }
     };
-    
+
 
     const handleEditar = (e) => {
         const { name, value } = e.target;
@@ -199,10 +199,13 @@ const Vehiculos = () => {
                     ))}
                 </tbody>
             </Table>
+
             <Modal show={showModal} onHide={() => setShowModal(false)}>
-                <Modal.Header closeButton>
+                <Modal.Header>
                     <Modal.Title>Editar Vehículo</Modal.Title>
+                    <Button variant="secondary" style={{ marginRight: 'auto' }} onClick={() => setShowModal(false)}>Minimizar</Button>
                 </Modal.Header>
+
                 <Modal.Body>
                     <Form onSubmit={handleSubmit}>
                         <Form.Group controlId="formMarca">
@@ -235,17 +238,17 @@ const Vehiculos = () => {
                                 <option value="Manual">Manual</option>
                             </Form.Control>
                             <Form.Group controlId="formPatente">
-                            <Form.Label>Patente:</Form.Label>
-                            <Form.Control type="text" name="patente" value={nuevoVehiculo.patente} onChange={handleEditar} />
-                        </Form.Group>
+                                <Form.Label>Patente:</Form.Label>
+                                <Form.Control type="text" name="patente" value={nuevoVehiculo.patente} onChange={handleEditar} />
+                            </Form.Group>
                             <Form.Group controlId="formKilometrajeinicial">
-                            <Form.Label>Kilometraje Inicial:</Form.Label>
-                            <Form.Control type="text" name="kilometrajeinicial" value={nuevoVehiculo.kilometrajeinicial} onChange={handleEditar} />
-                        </Form.Group>
-                        <Form.Group controlId="formKilometrajeactual">
-                            <Form.Label>kilometraje Actual:</Form.Label>
-                            <Form.Control type="text" name="kilometrajeactual" value={nuevoVehiculo.kilometrajeactual} onChange={handleEditar} />
-                        </Form.Group>
+                                <Form.Label>Kilometraje Inicial:</Form.Label>
+                                <Form.Control type="text" name="kilometrajeinicial" value={nuevoVehiculo.kilometrajeinicial} onChange={handleEditar} />
+                            </Form.Group>
+                            <Form.Group controlId="formKilometrajeactual">
+                                <Form.Label>kilometraje Actual:</Form.Label>
+                                <Form.Control type="text" name="kilometrajeactual" value={nuevoVehiculo.kilometrajeactual} onChange={handleEditar} />
+                            </Form.Group>
                         </Form.Group>
                         <Button variant="primary" type="submit">Guardar cambios</Button>
                     </Form>
