@@ -12,7 +12,7 @@ function Navbar() {
         <li><a href="/Estados">Estado</a></li>
         {/* Dropdown Vehículo */}
         <li className="dropdown">
-          <a href="#" className="dropbtn">Vehículo</a>
+          <a href="/AgregarVehiculo" className="dropbtn">Vehículo</a>
           <div className="dropdown-content">
             <a href="/AgregarVehiculo">Agregar</a>
             <a href="/ModificarVehiculos">Modificar</a>
