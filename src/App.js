@@ -1,6 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Route, Routes , Switch} from 'react-router-dom';
-import Navbar from './components/Navbar';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import AgendarCita from './components/AgendarCita';
 import AgregarObjeto from './components/AgregarObjeto';
 import Estados from './components/Estados';
