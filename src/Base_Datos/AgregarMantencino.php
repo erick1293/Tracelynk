@@ -1,28 +1,52 @@
 <?php
+// Habilitar la visualización de errores de PHP
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+// Configurar los encabezados CORS
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Headers: Content-Type");
+header("Content-Type: application/json");
+
 // Conexión a la base de datos
-$conexion = new mysqli("localhost", "tu_usuario", "tu_contraseña", "tu_base_de_datos");
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "vehiculos";
+
+// Crear conexión
+$conn = new mysqli($servername, $username, $password, $dbname);
 
 // Verificar conexión
-if ($conexion->connect_error) {
-    die("La conexión falló: " . $conexion->connect_error);
+if ($conn->connect_error) {
+    http_response_code(500);
+    echo json_encode(["error" => "Error de conexión: " . $conn->connect_error]);
+    exit();
 }
 
-// Recibir los datos del formulario
-$cita_id = $_POST['cita_id'];
-$descripcion = $_POST['descripcion'];
+// Obtención de datos del cuerpo de la solicitud
+$data = json_decode(file_get_contents('php://input'), true);
 
-// Preparar la consulta SQL para insertar
-$stmt = $conexion->prepare("INSERT INTO mantenimientos (cita_id, descripcion) VALUES (?, ?)");
-$stmt->bind_param("is", $cita_id, $descripcion);
+// Verificar que los datos necesarios están presentes
+if (empty($data['marca']) || empty($data['modelo']) || empty($data['anio']) || empty($data['transmision']) || empty($data['patente'])) {
+    http_response_code(400);
+    echo json_encode(["error" => "Error: Todos los campos son obligatorios"]);
+    exit();
+}
+
+// Preparar la consulta
+$stmt = $conn->prepare("INSERT INTO vehiculo (marca, modelo, anio, transmision, patente) VALUES (?, ?, ?, ?, ?)");
+$stmt->bind_param("ssiss", $data['marca'], $data['modelo'], $data['anio'], $data['transmision'], $data['patente']);
 
 // Ejecutar la consulta
 if ($stmt->execute()) {
-    echo json_encode(["success" => true]);
+    echo json_encode(["message" => "Vehículo agregado correctamente"]);
 } else {
-    echo json_encode(["success" => false, "error" => $stmt->error]);
+    http_response_code(500);
+    echo json_encode(["error" => "Error al agregar vehículo: " . $stmt->error]);
 }
 
-// Cerrar la conexión
+// Cerrar la declaración y la conexión
 $stmt->close();
-$conexion->close();
+$conn->close();
 ?>
