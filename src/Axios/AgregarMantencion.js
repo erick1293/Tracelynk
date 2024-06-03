@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from './axiosConfig';
-import { Form, Button, Table, Navbar } from 'react-bootstrap';
+import { Form, Button, Table} from 'react-bootstrap';
+import Navbar from '../components/Navbar';
 
 const AgregarMantenimiento = () => {
     const [citas, setCitas] = useState([]);
