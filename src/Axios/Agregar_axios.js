@@ -137,7 +137,7 @@ const AgregarVehiculo = ({ onAgregar }) => {
                             <Form.Label>Transmisión:</Form.Label>
                             <Form.Control as="select" value={transmision} onChange={(e) => setTransmision(e.target.value)} required>
                                 <option value="">Seleccionar</option>
-                                <option value="Automático">Automático</option>
+                                <option value="Automatico">Automático</option>
                                 <option value="Manual">Manual</option>
                             </Form.Control>
                         </Form.Group>

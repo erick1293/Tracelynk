@@ -233,8 +233,8 @@ const Vehiculos = () => {
                         <Form.Group controlId="formTransmision">
                             <Form.Label>Transmisión:</Form.Label>
                             <Form.Control as="select" name="transmision" value={nuevoVehiculo.transmision} onChange={handleEditar}>
-                                <option value="">Seleccionar</option>
-                                <option value="Automático">Automático</option>
+                                  <option value="">Seleccionar</option>
+                                <option value="Automatico">Automático</option>
                                 <option value="Manual">Manual</option>
                             </Form.Control>
                             <Form.Group controlId="formPatente">
