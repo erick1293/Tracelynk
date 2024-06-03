@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from './axiosConfig';
 import { Form, Button, Table } from 'react-bootstrap';
+import Navbar from '../components/Navbar';
+
+
 
 const AgregarMantenimiento = () => {
     const [citas, setCitas] = useState([]);
@@ -82,6 +85,7 @@ const AgregarMantenimiento = () => {
 
     return (
         <>
+         <Navbar />
             <Form onSubmit={handleSubmit}>
                 {/* ...tu código del formulario... */}
             </Form>
