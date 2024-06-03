@@ -79,15 +79,15 @@ if ($conn->connect_error) {
 $data = json_decode(file_get_contents('php://input'), true);
 
 // Verificar que los datos necesarios están presentes
-if (empty($data['cita_id']) || empty($data['fecha']) || empty($data['descripcion'])) {
+if (empty($data['idMantencion']) || empty($data['citas_idcitas']) || empty($data['fecha']) || empty($data['descripcion'])) {
     http_response_code(400);
     echo json_encode(["error" => "Error: Todos los campos son obligatorios"]);
     exit();
 }
 
 // Preparar la consulta
-$stmt = $conn->prepare("INSERT INTO mantenimiento (cita_id, fecha, descripcion) VALUES (?, ?, ?)");
-$stmt->bind_param("iss", $data['cita_id'], $data['fecha'], $data['descripcion']);
+$stmt = $conn->prepare("INSERT INTO mantenimiento (idMantencion,citas_idcitas,fecha,descripcion) VALUES (?, ?, ?)");
+$stmt->bind_param("iss", $data['idMantencion'],  $data['citas_idcitas'] , $data['fecha'], $data['descripcion']);
 
 // Ejecutar la consulta
 if ($stmt->execute()) {
@@ -100,4 +100,3 @@ if ($stmt->execute()) {
 // Cerrar la declaración y la conexión
 $stmt->close();
 $conn->close();
-?>
