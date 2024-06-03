@@ -10,7 +10,7 @@ function Navbar() {
          <li className="dropdown">
         <a href="/AgendarCita" className="dropbtn">Agendar Cita</a>
         <div className="dropdown-content">
-            <a href="/AgregarCita">Agregar</a>
+            <a href="/AgendarCita">Agregar</a>
             <a href="/AgendarMantencion">Mantencion</a>
           </div></li>
         <li><a href="/AgregarObjeto">Agregar Objeto</a></li>
