@@ -141,11 +141,9 @@ const Vehiculos = () => {
             modelo: modelo
         }));
     };
-
     const handleBuscar = (e) => {
         setFiltro(e.target.value);
     };
-
     const vehiculosFiltrados = data.filter(v => {
         return v.marca.toLowerCase().includes(filtro.toLowerCase()) ||
             v.modelo.toLowerCase().includes(filtro.toLowerCase()) ||
@@ -156,11 +154,9 @@ const Vehiculos = () => {
             v.kilometrajeinicial.toLowerCase().includes(filtro.toLowerCase()) ||
             v.kilometrajeactual.toLowerCase().includes(filtro.toLowerCase());
     });
-
     if (error) {
         return <div>Error: {error.message}</div>;
     }
-
     return (
         <div>
             <Navbar />
@@ -205,7 +201,6 @@ const Vehiculos = () => {
                     <Modal.Title>Editar Vehículo</Modal.Title>
                     <Button variant="secondary" style={{ marginRight: 'auto' }} onClick={() => setShowModal(false)}>Minimizar</Button>
                 </Modal.Header>
-
                 <Modal.Body>
                     <Form onSubmit={handleSubmit}>
                         <Form.Group controlId="formMarca">
