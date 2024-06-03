@@ -1,22 +1,19 @@
 .container {
-  
 }
 
-/* Estilos para los elementos en la fila */
 .row {
   display: flex;
-  flex-wrap: wrap;
 }
 
-/* Estilos para las columnas */
+
 .col-md-6 {
-  width: 50%; /* Cada columna toma la mitad del ancho */
-  padding: 10px; /* Espacio alrededor del contenido */
+  width: 50%; 
+  padding: 10px; 
 }
 
-/* Estilos específicos para el componente MenuDerecha */
 .menuDerecho {
-  /* Agrega tus estilos específicos aquí */
+  
+
 }
 
 .menuDerecho1 {

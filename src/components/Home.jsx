@@ -22,12 +22,12 @@ export function MenuDerecha() {
   return (
     <div className="menuDerecho">
         <h2 className="parametro">Parametros</h2>
-        <ul id="misParametros">
-          <li>Temperatura de motor: (80)</li>
-          <li>Combustible usado: (40 LTS)</li>
-          <li>Tiempo detenido: (15 Min)</li>
-          <li>Ubicación: (AVDA Los loros)</li>
-          <li>Siguiente mantención: (8.000 KM)</li>
+        <ul id="misParametros"> 
+          <li>Temperatura de motor: (80)</li><br/>
+          <li>Combustible usado: (40 LTS)</li><br/>
+          <li>Tiempo detenido: (15 Min)</li><br/>
+          <li>Ubicación: (AVDA Los loros)</li><br/>
+          <li>Siguiente mantención: (8.000 KM)</li><br/>
         </ul>
       </div>
   );

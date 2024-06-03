@@ -84,7 +84,7 @@ const AgregarMantenimiento = () => {
 
     return (
         <>
-        <Navbar/>
+       <Navbar/>
             <Form onSubmit={handleSubmit}>
                 <Form.Group controlId="formCitaId">
                     <Form.Label>Cita ID</Form.Label>
