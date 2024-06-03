@@ -1,25 +1,12 @@
 .container {
 }
-
 .row {
   display: flex;
 }
 
-
-.col-md-6 {
-  width: 50%; 
-  padding: 10px; 
-}
-
 .menuDerecho {
-  
+  position: relative;
+    left: 400px;
 
 }
 
-.menuDerecho1 {
-  /* Agrega tus estilos específicos aquí */
-}
-
-.parametro {
-  /* Agrega tus estilos específicos aquí */
-}
