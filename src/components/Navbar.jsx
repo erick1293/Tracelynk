@@ -5,7 +5,7 @@ function Navbar() {
   return (
     <nav>
       <ul>
-        <li><a href="/inicio">Inicio</a></li>
+        <li><a href="/">Inicio</a></li>
         <li><a href="/AgendarCita">Agendar Cita</a></li>
         <li><a href="/AgregarObjeto">Agregar Objeto</a></li>
         <li><a href="/Estados">Estado</a></li>
