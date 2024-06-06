@@ -1,3 +1,4 @@
+
 /* Navbar */
 nav {
     background-color: #333;
@@ -39,4 +40,47 @@ h1 {
 
 .table th, .table td {
     border: 1px solid
+
+/* Navbar */
+nav {
+    background-color: #333;
+    padding: 10px;
+}
+
+nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+nav li {
+    display: inline;
+    margin-right: 20px;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+}
+
+nav a:hover {
+    color: yellow;
+}
+
+/* Vehiculos */
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.table {
+    width: 90%;
+    margin: auto;
+    margin-bottom: 20px;
+    border-collapse: collapse;
+}
+
+.table th, .table td {
+    border: 1px solid
+
 }

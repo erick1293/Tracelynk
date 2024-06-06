@@ -1,3 +1,4 @@
+
 import axios from 'axios';
 
 const instance = axios.create({
@@ -8,3 +9,14 @@ const instance = axios.create({
 });
 
 export default instance;
+import axios from 'axios';
+
+const instance = axios.create({
+    baseURL: 'http://localhost/Tracelink/', 
+    headers: {
+        'Content-Type': 'application/json',
+    }
+});
+
+export default instance;
+

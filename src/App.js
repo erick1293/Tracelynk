@@ -1,24 +1,28 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import AgendarCita from './components/AgendarCita';
+import AgregarObjeto from './components/AgregarObjeto';
+import Estados from './components/Estados';
+import AgregarVehiculo from "./Axios/Agregar_axios"
+import ModificarVehiculos from "./Axios/Modificar_vehiculos"
+import Inicio from "./components/Inicio"
+import Mantencion from "./Axios/AgregarMantencion" 
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <BrowserRouter>
+      <Routes>
+        <Route path='/' element={<Inicio/>}/> 
+        <Route path='/AgendarCita' element={<AgendarCita/>}/>
+        <Route path='/AgendarMantencion' element={<Mantencion/>}/>
+        <Route path='/AgregarObjeto' element={<AgregarObjeto/>}/>
+        <Route path='/Estados' element={<Estados/>}/> 
+        <Route path='/AgregarVehiculo' element={<AgregarVehiculo/>}/> 
+        <Route path='/ModificarVehiculos' element={<ModificarVehiculos/>}/> 
+      </Routes>     
+      </BrowserRouter>
+    </>
   );
 }
 

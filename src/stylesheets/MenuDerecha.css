@@ -1,3 +1,4 @@
+
 body {
     font-family: Arial, sans-serif;
     background-color: #f2f2f2;
@@ -35,4 +36,43 @@ body {
 
 #misParametros li:last-child {
     border-bottom: none;
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f2f2f2;
+}
+
+.menuDerecho {
+    width: 300px;
+    position: fixed;
+    right: 0;
+    top: 0;
+    height: 100%;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px 0 0 8px;
+    box-shadow: -10px 0 10px 0 rgba(0,0,0,0.15);
+    overflow: auto;
+}
+
+.parametro {
+    font-weight: bold;
+    color: #4CAF50;
+    text-align: center;
+}
+
+#misParametros {
+    list-style-type: none;
+    padding: 0;
+}   
+
+#misParametros li {
+    border-bottom: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+}
+
+#misParametros li:last-child {
+    border-bottom: none;
+
 }
