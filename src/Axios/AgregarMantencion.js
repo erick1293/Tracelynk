@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from './axiosConfig';
+import axios from 'axios'; 
 import { Form, Button, Table } from 'react-bootstrap';
 import Navbar from '../components/Navbar';
 
@@ -12,7 +12,7 @@ const AgregarMantenimiento = () => {
     const [mensaje, setMensaje] = useState(null);
     const [error, setError] = useState(null);
 
-    useEffect(() => {
+    useEffect(() => {''
         fetchCitas();
         fetchMantenimientos();
     }, []);
@@ -23,17 +23,21 @@ const AgregarMantenimiento = () => {
             setCitas(response.data);
         } catch (error) {
             console.error('Error al obtener citas:', error);
+            setError('Error al obtener citas');
         }
     };
 
     const fetchMantenimientos = async () => {
         try {
-            const response = await axios.get('obtener_mantenimientos.php');
+            const response = await axios.get('agregar_mantenimiento.php'); // Usar el endpoint correcto
+            console.log(response.data); // Agregar este console.log para verificar la respuesta
             setMantenimientos(response.data);
         } catch (error) {
             console.error('Error al obtener mantenimientos:', error);
+            setError('Error al obtener mantenimientos');
         }
     };
+    
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -44,20 +48,21 @@ const AgregarMantenimiento = () => {
 
         try {
             const response = await axios.post('agregar_mantenimiento.php', {
-                idMantencion: selectedCitaId, // Cambiado para reflejar el nuevo nombre del campo en el backend
+                idMantencion: selectedCitaId, // Id mantención es el mismo que citas_idcitas
                 citas_idcitas: selectedCitaId,
                 fecha,
                 descripcion
             });
 
-            if (response.data.message) {
+            if (response.data.success) {
                 fetchMantenimientos();
-                setError('');
+                setMensaje('Datos insertados correctamente.');
+                setError(null);
                 setSelectedCitaId('');
                 setDescripcion('');
                 setFecha('');
             } else {
-                setError('Error al agregar mantenimiento: ' + (response.data.error || 'Error desconocido'));
+                setError(response.data.error || 'Error desconocido');
             }
         } catch (error) {
             setError('Error al agregar mantenimiento: ' + error.message);
@@ -74,13 +79,14 @@ const AgregarMantenimiento = () => {
     const handleDelete = async (mantenimientoId) => {
         try {
             const response = await axios.post('eliminar_mantenimiento.php', {
-                idMantencion: mantenimientoId // Cambiado para reflejar el nuevo nombre del campo en el backend
+                idMantencion: mantenimientoId
             });
 
-            if (response.data.message) {
+            if (response.data.success) {
                 fetchMantenimientos();
+                setError(null);
             } else {
-                setError('Error al eliminar mantenimiento: ' + (response.data.error || 'Error desconocido'));
+                setError(response.data.error || 'Error desconocido');
             }
         } catch (error) {
             setError('Error al eliminar mantenimiento: ' + error.message);
@@ -128,8 +134,8 @@ const AgregarMantenimiento = () => {
                 </thead>
                 <tbody>
                     {mantenimientos.map((mantenimiento) => (
-                        <tr key={mantenimiento.id}>
-                            <td>{mantenimiento.id}</td>
+                        <tr key={mantenimiento.idMantencion}>
+                            <td>{mantenimiento.idMantencion}</td>
                             <td>{mantenimiento.citas_idcitas}</td>
                             <td>{mantenimiento.fecha}</td>
                             <td>{mantenimiento.descripcion}</td>
@@ -137,7 +143,7 @@ const AgregarMantenimiento = () => {
                                 <Button variant="info" onClick={() => handleEdit(mantenimiento)}>
                                     Editar
                                 </Button>{' '}
-                                <Button variant="danger" onClick={() => handleDelete(mantenimiento.id)}>
+                                <Button variant="danger" onClick={() => handleDelete(mantenimiento.idMantencion)}>
                                     Eliminar
                                 </Button>
                             </td>
@@ -146,6 +152,7 @@ const AgregarMantenimiento = () => {
                 </tbody>
             </Table>
             {error && <p className="text-danger">{error}</p>}
+            {mensaje && <p className="text-success">{mensaje}</p>}
         </>
     );
 };

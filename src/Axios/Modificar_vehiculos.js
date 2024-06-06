@@ -46,7 +46,7 @@ const Vehiculos = () => {
 
     const handleDelete = async (vehiculoId) => {
         try {
-            const response = await axios.post('http://localhost/Tracelink/eliminar_vehiculo.php', { id: vehiculoId });
+            const response = await axios.post('http://localhost/Tracelink/vehiculo/eliminar_vehiculo.php', { id: vehiculoId });
             alert(response.data.message); // Mostrar mensaje de éxito o error
             // Actualizar la lista de vehículos después de eliminar
             fetchData();
@@ -58,7 +58,7 @@ const Vehiculos = () => {
 
     const fetchMarcas = async () => {
         try {
-            const response = await axios.get('http://localhost/Tracelink/obtener_marcas.php');
+            const response = await axios.get('http://localhost/Tracelink/vehiculo/obtener_marcas.php');
             setMarcas(response.data);
         } catch (error) {
             console.error('Error al obtener marcas:', error);
@@ -67,7 +67,7 @@ const Vehiculos = () => {
 
     const fetchModelos = async (marcaId) => {
         try {
-            const response = await axios.get(`http://localhost/Tracelink/obtener_modelos.php?marca=${marcaId}`);
+            const response = await axios.get(`http://localhost/Tracelink/vehiculo/obtener_modelos.php?marca=${marcaId}`);
             setModelos(response.data);
         } catch (error) {
             console.error('Error al obtener modelos:', error);
@@ -75,17 +75,26 @@ const Vehiculos = () => {
     };
 
     const handleModificar = (vehiculoId) => {
-        // Encuentra el vehículo seleccionado en los datos
         const vehiculo = data.find(v => v.id === vehiculoId);
         if (vehiculo) {
             setVehiculoSeleccionado(vehiculo);
-            setNuevoVehiculo(vehiculo); // Establece el vehículo seleccionado como el nuevo vehículo para editar
+            setNuevoVehiculo({
+                id: vehiculo.id,
+                marca: vehiculo.marca,
+                modelo: vehiculo.modelo,
+                anio: vehiculo.anio,
+                transmision: vehiculo.transmision,
+                patente: vehiculo.patente,
+                kilometrajeinicial: vehiculo.kilometrajeinicial,
+                kilometrajeactual: vehiculo.kilometrajeactual
+            });
             setEditando(true);
-            setShowModal(true); // Abre el modal al hacer clic en "Modificar"
+            setShowModal(true);
         } else {
             console.error('Vehículo no encontrado:', vehiculoId);
         }
     };
+
 
     const handleEditar = (e) => {
         const { name, value } = e.target;
@@ -93,23 +102,15 @@ const Vehiculos = () => {
             ...prevState,
             [name]: value
         }));
-    };
-
-    const handleMarcaChange = (e) => {
-        const marca = e.target.value;
-        console.log("Marca seleccionada:", marca); // Debug: Verifica la marca seleccionada
-        setNuevoVehiculo(prevState => ({
-            ...prevState,
-            marca: marca,
-            modelo: '' // Reiniciar el modelo al cambiar la marca
-        }));
+        console.log(`Editando campo ${name}: ${value}`);  // Debug
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("Nuevo vehículo antes de enviar:", nuevoVehiculo); // Agregar este console.log para ver el estado actual de nuevoVehiculo antes de enviar
+        console.log("Nuevo vehículo:", nuevoVehiculo); // Agregar este console.log para ver el estado actual de nuevoVehiculo
         try {
-            const response = await axios.post('http://localhost/Tracelink/editar_vehiculo.php', nuevoVehiculo);
+            const response = await axios.post('http://localhost/Tracelink/vehiculo/editar_vehiculo.php', nuevoVehiculo);
+            console.log("Respuesta del servidor:", response.data);
             alert(response.data.message); // Mostrar mensaje de éxito o error
             // Actualizar la lista de vehículos después de editar
             fetchData();
@@ -140,26 +141,22 @@ const Vehiculos = () => {
             modelo: modelo
         }));
     };
-
     const handleBuscar = (e) => {
         setFiltro(e.target.value);
     };
-
     const vehiculosFiltrados = data.filter(v => {
         return v.marca.toLowerCase().includes(filtro.toLowerCase()) ||
             v.modelo.toLowerCase().includes(filtro.toLowerCase()) ||
             v.anio.toString().includes(filtro.toLowerCase()) ||
             v.transmision.toLowerCase().includes(filtro.toLowerCase()) ||
             v.patente.toLowerCase().includes(filtro.toLowerCase()) ||
-            v.id.toString().includes(filtro.toLowerCase()) ||
-            v.kilometrajeinicial.toString().includes(filtro.toLowerCase()) ||
-            v.kilometrajeactual.toString().includes(filtro.toLowerCase());
+            v.id.toLowerCase().includes(filtro.toLowerCase()) ||
+            v.kilometrajeinicial.toLowerCase().includes(filtro.toLowerCase()) ||
+            v.kilometrajeactual.toLowerCase().includes(filtro.toLowerCase());
     });
-
     if (error) {
         return <div>Error: {error.message}</div>;
     }
-
     return (
         <div>
             <Navbar />
@@ -198,15 +195,17 @@ const Vehiculos = () => {
                     ))}
                 </tbody>
             </Table>
+
             <Modal show={showModal} onHide={() => setShowModal(false)}>
-                <Modal.Header closeButton>
+                <Modal.Header>
                     <Modal.Title>Editar Vehículo</Modal.Title>
+                    <Button variant="secondary" style={{ marginRight: 'auto' }} onClick={() => setShowModal(false)}>Minimizar</Button>
                 </Modal.Header>
                 <Modal.Body>
                     <Form onSubmit={handleSubmit}>
                         <Form.Group controlId="formMarca">
                             <Form.Label>Marca:</Form.Label>
-                            <Form.Control as="select" name="marca" value={nuevoVehiculo.marca} onChange={handleMarcaChange}>
+                            <Form.Control as="select" name="marca" value={nuevoVehiculo.marca} onChange={handleEditar}>
                                 <option value="">Seleccionar</option>
                                 {Array.isArray(marcas) && marcas.map(marca => (
                                     <option key={marca.idMarca} value={marca.Nombre_marca}>{marca.Nombre_marca}</option>
@@ -229,22 +228,22 @@ const Vehiculos = () => {
                         <Form.Group controlId="formTransmision">
                             <Form.Label>Transmisión:</Form.Label>
                             <Form.Control as="select" name="transmision" value={nuevoVehiculo.transmision} onChange={handleEditar}>
-                                <option value="">Seleccionar</option>
-                                <option value="Automático">Automático</option>
+                                  <option value="">Seleccionar</option>
+                                <option value="Automatico">Automático</option>
                                 <option value="Manual">Manual</option>
                             </Form.Control>
-                        </Form.Group>
-                        <Form.Group controlId="formPatente">
-                            <Form.Label>Patente:</Form.Label>
-                            <Form.Control type="text" name="patente" value={nuevoVehiculo.patente} onChange={handleEditar} />
-                        </Form.Group>
-                        <Form.Group controlId="formKilometrajeinicial">
-                            <Form.Label>Kilometraje Inicial:</Form.Label>
-                            <Form.Control type="text" name="kilometrajeinicial" value={nuevoVehiculo.kilometrajeinicial} onChange={handleEditar} />
-                        </Form.Group>
-                        <Form.Group controlId="formKilometrajeactual">
-                            <Form.Label>Kilometraje Actual:</Form.Label>
-                            <Form.Control type="text" name="kilometrajeactual" value={nuevoVehiculo.kilometrajeactual} onChange={handleEditar} />
+                            <Form.Group controlId="formPatente">
+                                <Form.Label>Patente:</Form.Label>
+                                <Form.Control type="text" name="patente" value={nuevoVehiculo.patente} onChange={handleEditar} />
+                            </Form.Group>
+                            <Form.Group controlId="formKilometrajeinicial">
+                                <Form.Label>Kilometraje Inicial:</Form.Label>
+                                <Form.Control type="text" name="kilometrajeinicial" value={nuevoVehiculo.kilometrajeinicial} onChange={handleEditar} />
+                            </Form.Group>
+                            <Form.Group controlId="formKilometrajeactual">
+                                <Form.Label>kilometraje Actual:</Form.Label>
+                                <Form.Control type="text" name="kilometrajeactual" value={nuevoVehiculo.kilometrajeactual} onChange={handleEditar} />
+                            </Form.Group>
                         </Form.Group>
                         <Button variant="primary" type="submit">Guardar cambios</Button>
                     </Form>
