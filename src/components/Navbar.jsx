@@ -6,16 +6,20 @@ function Navbar() {
     <nav>
       <ul>
         <li><a href="/">Inicio</a></li>
-        <li><a href="/Home">Home</a></li>
-        <li><a href="/Map">Map</a></li>
-        <li><a href="/AgendarCita">Agendar Cita</a></li>
-        <li><a href="/AgregarAuto">Agregar Auto</a></li>
+         {/* Dropdown Vehículo */}
+         <li className="dropdown">
+        <a href="/AgendarCita" className="dropbtn">Agendar Cita</a>
+        <div className="dropdown-content">
+            <a href="/AgendarCita">Agregar</a>
+            <a href="/AgendarCitas">Mostrar Citas</a>
+            <a href="/AgendarMantencion">Mantencion</a>
+          </div></li>
         <li><a href="/AgregarObjeto">Agregar Objeto</a></li>
         <li><a href="/Estados">Estado</a></li>
         {/* Dropdown Vehículo */}
         <li className="dropdown">
-          <a href="#" className="dropbtn">Vehículo</a>
-          <div className="dropdown-content">
+          <a href="/AgregarVehiculo" className="dropbtn">Vehículo</a>
+            <div className="dropdown-content">
             <a href="/AgregarVehiculo">Agregar</a>
             <a href="/ModificarVehiculos">Modificar</a>
           </div>
