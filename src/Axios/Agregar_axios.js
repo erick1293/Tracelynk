@@ -83,7 +83,6 @@ const AgregarVehiculo = ({ onAgregar }) => {
                 if (typeof onAgregar === 'function') {
                     onAgregar(response.data);
                 }
-
                 setMarca('');
                 setModelo('');
                 setAnio('');
