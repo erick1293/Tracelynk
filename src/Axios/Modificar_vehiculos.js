@@ -95,9 +95,19 @@ const Vehiculos = () => {
         }));
     };
 
+    const handleMarcaChange = (e) => {
+        const marca = e.target.value;
+        console.log("Marca seleccionada:", marca); // Debug: Verifica la marca seleccionada
+        setNuevoVehiculo(prevState => ({
+            ...prevState,
+            marca: marca,
+            modelo: '' // Reiniciar el modelo al cambiar la marca
+        }));
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("Nuevo vehículo:", nuevoVehiculo); // Agregar este console.log para ver el estado actual de nuevoVehiculo
+        console.log("Nuevo vehículo antes de enviar:", nuevoVehiculo); // Agregar este console.log para ver el estado actual de nuevoVehiculo antes de enviar
         try {
             const response = await axios.post('http://localhost/Tracelink/editar_vehiculo.php', nuevoVehiculo);
             alert(response.data.message); // Mostrar mensaje de éxito o error
@@ -141,9 +151,9 @@ const Vehiculos = () => {
             v.anio.toString().includes(filtro.toLowerCase()) ||
             v.transmision.toLowerCase().includes(filtro.toLowerCase()) ||
             v.patente.toLowerCase().includes(filtro.toLowerCase()) ||
-            v.id.toLowerCase().includes(filtro.toLowerCase()) ||
-            v.kilometrajeinicial.toLowerCase().includes(filtro.toLowerCase()) ||
-            v.kilometrajeactual.toLowerCase().includes(filtro.toLowerCase());
+            v.id.toString().includes(filtro.toLowerCase()) ||
+            v.kilometrajeinicial.toString().includes(filtro.toLowerCase()) ||
+            v.kilometrajeactual.toString().includes(filtro.toLowerCase());
     });
 
     if (error) {
@@ -196,7 +206,7 @@ const Vehiculos = () => {
                     <Form onSubmit={handleSubmit}>
                         <Form.Group controlId="formMarca">
                             <Form.Label>Marca:</Form.Label>
-                            <Form.Control as="select" name="marca" value={nuevoVehiculo.marca} onChange={handleEditar}>
+                            <Form.Control as="select" name="marca" value={nuevoVehiculo.marca} onChange={handleMarcaChange}>
                                 <option value="">Seleccionar</option>
                                 {Array.isArray(marcas) && marcas.map(marca => (
                                     <option key={marca.idMarca} value={marca.Nombre_marca}>{marca.Nombre_marca}</option>
@@ -223,18 +233,18 @@ const Vehiculos = () => {
                                 <option value="Automático">Automático</option>
                                 <option value="Manual">Manual</option>
                             </Form.Control>
-                            <Form.Group controlId="formPatente">
+                        </Form.Group>
+                        <Form.Group controlId="formPatente">
                             <Form.Label>Patente:</Form.Label>
                             <Form.Control type="text" name="patente" value={nuevoVehiculo.patente} onChange={handleEditar} />
                         </Form.Group>
-                            <Form.Group controlId="formKilometrajeinicial">
+                        <Form.Group controlId="formKilometrajeinicial">
                             <Form.Label>Kilometraje Inicial:</Form.Label>
                             <Form.Control type="text" name="kilometrajeinicial" value={nuevoVehiculo.kilometrajeinicial} onChange={handleEditar} />
                         </Form.Group>
                         <Form.Group controlId="formKilometrajeactual">
-                            <Form.Label>kilometraje Actual:</Form.Label>
+                            <Form.Label>Kilometraje Actual:</Form.Label>
                             <Form.Control type="text" name="kilometrajeactual" value={nuevoVehiculo.kilometrajeactual} onChange={handleEditar} />
-                        </Form.Group>
                         </Form.Group>
                         <Button variant="primary" type="submit">Guardar cambios</Button>
                     </Form>
@@ -245,4 +255,3 @@ const Vehiculos = () => {
 };
 
 export default Vehiculos;
-
