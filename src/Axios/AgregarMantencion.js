@@ -19,7 +19,7 @@ const AgregarMantenimiento = () => {
 
     const fetchCitas = async () => {
         try {
-            const response = await axios.get('obtener_citas.php');
+            const response = await axios.get('http://localhost/Tracelink/Mantenimiento/obtener_citas.php');
             setCitas(response.data);
         } catch (error) {
             console.error('Error al obtener citas:', error);
