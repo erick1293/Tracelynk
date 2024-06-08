@@ -6,7 +6,7 @@ import Estados from './components/Estados';
 import AgregarVehiculo from "./Axios/Agregar_axios"
 import ModificarVehiculos from "./Axios/Modificar_vehiculos"
 import Inicio from "./components/Inicio"
-import Mantencion from "./Axios/AgregarMantencion" 
+import Mantencion from "./Axios/Agregarmantenciones" 
 import AgendarCitas from "./Axios/CrearCita"
 
 function App() {
