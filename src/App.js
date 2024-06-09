@@ -17,7 +17,7 @@ function App() {
       <Routes>
         <Route path='/' element={<Inicio/>}/> 
         <Route path='/AgendarCita' element={<AgendarCita/>}/>
-        <Route path='/Mapa' element={<Mapa/>}/>
+
         <Route path='/AgendarCitas' element={<AgendarCitas/>}/>
         <Route path='/AgendarMantencion' element={<Mantencion/>}/>
         <Route path='/AgregarObjeto' element={<AgregarObjeto/>}/>
