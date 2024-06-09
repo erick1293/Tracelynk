@@ -15,6 +15,7 @@ function Navbar() {
             <a href="/AgendarMantencion">Mantencion</a>
           </div></li>
         <li><a href="/AgregarObjeto">Agregar Objeto</a></li>
+        <li><a href="/Mapa">Mapa</a></li>
         <li><a href="/Estados">Estado</a></li>
         {/* Dropdown Vehículo */}
         <li className="dropdown">
