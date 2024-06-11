@@ -2,6 +2,8 @@
 // Conexión a la base de datos y consulta para obtener las marcas
 include 'conection.php';
 
+$conn = conectar();
+
 $query = "SELECT * FROM marca";
 $resultado = mysqli_query($conn, $query);
 $marcas = array();
