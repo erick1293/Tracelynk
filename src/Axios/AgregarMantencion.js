@@ -50,6 +50,37 @@ function AgregarMantencion() {
         cargarCitas();
         cargarVehiculos();
     }, []);
+    const handleModificar = {
+
+    }
+
+    const handleDelete = async (mantencionId) => {
+        try {
+            const response = await axios.post(
+                'http://localhost/Tracelink/Mantenimiento/eliminar_mantencion.php',
+                { idMantencion: mantencionId },
+                { headers: { 'Content-Type': 'application/json' } }
+            );
+            if (response.data.success) {
+                alert('Mantención eliminada correctamente');
+                cargarDatosMantencion(); // Actualizar la lista de mantenciones después de eliminar
+            } else {
+                console.error('Error detallado del servidor:', response.data.error);
+                alert('Error al eliminar la mantención: ' + response.data.error);
+            }
+        } catch (error) {
+            console.error('Error al eliminar la mantención:', error);
+            alert('Error al eliminar la mantención: ' + (error.message || 'Ocurrió un error desconocido'));
+        }
+    };
+    
+    
+    
+    
+    
+    
+
+
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -146,16 +177,6 @@ function AgregarMantencion() {
                                     <td>{mantencion.patente}</td>
                                     <td>{mantencion.kilometrajeinicial}</td>
                                     <td>{mantencion.kilometrajeactual}</td>
-                                    
-                                    </tr>
-                            ))}
-                        </tbody>
-                    </Table>
-                </div>
-            )}
-        </div>
-    );
-}
-
-export default AgregarMantencion;
+                                        <td> <Button variant="primary" onClick={() => handleModificar(mantencion.idMantencion)}>Modificar</Button>
+                                            <Button variant="danger" onClick={() => { console.log("ID de la mantención:", mantencion.idMantencion);handleDelete(mantencion.idMantencion); }}>Eliminar</Button> </td> </tr>))} </tbody> </Table></div>)}</div> );}export default AgregarMantencion;
 
