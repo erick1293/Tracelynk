@@ -80,6 +80,7 @@ const AgregarVehiculo = ({ onAgregar }) => {
             console.log('Respuesta del servidor:', response.data);
 
             if (response.data && response.data.success) {
+                setError(response.data.error);
                 if (typeof onAgregar === 'function') {
                     onAgregar(response.data);
                 }
