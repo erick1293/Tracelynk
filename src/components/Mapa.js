@@ -13,6 +13,7 @@ L.Icon.Default.mergeOptions({
 });
 
 const Mapa = () => {
+    
     const position = [-27.372573265394145, -70.3187041851527]; 
 
     // Definir coordenadas del polígono
@@ -26,15 +27,12 @@ const Mapa = () => {
     ];
 
     return (
-        <MapContainer center={position} zoom={13} style={{ height: "600%" ,width: "250%" , position: "  relative" }}>
+        <MapContainer center={position} zoom={14} style={{ height: "600%" ,width: "250%" }}>
             <TileLayer
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             />
             <Marker position={position}>
-                <Popup>
-                    A pretty CSS3 popup. <br /> Easily customizable.
-                </Popup>
             </Marker>
             <Polygon positions={polygonCoordinates} color="purple">
                 

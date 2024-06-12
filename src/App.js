@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import AgendarCita from './components/AgendarCita';
+import AgendarCita from './Axios/AgendarCita';
 import AgregarObjeto from './components/AgregarObjeto';
 import Estados from './components/Estados';
 import AgregarVehiculo from "./Axios/Agregar_axios"
