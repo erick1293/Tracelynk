@@ -1,11 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../stylesheets/AgregarObjetos.css';
 import Navbar from './Navbar'; // Importa el componente Navbar
+import axios from 'axios';
 
 function AgregarObjeto() {
-    
   const [objetos, setObjetos] = useState([]);
   const [formulario, setFormulario] = useState({ nombre: '', altura: '', ancho: '' });
+  const [vehiculos, setVehiculos] = useState([]);
+  const [filtro, setFiltro] = useState('');
+
+  useEffect(() => {
+    // Obtener los vehículos al cargar el componente
+    axios.get('http://localhost/Tracelink/Objetos/obtenerVehiculos.php')
+      .then(response => setVehiculos(response.data))
+      .catch(error => console.error('Error al obtener los vehículos:', error));
+
+    // Obtener las cargas al cargar el componente
+    axios.get('http://localhost/Tracelink/Objetos/obtenerObjetos.php')
+      .then(response => setObjetos(response.data))
+      .catch(error => console.error('Error al obtener las cargas:', error));
+  }, []);
+
+  const cargaFiltradas = objetos.filter(c => {
+    return c.nombre.toLowerCase().includes(filtro.toLowerCase()) ||
+        c.altura.toLowerCase().includes(filtro.toLowerCase()) ||
+        c.ancho.toLowerCase().includes(filtro.toLowerCase()) ||
+        c.id.toString().toLowerCase().includes(filtro.toLowerCase())||
+        c.vehiculo_id.toLowerCase().includes(filtro.toLowerCase());
+});
 
   const manejarCambio = (e) => {
     setFormulario({ ...formulario, [e.target.name]: e.target.value });
@@ -19,8 +41,13 @@ function AgregarObjeto() {
       return;
     }
 
-    setFormulario({ nombre: '', altura: '', ancho: '' });
-    setObjetos([...objetos, formulario]);
+    axios.post('http://localhost/Tracelink/Objetos/agregarObjeto.php', formulario)
+      .then(response => {
+        setFormulario({ nombre: '', altura: '', ancho: '' });
+        setObjetos([...objetos, formulario]);
+        alert('Objeto agregado con éxito');
+      })
+      .catch(error => console.error('Error al agregar el objeto:', error));
   };
 
   const manejarBuscar = (e) => {
@@ -31,15 +58,17 @@ function AgregarObjeto() {
       return;
     }
 
-    const objetoEncontrado = objetos.find(objeto => objeto.nombre === formulario.nombre); 
-
-    if (objetoEncontrado) {
-      alert(`Objeto encontrado: ${objetoEncontrado.nombre}, Altura: ${objetoEncontrado.altura}, Ancho: ${objetoEncontrado.ancho}`);
-      setFormulario({ ...formulario, ...objetoEncontrado});
-  
-    } else {
-      alert('Objeto no encontrado');
-    }
+    axios.post('http://localhost/Tracelink/Objetos/buscarObjeto.php', { nombre: formulario.nombre })
+      .then(response => {
+        const objetoEncontrado = response.data;
+        if (objetoEncontrado) {
+          alert(`Objeto encontrado: ${objetoEncontrado.nombre}, Altura: ${objetoEncontrado.altura}, Ancho: ${objetoEncontrado.ancho}`);
+          setFormulario({ ...formulario, ...objetoEncontrado });
+        } else {
+          alert('Objeto no encontrado');
+        }
+      })
+      .catch(error => console.error('Error al buscar el objeto:', error));
   };
 
   const manejarEditar = (e) => {
@@ -50,27 +79,30 @@ function AgregarObjeto() {
       return;
     }
 
-    const indice = objetos.findIndex(objeto => objeto.nombre === formulario.nombre);
-
-    if (indice !== -1) {
-      const nuevosObjetos = [...objetos];
-      nuevosObjetos[indice] = formulario;
-      setObjetos(nuevosObjetos);
-      alert('Objeto editado con éxito');
-    } else {
-      alert('Objeto no encontrado');
-    }
+    axios.post('http://localhost/Tracelink/Objetos/editarObjeto.php', formulario)
+      .then(response => {
+        const nuevosObjetos = objetos.map(obj => obj.nombre === formulario.nombre ? formulario : obj);
+        setObjetos(nuevosObjetos);
+        alert('Objeto editado con éxito');
+      })
+      .catch(error => console.error('Error al editar el objeto:', error));
   };
 
   const manejarBorrar = (e) => {
     e.preventDefault();
-    setObjetos(objetos.filter(objeto => objeto.nombre !== formulario.nombre));
+
+    axios.post('http://localhost/Tracelink/Objetos/borrarObjeto.php', { nombre: formulario.nombre })
+      .then(response => {
+        setObjetos(objetos.filter(objeto => objeto.nombre !== formulario.nombre));
+        setFormulario({ nombre: '', altura: '', ancho: '' });
+        alert('Objeto borrado con éxito');
+      })
+      .catch(error => console.error('Error al borrar el objeto:', error));
   };
 
   return (
     <div>
-      <Navbar /> {/* Incluye el Navbar aquí */}
-
+      <Navbar /> 
       <form>
         <label>
           Nombre del objeto:
@@ -84,32 +116,46 @@ function AgregarObjeto() {
           Ancho:
           <input type="number" name="ancho" value={formulario.ancho} onChange={manejarCambio} />
         </label>
+        <label>
+          Vehículo:
+          <select name="vehiculo_id" value={formulario.vehiculo_id} onChange={manejarCambio}>
+            <option value="">Selecciona un vehículo</option>
+            {vehiculos.map(vehiculo => (
+              <option key={vehiculo.id} value={vehiculo.id}>{vehiculo.patente}</option>
+            ))}
+          </select>
+        </label>
         <button type="button" onClick={manejarAgregar}>Agregar objeto</button>
-        <button type="button" onClick={manejarBuscar}>Buscar objeto</button>
-        <button type="button" onClick={manejarEditar}>Editar objeto</button>
-        <button type="button" onClick={manejarBorrar}>Borrar objeto</button>
       </form>
 
       <table>
         <thead>
           <tr>
-            <th>Nombre del objeto</th>
+            <th>id Carga </th>
+             <th>Nombre De la carga</th>
             <th>Altura</th>
             <th>Ancho</th>
+            <th>vehiculo_id</th>
+            <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
-          {objetos.map((objeto, indice) => (
-            <tr key={indice}>
-              <td>{objeto.nombre}</td>
-              <td>{objeto.altura}</td>
-              <td>{objeto.ancho}</td>
-            </tr>
+          {cargaFiltradas.map(c => (
+           <tr key={c.id}>
+            <td>{c.id}</td>
+           <td>{c.nombre}</td>
+           <td>{c.altura}</td>
+           <td>{c.ancho}</td>
+           <td>{c.vehiculo_id}</td>
+           <td>
+        <button type="button" onClick={manejarEditar}>Editar Carga</button>
+        <button type="button" onClick={manejarBorrar}>Borrar Carga</button></td>
+           </tr>
           ))}
         </tbody>
       </table>
+
     </div>
   );
 }
-
 export default AgregarObjeto;
