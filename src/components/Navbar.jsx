@@ -24,6 +24,13 @@ function Navbar() {
             <a href="/ModificarVehiculos">Modificar/Mostar</a>
           </div>
         </li>
+        <li className="dropdown">
+          <a href="/AgregarMecanico" className="dropbtn">Vehículo</a>
+            <div className="dropdown-content">
+            <a href="/AgregarMecanico">Agregar</a>
+            <a href="/ModificarVehiculos">Modificar/Mostar</a>
+          </div>
+        </li>
       </ul>
     </nav>
   );
