@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import '../stylesheets/AgregarMecanico.css';
 import { Table, Button, Modal, Form } from 'react-bootstrap';
-import Navbar from './Navbar';
-import axios from 'axios';
+import Navbar from '../components/Navbar';
+import axios from './axiosConfig';
 
 function AgregarMecanico() {
   const [mecanicos, setMecanicos] = useState([]);
@@ -75,7 +74,7 @@ function AgregarMecanico() {
 
   return (
     <div>
-      <Navbar />
+      <Navbar/>
       <form>
         <label>
           Nombre:

@@ -24,7 +24,7 @@ function App() {
         <Route path='/Estados' element={<Estados/>}/> 
         <Route path='/AgregarVehiculo' element={<AgregarVehiculo/>}/> 
         <Route path='/ModificarVehiculos' element={<ModificarVehiculos/>}/> 
-        <Route path='/ModificarMecanico' element={<AgregarMecanico/>}/> 
+        <Route path='/AgregarMecanico' element={<AgregarMecanico/>}/> 
       </Routes>     
       </BrowserRouter>
     </>

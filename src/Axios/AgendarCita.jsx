@@ -2,16 +2,19 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios'; 
 import { Form, Button, Table } from 'react-bootstrap';
 import Navbar from '../components/Navbar';
+import { Autocomplete, TextField } from '@mui/material';
 import "../stylesheets/AgendarCita.css"
 
 const AgregarCita = () => {
     const [formData, setFormData] = useState({
         nombre_mecanico: '',
+        apellido_mecanico: '',
         fecha: '',
         hora: '',
         descripcion: ''
     });
     const [citas, setCitas] = useState([]);
+    const [mecanicos, setMecanicos] = useState([]);
 
     useEffect(() => {
         // Llamada inicial para obtener las citas existentes
@@ -21,6 +24,15 @@ const AgregarCita = () => {
             })
             .catch(error => {
                 console.error("Hubo un error al obtener las citas: ", error);
+            });
+
+        // Llamada inicial para obtener la lista de mecánicos
+        axios.get('http://localhost/Tracelink/mecanicos/obtenerMecanicos.php')
+            .then(response => {
+                setMecanicos(response.data);
+            })
+            .catch(error => {
+                console.error("Hubo un error al obtener los mecánicos: ", error);
             });
     }, []);
 
@@ -35,7 +47,7 @@ const AgregarCita = () => {
         e.preventDefault();
 
         // Validación de datos antes de enviar la solicitud
-        if (!formData.nombre_mecanico || !formData.fecha || !formData.hora || !formData.descripcion) {
+        if (!formData.nombre_mecanico || !formData.apellido_mecanico || !formData.fecha || !formData.hora || !formData.descripcion) {
             alert('Por favor complete todos los campos');
             return;
         }
@@ -46,6 +58,7 @@ const AgregarCita = () => {
                 setCitas([...citas, response.data]);
                 setFormData({
                     nombre_mecanico: '',
+                    apellido_mecanico: '',
                     fecha: '',
                     hora: '',
                     descripcion: ''
@@ -56,21 +69,27 @@ const AgregarCita = () => {
             });
     };
 
+    const handleMecanicoChange = (event, newValue) => {
+        setFormData({
+            ...formData,
+            nombre_mecanico: newValue ? newValue.nombre : '',
+            apellido_mecanico: newValue ? newValue.apellido : ''
+        });
+    };
+
     return (
         <div>
             <Navbar />
             <div className="container mt-4">
-              
                 <Form onSubmit={handleSubmit}>
-                      <h2>Agregar Nueva Cita</h2>
+                    <h2>Agregar Nueva Cita</h2>
                     <Form.Group controlId="formNombreMecanico">
                         <Form.Label>Nombre del Mecánico</Form.Label>
-                        <Form.Control 
-                            type="text" 
-                            name="nombre_mecanico"
-                            value={formData.nombre_mecanico}
-                            onChange={handleChange}
-                            placeholder="Ingrese el nombre del mecánico" 
+                        <Autocomplete
+                            options={mecanicos}
+                            getOptionLabel={(option) => `${option.nombre} ${option.apellido}`}
+                            onChange={handleMecanicoChange}
+                            renderInput={(params) => <TextField {...params} placeholder="Seleccione el nombre del mecánico" />}
                         />
                     </Form.Group>
 
@@ -110,7 +129,6 @@ const AgregarCita = () => {
                         Agregar Cita
                     </Button>
                 </Form>
-
             </div>
         </div>
     );

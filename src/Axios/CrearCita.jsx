@@ -118,6 +118,7 @@ const Citas = () => {
                     <tr>
                         <th>ID</th>
                         <th>Nombre del Mecánico</th>
+                        <th>Apellido del Mecánico</th>
                         <th>Fecha</th>
                         <th>Hora</th>
                         <th>Descripción</th>
@@ -129,6 +130,7 @@ const Citas = () => {
                         <tr key={c.id}>
                             <td>{c.id}</td>
                             <td>{c.nombre_mecanico}</td>
+                            <td>{c.apellido}</td>
                             <td>{c.fecha}</td>
                             <td>{c.hora}</td>
                             <td>{c.descripcion}</td>
