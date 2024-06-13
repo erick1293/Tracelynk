@@ -21,7 +21,7 @@ function Navbar() {
           <a href="/AgregarVehiculo" className="dropbtn">Vehículo</a>
             <div className="dropdown-content">
             <a href="/AgregarVehiculo">Agregar</a>
-            <a href="/ModificarVehiculos">Modificar</a>
+            <a href="/ModificarVehiculos">Modificar/Mostar</a>
           </div>
         </li>
       </ul>
