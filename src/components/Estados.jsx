@@ -15,13 +15,7 @@ function EstadoComponent() {
       // Obtener los estados al cargar el componente
       axios.get('http://localhost/Tracelink/Estados/obtenerEstados.php')
         .then(response => setEstados(response.data))
-        .catch(error => console.error('Error al obtener los estados:', error));
-  
-    // Obtener los vehículos al cargar el componente
-    axios.get('http://localhost/Tracelink/Objetos/obtenerVehiculos.php')
-      .then(response => setVehiculos(response.data))
-      .catch(error => console.error('Error al obtener los vehículos:', error));
-  }, []);
+        .catch(error => console.error('Error al obtener los estados:', error));}, []);
 
   const agregarEstado = (e) => {
     e.preventDefault();
@@ -78,21 +72,7 @@ function EstadoComponent() {
        <label>
         Estado
         <input type="text" placeholder="Estado" value={nuevoEstado.estado} onChange={(e) => setNuevoEstado({ ...nuevoEstado, estado: e.target.value })} />
-
-        </label>
-        <label>
-          Patente de vehiculo:
-          <select
-            name="vehiculo_id"
-            value={formulario.vehiculo_id}
-            onChange={manejarCambio}
-          >
-            <option value="">Selecciona un vehículo</option>
-            {vehiculos.map(vehiculo => (
-              <option key={vehiculo.id} value={vehiculo.id}>{vehiculo.patente}</option>
-            ))}
-          </select>
-        </label>
+      </label>
         <label>
         Fecha:<br/>
         <input
@@ -112,23 +92,17 @@ function EstadoComponent() {
           <tr>
             <th>Estado</th>
             <th>Fecha</th>
-            <th>Patente vehiculo</th>
             <th>Operaciones</th>
           </tr>
         </thead>
         <tbody>
   {EstadoFiltradas.map(e => {
-    console.log('ID del estado:', e.idEstado);
-    console.log('ID del vehículo:', e.vehiculo_id);
+    
 
     return (
       <tr key={e.idEstado}>
         <td>{e.estado}</td>
         <td>{e.fecha}</td>
-        <td>
-          {/* Buscar el vehículo que corresponde al vehiculo_id del estado actual */}
-          {vehiculos.find(v => v.id === e.vehiculo_id)?.patente || 'No disponible'}
-        </td>
         <td>
           <Button variant="warning" onClick={() => aplicarModificacion(e)}>Editar Estado</Button>
           <Button variant="danger" onClick={() => eliminarEstado(e.id)}>Eliminar estado</Button>
