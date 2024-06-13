@@ -1,16 +1,22 @@
 import { useState, useEffect } from "react";
-import { v4 as uuidv4 } from 'uuid';
 import Navbar from './Navbar';
 import axios from 'axios';
+import { Table, Button, Modal, Form } from 'react-bootstrap';
 
 function EstadoComponent() {
   const [estados, setEstados] = useState([]);
-  const [nuevoEstado, setNuevoEstado] = useState({ idEstado: '', estado: '', fecha: '' , vehiculo_id:'' });
+  const [nuevoEstado, setNuevoEstado] = useState({ idEstado: '', estado: '', fecha: ''  });
   const [estadoAModificar, setEstadoAModificar] = useState(null);
   const [formulario, setFormulario] = useState({ vehiculo_id: '' });
   const [vehiculos, setVehiculos] = useState([]);
+  const [filtro, setFiltro] = useState('');
 
   useEffect(() => {
+      // Obtener los estados al cargar el componente
+      axios.get('http://localhost/Tracelink/Estados/obtenerEstados.php')
+        .then(response => setEstados(response.data))
+        .catch(error => console.error('Error al obtener los estados:', error));
+  
     // Obtener los vehículos al cargar el componente
     axios.get('http://localhost/Tracelink/Objetos/obtenerVehiculos.php')
       .then(response => setVehiculos(response.data))
@@ -19,19 +25,27 @@ function EstadoComponent() {
 
   const agregarEstado = (e) => {
     e.preventDefault();
-
-    if (formulario.idEstado === '') {
-      alert('El nombre del estado no puede estar vacío');
+  
+    if (nuevoEstado.estado === '' || nuevoEstado.fecha === '') {
+      alert('Por favor, completa todos los campos');
       return;
-  }
-  axios.post('http://localhost/Tracelink/Estados/Agregar_Estado.php', formulario)
-  .then(response => {
-    setFormulario({ idEstado: '', estado: '', vehiculo_id: '' });
-    setEstados([...estados, { ...formulario, idEstado: response.data.idEstado}]);
-    alert('Objeto agregado con éxito');
-  })
-  .catch(error => console.error('Error al agregar el carga:', error));
-};
+    }
+  
+    axios.post('http://localhost/Tracelink/Estados/Agregar_Estado.php', nuevoEstado)
+      .then(response => {
+        setEstados([...estados, { ...nuevoEstado, id: response.data.idEstado }]);
+        setNuevoEstado({ idEstado: '', estado: '', fecha: '' }); 
+        alert('Estado agregado con éxito');
+      })
+      .catch(error => console.error('Error al agregar el estado:', error));
+  };
+  
+
+  const EstadoFiltradas = estados.filter(e => {
+    return e.idEstado.toLowerCase().includes(filtro.toLowerCase()) ||
+      e.estado.toLowerCase().includes(filtro.toLowerCase()) ||
+      e.fecha.toLowerCase().includes(filtro.toLowerCase()) ;
+  });
 
   function prepararModificacion(id) {
     const estado = estados.find(estado => estado.id === id);
@@ -63,7 +77,8 @@ function EstadoComponent() {
       <form onSubmit={(e) => { e.preventDefault(); estadoAModificar ? aplicarModificacion() : agregarEstado(); }}>
        <label>
         Estado
-        <input type="text" placeholder="Estado" value={nuevoEstado.estado}onChange={(e) => setNuevoEstado({ ...nuevoEstado, estado: e.target.value })} />
+        <input type="text" placeholder="Estado" value={nuevoEstado.estado} onChange={(e) => setNuevoEstado({ ...nuevoEstado, estado: e.target.value })} />
+
         </label>
         <label>
           Patente de vehiculo:
@@ -81,7 +96,7 @@ function EstadoComponent() {
         <label>
         Fecha:<br/>
         <input
-          type="datetime-local"
+          type="date"
           value={nuevoEstado.fecha}
           onChange={(e) => setNuevoEstado({ ...nuevoEstado, fecha: e.target.value })}
           />
@@ -97,21 +112,31 @@ function EstadoComponent() {
           <tr>
             <th>Estado</th>
             <th>Fecha</th>
+            <th>Patente vehiculo</th>
             <th>Operaciones</th>
           </tr>
         </thead>
         <tbody>
-          {estados.map(estado => (
-            <tr key={estado.id}>
-              <td>{estado.estado}</td>
-              <td>{estado.fecha}</td>
-              <td>
-                <button onClick={() => prepararModificacion(estado.id)}>Modificar</button>
-                <button onClick={() => eliminarEstado(estado.id)}>Eliminar</button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
+  {EstadoFiltradas.map(e => {
+    console.log('ID del estado:', e.idEstado);
+    console.log('ID del vehículo:', e.vehiculo_id);
+
+    return (
+      <tr key={e.idEstado}>
+        <td>{e.estado}</td>
+        <td>{e.fecha}</td>
+        <td>
+          {/* Buscar el vehículo que corresponde al vehiculo_id del estado actual */}
+          {vehiculos.find(v => v.id === e.vehiculo_id)?.patente || 'No disponible'}
+        </td>
+        <td>
+          <Button variant="warning" onClick={() => aplicarModificacion(e)}>Editar Estado</Button>
+          <Button variant="danger" onClick={() => eliminarEstado(e.id)}>Eliminar estado</Button>
+        </td>
+      </tr>
+    );
+  })}
+</tbody>
       </table>
     </div>
   );

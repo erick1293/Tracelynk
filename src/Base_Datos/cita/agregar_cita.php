@@ -40,7 +40,6 @@ $descripcion= $data['descripcion'];
 // Consulta SQL para insertar una nueva cita
 $sql = "INSERT INTO citas (nombre_mecanico, fecha, hora, descripcion) VALUES ('$nombre_mecanico', '$fecha', '$hora', '$descripcion')";
 
-
 // Ejecutar la consulta SQL y manejar errores
 if ($conn->query($sql) === TRUE) {
     echo json_encode(["success" => true, "message" => "Cita agregada exitosamente"]);

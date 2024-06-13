@@ -152,10 +152,6 @@ const handleSubmitEditar = async (e) => {
         }
     };
 
-
-
-
-
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setNuevoMantenimiento({ ...nuevoMantenimiento, [name]: value });
