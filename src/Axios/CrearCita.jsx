@@ -12,6 +12,7 @@ const Citas = () => {
     const [nuevaCita, setNuevaCita] = useState({
         id: '',
         nombre_mecanico: '',
+        apellido_mecanico: '',
         fecha: '',
         hora: '',
         descripcion: ''
@@ -26,7 +27,7 @@ const Citas = () => {
     const fetchData = async () => {
         try {
             const response = await axios.get('http://localhost/Tracelink/cita/obtener_citas.php');
-            setCitas(response.data);
+            setCitas(response.data); // Asumiendo que el formato del JSON coincide con la estructura de citas esperada
         } catch (error) {
             setError(error);
         }
@@ -36,8 +37,7 @@ const Citas = () => {
         try {
             const response = await axios.post('http://localhost/Tracelink/cita/eliminarCita.php', { id: citaId });
             alert(response.data.message); // Mostrar mensaje de éxito o error
-            // Actualizar la lista de citas después de eliminar
-            fetchData();
+            fetchData(); // Actualizar la lista de citas después de eliminar
         } catch (error) {
             console.error('Error al eliminar cita:', error);
             alert('Error al eliminar cita: ' + error.message);
@@ -51,6 +51,7 @@ const Citas = () => {
             setNuevaCita({
                 id: cita.id,
                 nombre_mecanico: cita.nombre_mecanico,
+                apellido_mecanico: cita.apellido_mecanico,
                 fecha: cita.fecha,
                 hora: cita.hora,
                 descripcion: cita.descripcion
@@ -75,13 +76,14 @@ const Citas = () => {
         try {
             const response = await axios.post('http://localhost/Tracelink/cita/editarCita.php', nuevaCita);
             alert(response.data.message); // Mostrar mensaje de éxito o error
-            fetchData();
+            fetchData(); // Actualizar la lista de citas después de editar
             setEditando(false);
             setShowModal(false);
             setCitaSeleccionada(null);
             setNuevaCita({
                 id: '',
                 nombre_mecanico: '',
+                apellido_mecanico: '',
                 fecha: '',
                 hora: '',
                 descripcion: ''
@@ -98,6 +100,7 @@ const Citas = () => {
 
     const citasFiltradas = citas.filter(c => {
         return c.nombre_mecanico.toLowerCase().includes(filtro.toLowerCase()) ||
+            c.apellido_mecanico.toLowerCase().includes(filtro.toLowerCase()) ||
             c.fecha.toLowerCase().includes(filtro.toLowerCase()) ||
             c.hora.toLowerCase().includes(filtro.toLowerCase()) ||
             c.descripcion.toLowerCase().includes(filtro.toLowerCase()) ||
@@ -130,7 +133,7 @@ const Citas = () => {
                         <tr key={c.id}>
                             <td>{c.id}</td>
                             <td>{c.nombre_mecanico}</td>
-                            <td>{c.apellido}</td>
+                            <td>{c.apellido_mecanico}</td>
                             <td>{c.fecha}</td>
                             <td>{c.hora}</td>
                             <td>{c.descripcion}</td>
@@ -160,47 +163,59 @@ const Citas = () => {
                             />
                         </Form.Group>
 
+                        <Form.Group controlId="formApellidoMecanico">
+                            <Form.Label>Apellido del Mecánico</Form.Label>
+                            <Form.Control
+                                type="text"
+                                name="apellido_mecanico"
+                                value={nuevaCita.apellido_mecanico}
+                                onChange={handleEditar}
+                                placeholder="Ingrese el apellido del mecánico"
+                            />
+                        </Form.Group>
+
                         <Form.Group controlId="formFecha">
                             <Form.Label>Fecha</Form.Label>
                             <Form.Control
                                 type="date"
                                 name="fecha"
                                 value={nuevaCita.fecha}
-                                onChange={handleEditar}
-                            />
-                        </Form.Group>
-
-                        <Form.Group controlId="formHora">
-                            <Form.Label>Hora</Form.Label>
-                            <Form.Control
-                                type="time"
-                                name="hora"
-                                value={nuevaCita.hora}
-                                onChange={handleEditar}
-                            />
-                        </Form.Group>
-
-
-                        <Form.Group controlId="formDescripcion">
-                            <Form.Label>Descripción</Form.Label>
-                            <Form.Control
-                                as="textarea"
-                                rows={3}
-                                name="descripcion"
-                                value={nuevaCita.descripcion}
-                                onChange={handleEditar}
-                                placeholder="Ingrese la descripción"
-                            />
-                        </Form.Group>
-
-                        <Button variant="primary" type="submit">
-                            {editando ? 'Guardar cambios' : 'Agregar Cita'}
-                        </Button>
-                    </Form>
-                </Modal.Body>
-            </Modal>
-        </div>
-    );
-};
-
-export default Citas;
+                                onChange
+                                ={handleEditar}
+                                />
+                            </Form.Group>
+    
+                            <Form.Group controlId="formHora">
+                                <Form.Label>Hora</Form.Label>
+                                <Form.Control
+                                    type="time"
+                                    name="hora"
+                                    value={nuevaCita.hora}
+                                    onChange={handleEditar}
+                                />
+                            </Form.Group>
+    
+                            <Form.Group controlId="formDescripcion">
+                                <Form.Label>Descripción</Form.Label>
+                                <Form.Control
+                                    as="textarea"
+                                    rows={3}
+                                    name="descripcion"
+                                    value={nuevaCita.descripcion}
+                                    onChange={handleEditar}
+                                    placeholder="Ingrese la descripción"
+                                />
+                            </Form.Group>
+    
+                            <Button variant="primary" type="submit">
+                                {editando ? 'Guardar cambios' : 'Agregar Cita'}
+                            </Button>
+                        </Form>
+                    </Modal.Body>
+                </Modal>
+            </div>
+        );
+    };
+    
+    export default Citas;
+    

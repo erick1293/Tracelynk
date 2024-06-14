@@ -8,7 +8,7 @@ import "../stylesheets/AgendarCita.css"
 const AgregarCita = () => {
     const [formData, setFormData] = useState({
         nombre_mecanico: '',
-        apellido_mecanico: '',
+        mecanico_id: '', // Nuevo campo para almacenar el ID del mecánico
         fecha: '',
         hora: '',
         descripcion: ''
@@ -42,23 +42,44 @@ const AgregarCita = () => {
             [e.target.name]: e.target.value
         });
     };
+    const handleMecanicoChange = (event, newValue) => {
+        if (newValue) {
+            console.log("Mecánico seleccionado:", newValue);
+            setFormData({
+                ...formData,
+                nombre_mecanico: `${newValue.nombre} ${newValue.apellido}`,
+                mecanico_id: newValue.idMecanico  // Usar idMecanico en lugar de id
+            });
+        } else {
+            console.log("Mecánico deseleccionado");
+            setFormData({
+                ...formData,
+                nombre_mecanico: '',
+                mecanico_id: ''
+            });
+        }
+    };
+    
+    
 
     const handleSubmit = (e) => {
         e.preventDefault();
-
+    
         // Validación de datos antes de enviar la solicitud
-        if (!formData.nombre_mecanico || !formData.apellido_mecanico || !formData.fecha || !formData.hora || !formData.descripcion) {
+        console.log("Datos a enviar:", formData); // Agregar este console log
+    
+        if (!formData.nombre_mecanico || !formData.mecanico_id || !formData.fecha || !formData.hora || !formData.descripcion) {
             alert('Por favor complete todos los campos');
             return;
         }
-
+    
         // Enviar la solicitud POST para agregar una nueva cita
         axios.post('http://localhost/Tracelink/cita/agregar_cita.php', formData)
             .then(response => {
                 setCitas([...citas, response.data]);
                 setFormData({
                     nombre_mecanico: '',
-                    apellido_mecanico: '',
+                    mecanico_id: '',
                     fecha: '',
                     hora: '',
                     descripcion: ''
@@ -68,15 +89,8 @@ const AgregarCita = () => {
                 console.error("Hubo un error al agregar la cita: ", error);
             });
     };
-
-    const handleMecanicoChange = (event, newValue) => {
-        setFormData({
-            ...formData,
-            nombre_mecanico: newValue ? newValue.nombre : '',
-            apellido_mecanico: newValue ? newValue.apellido : ''
-        });
-    };
-
+    
+    
     return (
         <div>
             <Navbar />
