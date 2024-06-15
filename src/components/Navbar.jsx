@@ -1,5 +1,5 @@
 import React from 'react';
-import '../stylesheets/navbar.css'; // Importa el archivo CSS de estilos
+import '../stylesheets/navbar.css'; 
 
 function Navbar() {
   return (
@@ -15,7 +15,14 @@ function Navbar() {
             <a href="/AgendarMantencion">Mantencion</a>
           </div></li>
         <li><a href="/AgregarObjeto">Agregar Objeto</a></li>
-        <li><a href="/Estados">Estado</a></li>
+         {/* Dropdown Vehículo */}
+         <li className="dropdown">
+          <a href="/Estados" className="dropbtn">Estados</a>
+            <div className="dropdown-content">
+            <a href="/Estados">Agregar</a>
+            <a href="/EditarEstado">Modificar/Mostar</a>
+          </div>
+        </li>
         {/* Dropdown Vehículo */}
         <li className="dropdown">
           <a href="/AgregarVehiculo" className="dropbtn">Vehículo</a>

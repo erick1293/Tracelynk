@@ -5,59 +5,64 @@ import { Table, Button, Modal, Form } from 'react-bootstrap';
 
 function EstadoComponent() {
   const [estados, setEstados] = useState([]);
-  const [nuevoEstado, setNuevoEstado] = useState({ idEstado: '', estado: '', fecha: ''  });
+  const [nuevoEstado, setNuevoEstado] = useState({ idEstado: '', estado: '', fecha: '' });
   const [estadoAModificar, setEstadoAModificar] = useState(null);
   const [formulario, setFormulario] = useState({ vehiculo_id: '' });
   const [vehiculos, setVehiculos] = useState([]);
   const [filtro, setFiltro] = useState('');
 
   useEffect(() => {
-      // Obtener los estados al cargar el componente
-      axios.get('http://localhost/Tracelink/Estados/obtenerEstados.php')
-        .then(response => setEstados(response.data))
-        .catch(error => console.error('Error al obtener los estados:', error));}, []);
+    // Obtener los estados al cargar el componente
+    axios.get('http://localhost/Tracelink/Estados/obtenerEstados.php')
+      .then(response => setEstados(response.data))
+      .catch(error => console.error('Error al obtener los estados:', error));
+  }, []);
 
   const agregarEstado = (e) => {
     e.preventDefault();
-  
+
     if (nuevoEstado.estado === '' || nuevoEstado.fecha === '') {
       alert('Por favor, completa todos los campos');
       return;
     }
-  
+
     axios.post('http://localhost/Tracelink/Estados/Agregar_Estado.php', nuevoEstado)
       .then(response => {
-        setEstados([...estados, { ...nuevoEstado, id: response.data.idEstado }]);
-        setNuevoEstado({ idEstado: '', estado: '', fecha: '' }); 
-        alert('Estado agregado con éxito');
+        if (response.data.success) {
+          const nuevoIdEstado = response.data.idEstado.toString();
+          setEstados([...estados, { ...nuevoEstado, idEstado: nuevoIdEstado }]);
+          setNuevoEstado({ idEstado: '', estado: '', fecha: '' });
+          alert('Estado agregado con éxito');
+        } else {
+          alert('Error al agregar el estado: ' + response.data.error);
+        }
       })
       .catch(error => console.error('Error al agregar el estado:', error));
   };
-  
 
   const EstadoFiltradas = estados.filter(e => {
-    return e.idEstado.toLowerCase().includes(filtro.toLowerCase()) ||
+    return e.idEstado.toString().toLowerCase().includes(filtro.toLowerCase()) ||
       e.estado.toLowerCase().includes(filtro.toLowerCase()) ||
-      e.fecha.toLowerCase().includes(filtro.toLowerCase()) ;
+      e.fecha.toLowerCase().includes(filtro.toLowerCase());
   });
 
   function prepararModificacion(id) {
-    const estado = estados.find(estado => estado.id === id);
+    const estado = estados.find(estado => estado.idEstado === id);
     setEstadoAModificar(estado);
     setNuevoEstado(estado);
   }
 
   function aplicarModificacion() {
     if (estadoAModificar && nuevoEstado.estado) {
-      const nuevosEstados = estados.map(estado => estado.id === estadoAModificar.id ? nuevoEstado : estado);
+      const nuevosEstados = estados.map(estado => estado.idEstado === estadoAModificar.idEstado ? nuevoEstado : estado);
       setEstados(nuevosEstados);
       setEstadoAModificar(null);
-      setNuevoEstado({ id: '', estado: '', fecha: '' });
+      setNuevoEstado({ idEstado: '', estado: '', fecha: '' });
     }
   }
 
   function eliminarEstado(id) {
-    const nuevosEstados = estados.filter(estado => estado.id !== id);
+    const nuevosEstados = estados.filter(estado => estado.idEstado !== id);
     setEstados(nuevosEstados);
   }
 
@@ -68,24 +73,20 @@ function EstadoComponent() {
   return (
     <div>
       <Navbar />
-      <form onSubmit={(e) => { e.preventDefault(); estadoAModificar ? aplicarModificacion() : agregarEstado(); }}>
-       <label>
-        Estado
-        <input type="text" placeholder="Estado" value={nuevoEstado.estado} onChange={(e) => setNuevoEstado({ ...nuevoEstado, estado: e.target.value })} />
-      </label>
+      <form onSubmit={(e) => { e.preventDefault(); estadoAModificar ? aplicarModificacion() : agregarEstado(e); }}>
         <label>
-        Fecha:<br/>
-        <input
-          type="date"
-          value={nuevoEstado.fecha}
-          onChange={(e) => setNuevoEstado({ ...nuevoEstado, fecha: e.target.value })}
+          Estado
+          <input type="text" placeholder="Estado" value={nuevoEstado.estado} onChange={(e) => setNuevoEstado({ ...nuevoEstado, estado: e.target.value })} />
+        </label>
+        <label>
+          Fecha:<br/>
+          <input
+            type="date"
+            value={nuevoEstado.fecha}
+            onChange={(e) => setNuevoEstado({ ...nuevoEstado, fecha: e.target.value })}
           />
-          </label>
-
-          <button type="button" onClick={agregarEstado} className="btn btn-primary">Agregar Estado</button>
-
-
-
+        </label>
+        <button type="submit" className="btn btn-primary">Agregar Estado</button>
       </form>
       <table>
         <thead>
@@ -96,21 +97,17 @@ function EstadoComponent() {
           </tr>
         </thead>
         <tbody>
-  {EstadoFiltradas.map(e => {
-    
-
-    return (
-      <tr key={e.idEstado}>
-        <td>{e.estado}</td>
-        <td>{e.fecha}</td>
-        <td>
-          <Button variant="warning" onClick={() => aplicarModificacion(e)}>Editar Estado</Button>
-          <Button variant="danger" onClick={() => eliminarEstado(e.id)}>Eliminar estado</Button>
-        </td>
-      </tr>
-    );
-  })}
-</tbody>
+          {EstadoFiltradas.map(e => (
+            <tr key={e.idEstado}>
+              <td>{e.estado}</td>
+              <td>{e.fecha}</td>
+              <td>
+                <Button variant="warning" onClick={() => prepararModificacion(e.idEstado)}>Editar Estado</Button>
+                <Button variant="danger" onClick={() => eliminarEstado(e.idEstado)}>Eliminar estado</Button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
       </table>
     </div>
   );

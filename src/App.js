@@ -10,6 +10,7 @@ import Mantencion from "./Axios/AgregarMantencion"
 import AgendarCitas from "./Axios/CrearCita"
 import AgregarMecanico from './Axios/Agregar_Mecanico';
 import Editar_mecanico from "./Axios/Editar_mecanico"
+import EditarEstado from './Axios/EditarEstado';
 
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
         <Route path='/ModificarVehiculos' element={<ModificarVehiculos/>}/> 
         <Route path='/AgregarMecanico' element={<AgregarMecanico/>}/> 
         <Route path='/Editar_Mecanico' element={<Editar_mecanico/>}/> 
+        <Route path='/EditarEstado' element={<EditarEstado/>}/> 
       </Routes>     
       </BrowserRouter>
     </>
