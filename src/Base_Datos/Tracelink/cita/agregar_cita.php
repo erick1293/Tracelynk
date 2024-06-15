@@ -4,7 +4,7 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+header("Access-Control-Allow-Methods: POST, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type");
 header("Content-Type: application/json");
 
@@ -24,25 +24,26 @@ if ($conn->connect_error) {
 
 // Obtener los datos enviados desde el cliente
 $data = json_decode(file_get_contents("php://input"), true);
-print_r($data); // Verificar los datos recibidos
-
 
 // Validar los datos
-if (!isset($data['nombre_mecanico']) || !isset($data['fecha']) || !isset($data['hora'])|| !isset($data['descripcion'])) {
+if (!isset($data['nombre_mecanico']) || !isset($data['mecanico_id']) || !isset($data['fecha']) || !isset($data['hora']) || !isset($data['descripcion'])) {
     die(json_encode(["success" => false, "error" => "Datos incompletos"]));
 }
 
 $nombre_mecanico = $data['nombre_mecanico'];
+$mecanico_id = $data['mecanico_id'];
 $fecha = $data['fecha'];
 $hora = $data['hora'];
-$descripcion= $data['descripcion'];
+$descripcion = $data['descripcion'];
 
 // Consulta SQL para insertar una nueva cita
-$sql = "INSERT INTO citas (nombre_mecanico, fecha, hora, descripcion) VALUES ('$nombre_mecanico', '$fecha', '$hora', '$descripcion')";
+$sql = "INSERT INTO citas (nombre_mecanico, mecanico_id, fecha, hora, descripcion) VALUES ('$nombre_mecanico', $mecanico_id, '$fecha', '$hora', '$descripcion')";
 
 // Ejecutar la consulta SQL y manejar errores
 if ($conn->query($sql) === TRUE) {
-    echo json_encode(["success" => true, "message" => "Cita agregada exitosamente"]);
+    // Obtener el ID de la última inserción
+    $last_id = $conn->insert_id;
+    echo json_encode(["success" => true, "id" => $last_id, "message" => "Cita agregada exitosamente"]);
 } else {
     echo json_encode(["success" => false, "error" => "Error: " . $conn->error]);
 }
@@ -50,4 +51,3 @@ if ($conn->query($sql) === TRUE) {
 // Cerrar la conexión
 $conn->close();
 ?>
-

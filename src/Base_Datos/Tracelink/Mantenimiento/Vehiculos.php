@@ -13,7 +13,7 @@ if ($mysqli->connect_errno) {
     exit();
 }
 
-$query = "SELECT id, marca, modelo, anio, transmision, patente, kilometrajeinicial, kilometrajeactual, estado FROM vehiculo";
+$query = "SELECT id, marca, modelo, anio, transmision, patente, kilometrajeinicial, kilometrajeactual FROM vehiculo";
 
 $result = $mysqli->query($query);
 

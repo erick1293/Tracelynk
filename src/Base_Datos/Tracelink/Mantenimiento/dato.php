@@ -12,7 +12,7 @@ if ($mysqli->connect_errno) {
     exit();
 }
 
-$query = "SELECT m.idMantencion, m.fecha, m.descripcion, c.id AS cita_id, c.nombre_mecanico, c.hora, c.fecha AS cita_fecha, v.id AS vehiculo_id, v.marca, v.modelo, v.anio, v.transmision, v.patente, v.kilometrajeinicial, v.kilometrajeactual, v.estado FROM mantenciones m JOIN citas c ON m.citas_idcitas = c.id JOIN vehiculo v ON m.vehiculos_id = v.id";
+$query = "SELECT m.idMantencion, m.fecha, m.descripcion, c.id AS cita_id, c.nombre_mecanico, c.hora, c.fecha AS cita_fecha, v.id AS vehiculo_id, v.marca, v.modelo, v.anio, v.transmision, v.patente, v.kilometrajeinicial, v.kilometrajeactual  FROM mantenciones m JOIN citas c ON m.citas_idcitas = c.id JOIN vehiculo v ON m.vehiculos_id = v.id";
 
 $result = $mysqli->query($query);
 

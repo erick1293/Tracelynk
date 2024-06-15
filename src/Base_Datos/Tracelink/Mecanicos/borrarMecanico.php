@@ -1,5 +1,4 @@
 <?php
-// Habilitar la visualización de errores de PHP
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
@@ -16,27 +15,25 @@ $dbname = "vehiculos";
 
 // Crear conexión
 $conn = new mysqli($servername, $username, $password, $dbname);
-
-// Verificar conexión
 if ($conn->connect_error) {
     die(json_encode(["success" => false, "error" => "Error de conexión: " . $conn->connect_error]));
 }
+$data = json_decode(file_get_contents('php://input'), true);
+print_r($data); // Verificar los datos recibidos
 
-// Consulta SQL para obtener los datos de la tabla cita
-$sql = "SELECT id, nombre_mecanico, fecha, hora, descripcion FROM citas";
-$result = $conn->query($sql);
-
-// Verificar si hay resultados
-if ($result->num_rows > 0) {
-    $citas = [];
-    while($row = $result->fetch_assoc()) {
-        $citas[] = $row;
-    }
-    echo json_encode($citas);
-} else {
-    echo json_encode(["message" => "No se encontraron datos"]);
+if (!isset($data['idMecanico'])) {
+    die(json_encode(["success" => false, "error" => "Datos incompletos"]));
 }
 
-// Cerrar la conexión
+$idMecanico = $data['idMecanico'];
+
+$sql = "DELETE FROM mecanicos WHERE idMecanico='$idMecanico'";
+
+if ($conn->query($sql) === TRUE) {
+    echo json_encode(['mensaje' => 'Mecánico borrado con éxito']);
+} else {
+    echo json_encode(['mensaje' => 'Error al borrar el mecánico: ' . $conn->error]);
+}
+
 $conn->close();
 ?>

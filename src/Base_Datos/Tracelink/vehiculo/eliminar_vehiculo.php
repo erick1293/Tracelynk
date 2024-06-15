@@ -57,13 +57,17 @@ if ($conn->connect_error) {
 }
 
 // Consulta para obtener los vehículos
-$sql = "SELECT id, marca, modelo, anio, transmision, patente FROM vehiculo";
+$sql = "SELECT * FROM vehiculo";
 $result = $conn->query($sql);
 
 $vehiculos = [];
 
 if ($result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
+        // Verificar si el estado es undefined y reemplazarlo con "mantención"
+        if (!isset($row['idEstado']) || $row['idEstado'] === null) {
+            $row['idEstado'] = 'Mantencion';
+        }
         $vehiculos[] = $row;
     }
     echo json_encode($vehiculos);

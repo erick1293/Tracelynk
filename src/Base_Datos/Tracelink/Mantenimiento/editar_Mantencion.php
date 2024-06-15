@@ -34,24 +34,22 @@ $data = json_decode(file_get_contents('php://input'), true);
 // Log para verificar los datos recibidos
 error_log(print_r($data, true));
 
-if (!empty($data['id']) && !empty($data['marca']) && !empty($data['modelo']) && !empty($data['anio']) && !empty($data['transmision']) && !empty($data['patente']) && !empty($data['kilometrajeinicial']) && !empty($data['kilometrajeactual'])) {
-    $id = $data['id'];
-    $marca = $data['marca'];
-    $modelo = $data['modelo'];
-    $anio = $data['anio'];
-    $transmision = $data['transmision'];
-    $patente = $data['patente'];
-    $kilometrajeinicial = $data['kilometrajeinicial'];
-    $kilometrajeactual = $data['kilometrajeactual'];
+if (!empty($data['idMantencion']) && !empty($data['idCita']) && !empty($data['idVehiculo']) && !empty($data['fecha']) && !empty($data['descripcion'])) {
+    $idMantencion = $data['idMantencion'];
+    $citas_idcitas = $data['idCita'];
+    $vehiculos_id = $data['idVehiculo'];
+    $fecha = $data['fecha'];
+    $descripcion = $data['descripcion'];
 
-    // Consulta para actualizar el vehículo usando consultas preparadas
-    $stmt = $conn->prepare("UPDATE vehiculo SET marca=?, modelo=?, anio=?, transmision=?, patente=?, kilometrajeinicial=?, kilometrajeactual=? WHERE id=?");
-    $stmt->bind_param("sssssssi", $marca, $modelo, $anio, $transmision, $patente, $kilometrajeinicial, $kilometrajeactual, $id);
+    // Consulta para actualizar la mantención usando consultas preparadas
+    $stmt = $conn->prepare("UPDATE mantenciones SET citas_idcitas=?, vehiculos_id=?, fecha=?, descripcion=? WHERE idMantencion=?");
+    $stmt->bind_param("iissi", $citas_idcitas, $vehiculos_id, $fecha, $descripcion, $idMantencion);
+    
 
     if ($stmt->execute()) {
-        echo json_encode(["message" => "Vehículo actualizado correctamente"]);
+        echo json_encode(["message" => "Mantención actualizada correctamente", "data" => $data]); // Agrega esta línea para enviar la respuesta al cliente
     } else {
-        echo json_encode(["error" => "Error al actualizar vehículo: " . $stmt->error]);
+        echo json_encode(["error" => "Error al actualizar mantención: " . $stmt->error]);
     }
 
     $stmt->close();

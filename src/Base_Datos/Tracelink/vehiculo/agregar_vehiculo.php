@@ -33,14 +33,27 @@ if (!empty($data['marca']) && !empty($data['modelo']) && !empty($data['anio']) &
     $kilometrajeinicial = $data['kilometrajeinicial'];
     $kilometrajeactual = $data['kilometrajeactual'];
 
-    // Consulta para insertar el vehículo
-    $stmt = $conn->prepare("INSERT INTO vehiculo (marca, modelo, anio, transmision, patente, kilometrajeinicial, kilometrajeactual) VALUES (?, ?, ?, ?, ?, ?, ?)");
+    // Verificar si la patente ya está en uso
+    $patenteQuery = "SELECT COUNT(*) AS count FROM vehiculo WHERE patente = ?";
+    $stmt = $conn->prepare($patenteQuery);
+    $stmt->bind_param("s", $patente);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $row = $result->fetch_assoc();
+    $count = $row['count'];
+
+    if ($count > 0) {
+        echo json_encode(["success" => false, "error" => "La patente ya está en uso, por favor utiliza otra patente."]);
+        exit;
+    }
+
+    // Si la patente no está en uso, proceder con la inserción del vehículo en la base de datos
+    $insertQuery = "INSERT INTO vehiculo (marca, modelo, anio, transmision, patente, kilometrajeinicial, kilometrajeactual) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    $stmt = $conn->prepare($insertQuery);
     $stmt->bind_param("ssissii", $marca, $modelo, $anio, $transmision, $patente, $kilometrajeinicial, $kilometrajeactual);
-    
 
     if ($stmt->execute()) {
-       // echo json_encode(["success" => true, "message" => "Vehículo agregado correctamente."]);
-       echo json_encode(["success" => true, "message" => "$transmision."]);
+        echo json_encode(["success" => true, "message" => "Vehículo agregado correctamente."]);
     } else {
         echo json_encode(["success" => false, "error" => $stmt->error]);
     }
