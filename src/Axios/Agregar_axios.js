@@ -4,32 +4,40 @@ import axios from './axiosConfig';
 import Navbar from '../components/Navbar';
 import '../stylesheets/AgregarVehiculo.css';
 
+// Componente para agregar un vehículo
 const AgregarVehiculo = ({ onAgregar }) => {
-    const [show, setShow] = useState(false);
-    const [marca, setMarca] = useState('');
-    const [modelo, setModelo] = useState('');
-    const [anio, setAnio] = useState('');
-    const [transmision, setTransmision] = useState('');
-    const [patente, setPatente] = useState('');
-    const [kilometrajeinicial, setKilometrajeinicial] = useState('');
-    const [kilometrajeactual, setKilometrajeactual] = useState('');
-    const [error, setError] = useState(null);
-    const [marcas, setMarcas] = useState([]);
-    const [modelos, setModelos] = useState([]);
+    // Definición de estados utilizando useState
+    const [show, setShow] = useState(false); // Estado para controlar la visibilidad del modal
+    const [marca, setMarca] = useState(''); // Estado para la marca del vehículo
+    const [modelo, setModelo] = useState(''); // Estado para el modelo del vehículo
+    const [anio, setAnio] = useState(''); // Estado para el año del vehículo
+    const [transmision, setTransmision] = useState(''); // Estado para la transmisión del vehículo
+    const [patente, setPatente] = useState(''); // Estado para la patente del vehículo
+    const [kilometrajeinicial, setKilometrajeinicial] = useState(''); // Estado para el kilometraje inicial del vehículo
+    const [kilometrajeactual, setKilometrajeactual] = useState(''); // Estado para el kilometraje actual del vehículo
+    const [error, setError] = useState(null); // Estado para manejar errores
+    const [marcas, setMarcas] = useState([]); // Estado para almacenar las marcas obtenidas de la API
+    const [modelos, setModelos] = useState([]); // Estado para almacenar los modelos obtenidos de la API
 
+    // Función para cerrar el modal
     const handleClose = () => setShow(false);
+
+    // Función para mostrar el modal
     const handleShow = () => setShow(true);
 
+    // useEffect para obtener las marcas al montar el componente
     useEffect(() => {
         fetchMarcas();
     }, []);
 
+    // useEffect para obtener los modelos cada vez que se cambia la marca
     useEffect(() => {
         if (marca) {
             fetchModelos(marca);
         }
     }, [marca]);
 
+    // Función para obtener las marcas desde la API
     const fetchMarcas = async () => {
         try {
             const response = await axios.get('http://localhost/Tracelink/vehiculo/obtener_marcas.php');
@@ -39,6 +47,7 @@ const AgregarVehiculo = ({ onAgregar }) => {
         }
     };
 
+    // Función para obtener los modelos según la marca seleccionada desde la API
     const fetchModelos = async (marcaId) => {
         try {
             const response = await axios.get(`http://localhost/Tracelink/vehiculo/obtener_modelos.php?marca=${marcaId}`);
@@ -48,14 +57,17 @@ const AgregarVehiculo = ({ onAgregar }) => {
         }
     };
 
+    // Función para manejar el envío del formulario
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        // Verificar que todos los campos estén llenos
         if (!marca || !modelo || !anio || !transmision || !patente || !kilometrajeinicial || !kilometrajeactual) {
             setError('Todos los campos son obligatorios.');
             return;
         }
 
+        // Log de los datos que se enviarán al servidor
         console.log('Datos que se enviarán al servidor:', {
             marca,
             modelo,
@@ -66,6 +78,7 @@ const AgregarVehiculo = ({ onAgregar }) => {
             kilometrajeactual
         });
 
+        // Envío de datos al servidor
         try {
             const response = await axios.post('http://localhost/Tracelink/vehiculo/agregar_vehiculo.php', {
                 marca,
@@ -77,13 +90,16 @@ const AgregarVehiculo = ({ onAgregar }) => {
                 kilometrajeactual
             });
 
+            // Log de la respuesta del servidor
             console.log('Respuesta del servidor:', response.data);
 
+            // Manejo de la respuesta del servidor
             if (response.data && response.data.success) {
                 setError(response.data.error);
                 if (typeof onAgregar === 'function') {
                     onAgregar(response.data);
                 }
+                // Resetear los campos del formulario
                 setMarca('');
                 setModelo('');
                 setAnio('');

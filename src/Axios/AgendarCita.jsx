@@ -5,17 +5,20 @@ import Navbar from '../components/Navbar';
 import { Autocomplete, TextField } from '@mui/material';
 import "../stylesheets/AgendarCita.css"
 
+// Componente para agregar una nueva cita
 const AgregarCita = () => {
+    // Definición de estados utilizando useState
     const [formData, setFormData] = useState({
-        nombre_mecanico: '',
-        mecanico_id: '', // Nuevo campo para almacenar el ID del mecánico
-        fecha: '',
-        hora: '',
-        descripcion: ''
+        nombre_mecanico: '', // Estado para el nombre del mecánico seleccionado
+        mecanico_id: '', // Estado para almacenar el ID del mecánico
+        fecha: '', // Estado para la fecha de la cita
+        hora: '', // Estado para la hora de la cita
+        descripcion: '' // Estado para la descripción de la cita
     });
-    const [citas, setCitas] = useState([]);
-    const [mecanicos, setMecanicos] = useState([]);
+    const [citas, setCitas] = useState([]); // Estado para almacenar las citas existentes
+    const [mecanicos, setMecanicos] = useState([]); // Estado para almacenar la lista de mecánicos
 
+    // useEffect para obtener las citas y mecánicos al montar el componente
     useEffect(() => {
         // Llamada inicial para obtener las citas existentes
         axios.get('http://localhost/Tracelink/cita/obtener_citas.php')
@@ -36,12 +39,15 @@ const AgregarCita = () => {
             });
     }, []);
 
+    // Función para manejar el cambio en los campos del formulario
     const handleChange = (e) => {
         setFormData({
             ...formData,
             [e.target.name]: e.target.value
         });
     };
+
+    // Función para manejar el cambio en el campo de mecánico utilizando Autocomplete
     const handleMecanicoChange = (event, newValue) => {
         if (newValue) {
             console.log("Mecánico seleccionado:", newValue);
@@ -59,14 +65,13 @@ const AgregarCita = () => {
             });
         }
     };
-    
-    
 
+    // Función para manejar el envío del formulario
     const handleSubmit = (e) => {
         e.preventDefault();
     
         // Validación de datos antes de enviar la solicitud
-        console.log("Datos a enviar:", formData); // Agregar este console log
+        console.log("Datos a enviar:", formData);
     
         if (!formData.nombre_mecanico || !formData.mecanico_id || !formData.fecha || !formData.hora || !formData.descripcion) {
             alert('Por favor complete todos los campos');
@@ -89,8 +94,7 @@ const AgregarCita = () => {
                 console.error("Hubo un error al agregar la cita: ", error);
             });
     };
-    
-    
+
     return (
         <div>
             <Navbar />

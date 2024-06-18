@@ -3,19 +3,23 @@ import { Table, Button, Modal, Form } from 'react-bootstrap';
 import Navbar from '../components/Navbar';
 import axios from './axiosConfig';
 
+// Componente para agregar, editar y eliminar mecánicos
 function AgregarMecanico() {
-  const [mecanicos, setMecanicos] = useState([]);
-  const [formulario, setFormulario] = useState({ idMecanico: '', nombre: '', apellido: '', rut: '', especialidad: '' });
-  const [mecanicoSeleccionado, setMecanicoSeleccionado] = useState(null);
-  const [showModal, setShowModal] = useState(false);
-  const [filtro, setFiltro] = useState('');
+  // Definición de estados utilizando useState
+  const [mecanicos, setMecanicos] = useState([]); // Estado para almacenar la lista de mecánicos
+  const [formulario, setFormulario] = useState({ idMecanico: '', nombre: '', apellido: '', rut: '', especialidad: '' }); // Estado para el formulario de agregar/editar mecánico
+  const [mecanicoSeleccionado, setMecanicoSeleccionado] = useState(null); // Estado para el mecánico seleccionado para editar
+  const [showModal, setShowModal] = useState(false); // Estado para controlar la visibilidad del modal
+  const [filtro, setFiltro] = useState(''); // Estado para el filtro de búsqueda
 
+  // useEffect para obtener la lista de mecánicos al montar el componente
   useEffect(() => {
     axios.get('http://localhost/Tracelink/Mecanicos/obtenerMecanicos.php')
       .then(response => setMecanicos(response.data))
       .catch(error => console.error('Error al obtener los mecánicos:', error));
   }, []);
 
+  // Filtrar mecánicos según el texto del filtro
   const mecanicosFiltrados = mecanicos.filter(m => {
     return m.nombre.toLowerCase().includes(filtro.toLowerCase()) ||
       m.apellido.toLowerCase().includes(filtro.toLowerCase()) ||
@@ -23,10 +27,12 @@ function AgregarMecanico() {
       m.especialidad.toLowerCase().includes(filtro.toLowerCase());
   });
 
+  // Manejar cambios en los campos del formulario
   const manejarCambio = (e) => {
     setFormulario({ ...formulario, [e.target.name]: e.target.value });
   };
 
+  // Manejar el envío del formulario para agregar un mecánico
   const manejarAgregar = (e) => {
     e.preventDefault();
 
@@ -44,11 +50,13 @@ function AgregarMecanico() {
       .catch(error => console.error('Error al agregar el mecánico:', error));
   };
 
+  // Manejar la edición de un mecánico
   const manejarEditar = (mecanico) => {
     setMecanicoSeleccionado(mecanico);
     setShowModal(true);
   };
 
+  // Manejar la guardado de la edición de un mecánico
   const manejarGuardarEdicion = () => {
     axios.post('http://localhost/Tracelink/Mecanicos/editarMecanico.php', mecanicoSeleccionado)
       .then(response => {
@@ -59,6 +67,7 @@ function AgregarMecanico() {
       .catch(error => console.error('Error al editar el mecánico:', error));
   };
 
+  // Manejar la eliminación de un mecánico
   const manejarBorrar = (idMecanico) => {
     axios.post('http://localhost/Tracelink/Mecanicos/borrarMecanico.php', { idMecanico })
       .then(response => {
@@ -68,6 +77,7 @@ function AgregarMecanico() {
       .catch(error => console.error('Error al borrar el mecánico:', error));
   };
 
+  // Manejar cambios en los campos del modal de edición
   const manejarCambioModal = (e) => {
     setMecanicoSeleccionado({ ...mecanicoSeleccionado, [e.target.name]: e.target.value });
   };
