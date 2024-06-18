@@ -13,6 +13,7 @@ function Navbar() {
             <a href="/AgendarCita">Agregar</a>
             <a href="/AgendarCitas">Mostrar Citas</a>
             <a href="/AgendarMantencion">Mantencion</a>
+            <a href="/test">Test</a>
           </div></li>
         <li><a href="/AgregarObjeto">Agregar Objeto</a></li>
          {/* Dropdown Vehículo */}

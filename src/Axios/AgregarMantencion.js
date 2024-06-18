@@ -155,17 +155,19 @@ function AgregarMantencion() {
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setNuevoMantenimiento({ ...nuevoMantenimiento, [name]: value });
-
+    
         if (name === 'fecha') {
-            cargarCitasDisponibles(nuevoMantenimiento.idMecanico, value);
+            cargarCitasDisponibles(nuevoMantenimiento.idCita, value); // Aquí estaba `nuevoMantenimiento.idMecanico`
         }
     };
 
+
+    
     const handleSubmit = async (e) => {
         e.preventDefault();
         const fechaDisponible = verificarFechaDisponible(nuevoMantenimiento.fecha);
-        const mecanicoDisponible = verificarMecanicoDisponible(nuevoMantenimiento.idMecanico, nuevoMantenimiento.fecha);
-
+        const mecanicoDisponible = verificarMecanicoDisponible(nuevoMantenimiento.idCita, nuevoMantenimiento.fecha);
+    
         if (fechaDisponible && mecanicoDisponible) {
             try {
                 await axios.post('http://localhost/Tracelink/Mantenimiento/AgregarMantencion.php', nuevoMantenimiento);
@@ -178,6 +180,8 @@ function AgregarMantencion() {
             alert('La fecha y/o el mecánico seleccionado no están disponibles. Por favor, elija otra fecha/mecánico.');
         }
     };
+    
+    
 
     const limpiarFormulario = () => {
         setNuevoMantenimiento({
@@ -199,42 +203,29 @@ function AgregarMantencion() {
         setMantencionSeleccionada(null);
     };
 
-    const verificarMecanicoDisponible = (idMecanico, fecha) => {
-        const citaExistente = citas.find(cita => cita.idMecanico === idMecanico && cita.fecha === fecha);
-        return !citaExistente;
+    const verificarMecanicoDisponible = (idCita, fecha) => {
+        const citaExistente = citas.find(cita => cita.id === idCita && cita.fecha === fecha);
+        return !citaExistente; // Devuelve true si el mecánico está disponible en esa fecha, false si no lo está
     };
+    
+    
 
     const verificarFechaDisponible = (fecha) => {
         const citaExistente = citas.find(cita => cita.fecha === fecha);
-        return !citaExistente;
+        return !citaExistente; // Devuelve true si la fecha está disponible, false si no lo está
     };
 
-    const handleMecanicoChange = (event, newValue) => {
-        if (newValue) {
-            setNuevoMantenimiento(prevState => ({
-                ...prevState,
-                idMecanico: newValue.id,
-                nombreMecanico: `${newValue.nombre} ${newValue.apellido}`
-            }));
-            cargarCitasDisponibles(newValue.id, nuevoMantenimiento.fecha);
-        } else {
-            setNuevoMantenimiento(prevState => ({
-                ...prevState,
-                idMecanico: '',
-                nombreMecanico: ''
-            }));
-            setCitasDisponibles([]);
-        }
-    };
+   
 
-    const cargarCitasDisponibles = async (idMecanico, fecha) => {
+    const cargarCitasDisponibles = async (idCita, fecha) => {
         try {
-            const response = await axios.get(`http://localhost/Tracelink/Mantenimiento/obtener_citas.php?idMecanico=${idMecanico}&fecha=${fecha}`);
+            const response = await axios.get(`http://localhost/Tracelink/Mantenimiento/obtener_citas.php?idCita=${idCita}&fecha=${fecha}`);
             setCitasDisponibles(response.data);
         } catch (error) {
             console.error('Error al obtener las citas disponibles:', error);
         }
     };
+    
 
     return (
         <div>
@@ -271,17 +262,6 @@ function AgregarMantencion() {
                 <Form.Group controlId="descripcion">
                     <Form.Label>Descripción</Form.Label>
                     <Form.Control as="textarea" name="descripcion" value={nuevoMantenimiento.descripcion} onChange={handleInputChange} />
-                </Form.Group>
-
-                <Form.Group controlId="idMecanico">
-                    <Form.Label>Mecánico</Form.Label>
-                    <Autocomplete
-                        options={mecanicos}
-                        getOptionLabel={(option) => `${option.nombre} ${option.apellido}`}
-                        renderInput={(params) => <TextField {...params} label="Seleccione un mecánico" variant="outlined" />}
-                        value={nuevoMantenimiento.idMecanico ? mecanicos.find(m => m.id === nuevoMantenimiento.idMecanico) : null}
-                        onChange={handleMecanicoChange}
-                    />
                 </Form.Group>
 
                 <Button variant="primary" type="submit">

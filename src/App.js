@@ -11,7 +11,7 @@ import AgendarCitas from "./Axios/CrearCita"
 import AgregarMecanico from './Axios/Agregar_Mecanico';
 import Editar_mecanico from "./Axios/Editar_mecanico"
 import EditarEstado from './Axios/EditarEstado';
-
+import TestFiltrado from './Axios/Filtrados';
 
 function App() {
   return (
@@ -29,6 +29,7 @@ function App() {
         <Route path='/AgregarMecanico' element={<AgregarMecanico/>}/> 
         <Route path='/Editar_Mecanico' element={<Editar_mecanico/>}/> 
         <Route path='/EditarEstado' element={<EditarEstado/>}/> 
+        <Route path='/test' element={<TestFiltrado/>}/>
       </Routes>     
       </BrowserRouter>
     </>
