@@ -40,10 +40,13 @@ function AgregarMantencion() {
     const cargarDatosMantencion = async () => {
         try {
             const response = await axios.get('http://localhost/Tracelink/Mantenimiento/dato.php');
+            if (response.data.error) {
+                throw new Error(response.data.error);
+            }
             setDatosMantencion(response.data.mantenciones);
         } catch (error) {
             console.error('Error al obtener los datos de mantención:', error);
-            setError('Error al obtener los datos de mantención.');
+            setError('Error al obtener los datos de mantención: ' + error.message);
         }
     };
 
@@ -271,32 +274,32 @@ function AgregarMantencion() {
 
             <h2>Lista de Mantenciones</h2>
             <Table striped bordered hover>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Fecha</th>
-                        <th>Nombre Mecánico</th>
-                        <th>Descripción</th>
-                        <th>Patente vehiculo</th>    
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {datosMantencion.map((mantencion) => (
-                        <tr key={mantencion.idMantencion}>
-                            <td>{mantencion.idMantencion}</td>
-                            <td>{mantencion.fecha}</td>
-                            <td>{mantencion.nombre}</td>
-                            <td>{mantencion.descripcion}</td>
-                            <td>{mantencion.patente}</td>
-                            <td>
-                                <Button variant="warning" onClick={() => handleModificar(mantencion.idMantencion)}>Modificar</Button>
-                                <Button variant="danger" onClick={() => handleDelete(mantencion.idMantencion)}>Eliminar</Button>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </Table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Fecha</th>
+            <th>Nombre Mecánico</th>
+            <th>Descripción</th>
+            <th>Patente vehiculo</th>    
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {datosMantencion.map((mantencion) => (
+            <tr key={mantencion.idMantencion}>
+                <td>{mantencion.idMantencion}</td>
+                <td>{mantencion.fecha}</td>
+                <td>{`${mantencion.mecanico_nombre} ${mantencion.mecanico_apellido}`}</td>
+                <td>{mantencion.descripcion}</td>
+                <td>{mantencion.patente}</td>
+                <td>
+                    <Button variant="warning" onClick={() => handleModificar(mantencion.idMantencion)}>Modificar</Button>
+                    <Button variant="danger" onClick={() => handleDelete(mantencion.idMantencion)}>Eliminar</Button>
+                </td>
+            </tr>
+        ))}
+    </tbody>
+</Table>
 
             <Modal show={showModal} onHide={handleCloseModal}>
                 <Modal.Header closeButton>

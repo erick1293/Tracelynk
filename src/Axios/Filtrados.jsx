@@ -6,7 +6,7 @@ import Navbar from '../components/Navbar';
 function FiltrarPorFecha() {
   const [fromDate, setFromDate] = useState('');
   const [toDate, setToDate] = useState('');
-  const [datosFiltrados, setDatosFiltrados] = useState([]); // Inicializado como array vacío []
+  const [datosFiltrados, setDatosFiltrados] = useState([]);
   const [error, setError] = useState(null);
 
   const handleSubmit = async (e) => {
@@ -31,7 +31,6 @@ function FiltrarPorFecha() {
       setError('Error al obtener los datos filtrados.');
     }
   };
-  
 
   return (
     <div>
@@ -77,7 +76,7 @@ function FiltrarPorFecha() {
             <tr key={mantencion.idMantencion}>
               <td>{mantencion.idMantencion}</td>
               <td>{mantencion.fecha}</td>
-              <td>{mantencion.nombre_mecanico}</td>
+              <td>{`${mantencion.mecanico_nombre} ${mantencion.mecanico_apellido}`}</td>
               <td>{mantencion.descripcion}</td>
               <td>{mantencion.patente}</td>
             </tr>
