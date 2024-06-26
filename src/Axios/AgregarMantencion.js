@@ -239,7 +239,7 @@ function AgregarMantencion() {
                     <Form.Control as="select" value={nuevoMantenimiento.idCita} onChange={handleCitaChange}>
                         <option value="">Seleccione una cita</option>
                         {citas.map(cita => (
-                            <option key={cita.id} value={cita.id}>{cita.nombre_mecanico} {cita.fecha} { cita.descripcion} </option>
+                            <option key={cita.id} value={cita.id}> {cita.fecha} { cita.descripcion} </option>
                         ))}
                     </Form.Control>
                 </Form.Group>
@@ -286,7 +286,7 @@ function AgregarMantencion() {
                         <tr key={mantencion.idMantencion}>
                             <td>{mantencion.idMantencion}</td>
                             <td>{mantencion.fecha}</td>
-                            <td>{mantencion.nombre_mecanico}</td>
+                            <td>{mantencion.nombre}</td>
                             <td>{mantencion.descripcion}</td>
                             <td>{mantencion.patente}</td>
                             <td>
@@ -309,7 +309,7 @@ function AgregarMantencion() {
                             <Form.Control as="select" value={editarMantenimiento.idCita} onChange={(e) => setEditarMantenimiento({ ...editarMantenimiento, idCita: e.target.value })}>
                                 <option value="">Seleccione una cita</option>
                                 {citas.map(cita => (
-                                    <option key={cita.id} value={cita.id}>{cita.nombre_mecanico} {cita.fecha} { cita.descripcion}  </option>
+                                    <option key={cita.id} value={cita.id}>{cita.nombre} {cita.fecha} { cita.descripcion}  </option>
                                 ))}
                             </Form.Control>
                         </Form.Group>
