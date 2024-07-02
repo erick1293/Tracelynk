@@ -15,7 +15,7 @@ L.Icon.Default.mergeOptions({
 const Mapa = () => {
     
     const position = [-27.360535800413754, -70.3350422675603]; 
-
+//ubicacion ponerlo en la db y tratar de recuperarlo aca
     // Definir coordenadas del polígono
     const polygonCoordinates =
     
@@ -24,7 +24,7 @@ const Mapa = () => {
         [-27.380347504022765, -70.3461700066091],
         [ -27.42293152950013, -70.29230581781657 ],
          [-27.392833963748277,  -70.26569830453009], ];
-
+//
     return (
         <MapContainer center={position} zoom={14} style={{ height: "600%" ,width: "250%" }}>
             <TileLayer

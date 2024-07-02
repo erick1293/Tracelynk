@@ -1,26 +1,49 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import { Table, Form, Button } from 'react-bootstrap';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios'; 
+import { Form, Button, Table } from 'react-bootstrap';
 import Navbar from '../components/Navbar';
+import { Autocomplete, TextField } from '@mui/material';
+import "../stylesheets/AgendarCita.css"
 
 function FiltrarPorFecha() {
   const [fromDate, setFromDate] = useState('');
   const [toDate, setToDate] = useState('');
+  const [mecanicos, setMecanicos] = useState([]);
+  const [selectedMechanic, setSelectedMechanic] = useState(null);
   const [datosFiltrados, setDatosFiltrados] = useState([]);
   const [error, setError] = useState(null);
 
+  useEffect(() => {
+    // Llamada inicial para obtener la lista de mecánicos
+    axios.get('http://localhost/Tracelink/mecanicos/obtenerMecanicos.php')
+      .then(response => {
+        setMecanicos(response.data);
+      })
+      .catch(error => {
+        console.error("Hubo un error al obtener los mecánicos: ", error);
+      });
+  }, []);
+
+  const handleMecanicoChange = (event, newValue) => {
+    setSelectedMechanic(newValue); // Actualizar el mecánico seleccionado
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('fromDate:', fromDate);
-    console.log('toDate:', toDate);
     try {
+      let params = {
+        from_date: fromDate,
+        to_date: toDate,
+      };
+  
+      if (selectedMechanic) {
+        params.mechanic_name = selectedMechanic.nombre; // Asegúrate de usar 'nombre' del objeto selectedMechanic
+      }
+  
       const response = await axios.get('http://localhost/Tracelink/Mantenimiento/filtrar_mantencion.php', {
-        params: {
-          from_date: fromDate,
-          to_date: toDate
-        }
+        params: params
       });
-      console.log('Response from server:', response.data);
+  
       if (Array.isArray(response.data)) {
         setDatosFiltrados(response.data);
       } else {
@@ -35,7 +58,7 @@ function FiltrarPorFecha() {
   return (
     <div>
       <Navbar />
-      <h2>Filtrar Mantenciones por Fecha</h2>
+      <h2>Filtrar Mantenciones por Fecha y Mecánico</h2>
       {error && <p>Error: {error}</p>}
 
       <Form onSubmit={handleSubmit}>
@@ -53,6 +76,16 @@ function FiltrarPorFecha() {
             type="date"
             value={toDate}
             onChange={(e) => setToDate(e.target.value)}
+          />
+        </Form.Group>
+        <Form.Group controlId="formNombreMecanico">
+          <Form.Label>Nombre del Mecánico</Form.Label>
+          <Autocomplete
+            options={mecanicos}
+            getOptionLabel={(option) => `${option.nombre} ${option.apellido}`}
+            onChange={handleMecanicoChange}
+            value={selectedMechanic}
+            renderInput={(params) => <TextField {...params} placeholder="Seleccione el nombre del mecánico" />}
           />
         </Form.Group>
         <Button variant="primary" type="submit">
