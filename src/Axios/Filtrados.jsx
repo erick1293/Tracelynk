@@ -12,6 +12,16 @@ function FiltrarPorFecha() {
   const [selectedMechanic, setSelectedMechanic] = useState(null);
   const [datosFiltrados, setDatosFiltrados] = useState([]);
   const [error, setError] = useState(null);
+  const [datosMantencion, setDatosMantencion] = useState([]);
+  const [mantencionSeleccionada, setMantencionSeleccionada] = useState(null);
+  const [editarMantenimiento, setEditarMantenimiento] = useState({
+    idCita: '',
+    idVehiculo: '',
+    fecha: '',
+    descripcion: ''
+});
+const [showModal, setShowModal] = useState(false);
+
 
   useEffect(() => {
     // Llamada inicial para obtener la lista de mecánicos
@@ -54,7 +64,51 @@ function FiltrarPorFecha() {
       setError('Error al obtener los datos filtrados.');
     }
   };
+  const handleModificar = (idMantencion) => {
+    const mantencion = datosMantencion.find(m => m.idMantencion === idMantencion);
+    if (mantencion) {
+        setMantencionSeleccionada(mantencion);
+        setEditarMantenimiento({
+            idCita: mantencion.cita_id,
+            idVehiculo: mantencion.vehiculo_id,
+            fecha: mantencion.fecha,
+            descripcion: mantencion.descripcion
+        });
+        setShowModal(true);
+    } else {
+        console.error('Mantención no encontrada con el ID:', idMantencion);
+    }
+};
+const cargarDatosMantencion = async () => {
+  try {
+      const response = await axios.get('http://localhost/Tracelink/Mantenimiento/dato.php');
+      if (response.data.error) {
+          throw new Error(response.data.error);
+      }
+      setDatosMantencion(response.data.mantenciones);
+  } catch (error) {
+      console.error('Error al obtener los datos de mantención:', error);
+      setError('Error al obtener los datos de mantención: ' + error.message);
+  }
+};
 
+const handleDelete = async (mantencionId) => {
+  try {
+      const response = await axios.post(
+          'http://localhost/Tracelink/Mantenimiento/eliminar_mantencion.php',
+          { idMantencion: mantencionId },
+          { headers: { 'Content-Type': 'application/json' } }
+      );
+      if (response.data.success) {
+          alert('Mantención eliminada correctamente');
+          cargarDatosMantencion();
+      } else {
+          alert('Error al eliminar la mantención: ' + response.data.error);
+      }
+  } catch (error) {
+      alert('Error al eliminar la mantención: ' + (error.message || 'Ocurrió un error desconocido'));
+  }
+};
   return (
     <div>
       <Navbar />
@@ -102,6 +156,7 @@ function FiltrarPorFecha() {
             <th>Nombre Mecánico</th>
             <th>Descripción</th>
             <th>Patente Vehículo</th>
+            <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
@@ -112,6 +167,10 @@ function FiltrarPorFecha() {
               <td>{`${mantencion.mecanico_nombre} ${mantencion.mecanico_apellido}`}</td>
               <td>{mantencion.descripcion}</td>
               <td>{mantencion.patente}</td>
+              <td>
+                    <Button variant="warning" onClick={() => handleModificar(mantencion.idMantencion)}>Modificar</Button>
+                    <Button variant="danger" onClick={() => handleDelete(mantencion.idMantencion)}>Eliminar</Button>
+                </td>
             </tr>
           ))}
         </tbody>
