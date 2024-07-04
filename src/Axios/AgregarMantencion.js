@@ -247,16 +247,6 @@ function AgregarMantencion() {
                     </Form.Control>
                 </Form.Group>
 
-                <Form.Group controlId="idVehiculo">
-                    <Form.Label>ID del Vehículo</Form.Label>
-                    <Form.Control as="select" value={nuevoMantenimiento.idVehiculo} onChange={handleVehiculoChange}>
-                        <option value="">Seleccione un vehículo</option>
-                        {vehiculos.map(vehiculo => (
-                            <option key={vehiculo.id} value={vehiculo.id}>{vehiculo.marca}{vehiculo.modelo} {vehiculo.patente} {vehiculo.anio} </option>
-                        ))}
-                    </Form.Control>
-                </Form.Group>
-
                 <Form.Group controlId="fecha">
                     <Form.Label>Fecha</Form.Label>
                     <Form.Control type="date" name="fecha" value={nuevoMantenimiento.fecha} onChange={handleInputChange} />

@@ -7,10 +7,15 @@ import axios from './axiosConfig';
 function AgregarMecanico() {
   // Definición de estados utilizando useState
   const [mecanicos, setMecanicos] = useState([]); // Estado para almacenar la lista de mecánicos
-  const [formulario, setFormulario] = useState({ idMecanico: '', nombre: '', apellido: '', rut: '', especialidad: '' }); // Estado para el formulario de agregar/editar mecánico
+  const [formulario, setFormulario] = useState({ nombre: '', apellido: '', rut: '', especialidad: '' }); // Estado para el formulario de agregar/editar mecánico
   const [mecanicoSeleccionado, setMecanicoSeleccionado] = useState(null); // Estado para el mecánico seleccionado para editar
   const [showModal, setShowModal] = useState(false); // Estado para controlar la visibilidad del modal
   const [filtro, setFiltro] = useState(''); // Estado para el filtro de búsqueda
+
+  // Función para ordenar los mecánicos por nombre
+  const ordenarMecanicosPorNombre = () => {
+    setMecanicos([...mecanicos.sort((a, b) => a.nombre.localeCompare(b.nombre))]);
+  };
 
   // useEffect para obtener la lista de mecánicos al montar el componente
   useEffect(() => {
@@ -19,13 +24,24 @@ function AgregarMecanico() {
       .catch(error => console.error('Error al obtener los mecánicos:', error));
   }, []);
 
-  // Filtrar mecánicos según el texto del filtro
-  const mecanicosFiltrados = mecanicos.filter(m => {
-    return m.nombre.toLowerCase().includes(filtro.toLowerCase()) ||
-      m.apellido.toLowerCase().includes(filtro.toLowerCase()) ||
-      m.rut.toLowerCase().includes(filtro.toLowerCase()) ||
-      m.especialidad.toLowerCase().includes(filtro.toLowerCase());
-  });
+  // Filtrar y ordenar mecánicos según el texto del filtro
+  const mecanicosFiltrados = mecanicos
+    .filter(m => {
+      return (
+        m.nombre.toLowerCase().includes(filtro.toLowerCase()) ||
+        m.apellido.toLowerCase().includes(filtro.toLowerCase()) ||
+        m.rut.toLowerCase().includes(filtro.toLowerCase()) ||
+        m.especialidad.toLowerCase().includes(filtro.toLowerCase())
+      );
+    })
+    .sort((a, b) => a.nombre.localeCompare(b.nombre)); // Ordenar por nombre ascendente
+
+  // Función para validar el formato de RUT (básica)
+  const validarRut = (rut) => {
+    // Formato básico: XX.XXX.XXX-Y
+    const regex = /^(\d{1,2}\.)?(\d{3}\.)?\d{3}-[\dkK]$/;
+    return regex.test(rut);
+  };
 
   // Manejar cambios en los campos del formulario
   const manejarCambio = (e) => {
@@ -36,18 +52,34 @@ function AgregarMecanico() {
   const manejarAgregar = (e) => {
     e.preventDefault();
 
-    if (formulario.nombre === '' || formulario.apellido === '' || formulario.rut === '' || formulario.especialidad === '') {
+    if (
+      formulario.nombre === '' ||
+      formulario.apellido === '' ||
+      formulario.rut === '' ||
+      formulario.especialidad === ''
+    ) {
       alert('Todos los campos son obligatorios');
       return;
     }
 
-    axios.post('http://localhost/Tracelink/Mecanicos/agregarMecanico.php', formulario)
-      .then(response => {
-        setFormulario({ idMecanico: '', nombre: '', apellido: '', rut: '', especialidad: '' });
+    if (!validarRut(formulario.rut)) {
+      alert('Formato de RUT inválido');
+      return;
+    }
+
+    axios
+      .post('http://localhost/Tracelink/Mecanicos/agregarMecanico.php', formulario)
+      .then((response) => {
+        setFormulario({
+          nombre: '',
+          apellido: '',
+          rut: '',
+          especialidad: '',
+        });
         setMecanicos([...mecanicos, { ...formulario, idMecanico: response.data.idMecanico }]);
         alert('Mecánico agregado con éxito');
       })
-      .catch(error => console.error('Error al agregar el mecánico:', error));
+      .catch((error) => console.error('Error al agregar el mecánico:', error));
   };
 
   // Manejar la edición de un mecánico
@@ -84,7 +116,7 @@ function AgregarMecanico() {
 
   return (
     <div>
-      <Navbar/>
+      <Navbar />
       <form>
         <label>
           Nombre:

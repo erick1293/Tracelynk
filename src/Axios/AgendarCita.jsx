@@ -1,45 +1,39 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios'; 
+import axios from 'axios';
 import { Form, Button, Table } from 'react-bootstrap';
 import Navbar from '../components/Navbar';
 import { Autocomplete, TextField } from '@mui/material';
-import "../stylesheets/AgendarCita.css"
+import "../stylesheets/AgendarCita.css";
 
-// Componente para agregar una nueva cita
 const AgregarCita = () => {
-    // Definición de estados utilizando useState
     const [formData, setFormData] = useState({
-        nombre_mecanico: '', // Estado para el nombre del mecánico seleccionado
-        mecanico_id: '', // Estado para almacenar el ID del mecánico
-        fecha: '', // Estado para la fecha de la cita
-        hora: '', // Estado para la hora de la cita
-        descripcion: '' // Estado para la descripción de la cita
+        nombre_mecanico: '',
+        mecanico_id: '',
+        fecha: '',
+        hora: '',
+        descripcion: '',
+        vehiculos: []
     });
-    const [citas, setCitas] = useState([]); // Estado para almacenar las citas existentes
-    const [mecanicos, setMecanicos] = useState([]); // Estado para almacenar la lista de mecánicos
+    const [citas, setCitas] = useState([]);
+    const [mecanicos, setMecanicos] = useState([]);
+    const [vehiculos, setVehiculos] = useState([]);
+    const [error, setError] = useState(null);
 
-    // useEffect para obtener las citas y mecánicos al montar el componente
     useEffect(() => {
-        // Llamada inicial para obtener las citas existentes
-        axios.get('http://localhost/Tracelink/cita/obtener_citas.php')
-            .then(response => {
-                setCitas(response.data);
-            })
-            .catch(error => {
-                console.error("Hubo un error al obtener las citas: ", error);
-            });
-
-        // Llamada inicial para obtener la lista de mecánicos
+        // Obtener mecánicos
         axios.get('http://localhost/Tracelink/mecanicos/obtenerMecanicos.php')
-            .then(response => {
-                setMecanicos(response.data);
-            })
+            .then(response => setMecanicos(response.data))
+            .catch(error => console.error("Hubo un error al obtener los mecánicos: ", error));
+
+        // Obtener vehículos
+        axios.get('http://localhost/Tracelink/Mantenimiento/Vehiculos.php')
+            .then(response => setVehiculos(response.data))
             .catch(error => {
-                console.error("Hubo un error al obtener los mecánicos: ", error);
+                console.error('Error al obtener los datos de vehículos:', error);
+                setError('Error al obtener los datos de vehículos.');
             });
     }, []);
 
-    // Función para manejar el cambio en los campos del formulario
     const handleChange = (e) => {
         setFormData({
             ...formData,
@@ -47,17 +41,14 @@ const AgregarCita = () => {
         });
     };
 
-    // Función para manejar el cambio en el campo de mecánico utilizando Autocomplete
     const handleMecanicoChange = (event, newValue) => {
         if (newValue) {
-            console.log("Mecánico seleccionado:", newValue);
             setFormData({
                 ...formData,
                 nombre_mecanico: `${newValue.nombre} ${newValue.apellido}`,
-                mecanico_id: newValue.idMecanico  // Usar idMecanico en lugar de id
+                mecanico_id: newValue.idMecanico
             });
         } else {
-            console.log("Mecánico deseleccionado");
             setFormData({
                 ...formData,
                 nombre_mecanico: '',
@@ -66,19 +57,25 @@ const AgregarCita = () => {
         }
     };
 
-    // Función para manejar el envío del formulario
+    const handleVehiculoChange = (e) => {
+        const idVehiculo = e.target.value;
+        const vehiculoSeleccionado = vehiculos.find(vehiculo => vehiculo.id === idVehiculo);
+        if (vehiculoSeleccionado) {
+            setFormData(prevState => ({
+                ...prevState,
+                vehiculos: [...prevState.vehiculos, vehiculoSeleccionado.id]
+            }));
+        }
+    };
+
     const handleSubmit = (e) => {
         e.preventDefault();
-    
-        // Validación de datos antes de enviar la solicitud
-        console.log("Datos a enviar:", formData);
-    
-        if (!formData.nombre_mecanico || !formData.mecanico_id || !formData.fecha || !formData.hora || !formData.descripcion) {
+
+        if (!formData.nombre_mecanico || !formData.mecanico_id || !formData.fecha || !formData.hora || !formData.descripcion || formData.vehiculos.length === 0) {
             alert('Por favor complete todos los campos');
             return;
         }
-    
-        // Enviar la solicitud POST para agregar una nueva cita
+
         axios.post('http://localhost/Tracelink/cita/agregar_cita.php', formData)
             .then(response => {
                 setCitas([...citas, response.data]);
@@ -87,12 +84,11 @@ const AgregarCita = () => {
                     mecanico_id: '',
                     fecha: '',
                     hora: '',
-                    descripcion: ''
+                    descripcion: '',
+                    vehiculos: []
                 });
             })
-            .catch(error => {
-                console.error("Hubo un error al agregar la cita: ", error);
-            });
+            .catch(error => console.error("Hubo un error al agregar la cita: ", error));
     };
 
     return (
@@ -110,31 +106,39 @@ const AgregarCita = () => {
                             renderInput={(params) => <TextField {...params} placeholder="Seleccione el nombre del mecánico" />}
                         />
                     </Form.Group>
-
+                    <Form.Group controlId="idVehiculo">
+                        <Form.Label>Vehículo</Form.Label>
+                        <Form.Control as="select" onChange={handleVehiculoChange}>
+                            <option value="">Seleccione un vehículo</option>
+                            {vehiculos.map(vehiculo => (
+                                <option key={vehiculo.id} value={vehiculo.id}>
+                                    {vehiculo.marca} {vehiculo.modelo} {vehiculo.patente} {vehiculo.anio}
+                                </option>
+                            ))}
+                        </Form.Control>
+                    </Form.Group>
                     <Form.Group controlId="formFecha">
                         <Form.Label>Fecha</Form.Label>
-                        <Form.Control 
-                            type="date" 
+                        <Form.Control
+                            type="date"
                             name="fecha"
                             value={formData.fecha}
                             onChange={handleChange}
                         />
                     </Form.Group>
-
                     <Form.Group controlId="formHora">
                         <Form.Label>Hora</Form.Label>
-                        <Form.Control 
-                            type="time" 
+                        <Form.Control
+                            type="time"
                             name="hora"
                             value={formData.hora}
                             onChange={handleChange}
                         />
                     </Form.Group>
-
                     <Form.Group controlId="formDescripcion">
                         <Form.Label>Descripción</Form.Label>
-                        <Form.Control 
-                            as="textarea" 
+                        <Form.Control
+                            as="textarea"
                             rows={3}
                             name="descripcion"
                             value={formData.descripcion}
@@ -142,7 +146,6 @@ const AgregarCita = () => {
                             placeholder="Ingrese la descripción"
                         />
                     </Form.Group>
-
                     <Button variant="primary" type="submit">
                         Agregar Cita
                     </Button>
