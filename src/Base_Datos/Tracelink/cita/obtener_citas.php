@@ -23,7 +23,13 @@ if ($conn->connect_error) {
 }
 
 // Consulta SQL para obtener los datos de la tabla cita
-$sql = "SELECT citas.id, citas.fecha, citas.hora, citas.descripcion, mecanicos.nombre AS nombre_mecanico, mecanicos.apellido AS apellido_mecanico FROM citas INNER JOIN mecanicos ON citas.mecanico_id = mecanicos.idMecanico;";
+$sql = "SELECT c.id AS cita_id, c.fecha, c.hora, c.descripcion, m.nombre AS nombre_mecanico, m.apellido AS apellido_mecanico,
+       v.marca, v.modelo, v.anio, v.transmision, v.patente, v.kilometrajeinicial, v.kilometrajeactual
+FROM citas c
+INNER JOIN citas_vehiculos cv ON c.id = cv.cita_id
+INNER JOIN vehiculo v ON cv.vehiculo_id = v.id
+LEFT JOIN mecanicos m ON c.mecanico_id = m.idMecanico;";
+
 $result = $conn->query($sql);
 
 // Verificar si hay resultados

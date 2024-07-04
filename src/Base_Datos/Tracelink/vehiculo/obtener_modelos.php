@@ -1,10 +1,23 @@
 <?php
-// Conexión a la base de datos y consulta para obtener los modelos
+// Conexión a la base de datos y consulta para obtener los modelos según la marca seleccionada
 include 'conection.php';
 
-$conn = conectar();
+// Obtener el parámetro 'marca' enviado por GET
+$marcaNombre = $_GET['marca'] ?? null;
 
-$query = "SELECT Modelo FROM modelo";
+// Verificar que se recibió un valor válido para 'marca'
+if (!$marcaNombre) {
+    die('Parámetro de marca inválido.');
+}
+
+$conn = conectar(); // Suponiendo que esta función establece la conexión a la base de datos
+
+// Consulta para obtener los modelos asociados a la marca seleccionada
+$query = "SELECT m.Modelo 
+          FROM modelo m 
+          INNER JOIN marca ma ON m.idMarca = ma.idMarca 
+          WHERE ma.Nombre_marca = '$marcaNombre'";
+
 $resultado = mysqli_query($conn, $query);
 $modelos = array();
 

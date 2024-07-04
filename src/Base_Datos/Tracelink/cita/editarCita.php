@@ -30,6 +30,7 @@ if ($conn->connect_error) {
 
 // Obtención de datos del cuerpo de la solicitud
 $data = json_decode(file_get_contents('php://input'), true);
+error_log('Datos recibidos en PHP: ' . print_r($data, true));
 
 // Log para verificar los datos recibidos
 error_log(print_r($data, true));

@@ -26,24 +26,35 @@ if ($conn->connect_error) {
 $data = json_decode(file_get_contents("php://input"), true);
 
 // Validar los datos
-if (!isset($data['nombre_mecanico']) || !isset($data['mecanico_id']) || !isset($data['fecha']) || !isset($data['hora']) || !isset($data['descripcion'])) {
+if (!isset($data['mecanico_id']) || !isset($data['fecha']) || !isset($data['hora']) || !isset($data['descripcion']) || !isset($data['vehiculos'])) {
     die(json_encode(["success" => false, "error" => "Datos incompletos"]));
 }
 
-$nombre_mecanico = $data['nombre_mecanico'];
 $mecanico_id = $data['mecanico_id'];
 $fecha = $data['fecha'];
 $hora = $data['hora'];
 $descripcion = $data['descripcion'];
+$vehiculos = $data['vehiculos']; // Array de IDs de vehículos
 
 // Consulta SQL para insertar una nueva cita
-$sql = "INSERT INTO citas (nombre_mecanico, mecanico_id, fecha, hora, descripcion) VALUES ('$nombre_mecanico', $mecanico_id, '$fecha', '$hora', '$descripcion')";
+$sql = "INSERT INTO citas (mecanico_id, fecha, hora, descripcion) VALUES ($mecanico_id, '$fecha', '$hora', '$descripcion')";
 
 // Ejecutar la consulta SQL y manejar errores
 if ($conn->query($sql) === TRUE) {
     // Obtener el ID de la última inserción
     $last_id = $conn->insert_id;
-    echo json_encode(["success" => true, "id" => $last_id, "message" => "Cita agregada exitosamente"]);
+    
+    // Insertar en la tabla intermedia citas_vehiculos
+    foreach ($vehiculos as $vehiculo_id) {
+        $sql_vehiculo = "INSERT INTO citas_vehiculos (cita_id, vehiculo_id) VALUES ($last_id, $vehiculo_id)";
+        if (!$conn->query($sql_vehiculo)) {
+            echo json_encode(["success" => false, "error" => "Error al agregar vehículo a la cita: " . $conn->error]);
+            $conn->close();
+            exit;
+        }
+    }
+    
+    echo json_encode(["success" => true, "id" => $last_id, "message" => "Cita y vehículos agregados exitosamente"]);
 } else {
     echo json_encode(["success" => false, "error" => "Error: " . $conn->error]);
 }

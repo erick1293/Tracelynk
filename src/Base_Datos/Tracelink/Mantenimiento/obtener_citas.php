@@ -23,7 +23,7 @@ if ($conn->connect_error) {
 }
 
 // Consulta SQL para obtener los datos de la tabla cita
-$sql = "SELECT id, nombre_mecanico, fecha, hora, descripcion FROM citas";
+$sql = "SELECT id, fecha, hora, descripcion FROM citas";
 $result = $conn->query($sql);
 
 // Verificar si hay resultados

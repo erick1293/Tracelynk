@@ -1,8 +1,8 @@
-<?php
+<?php 
 // Conexión a la base de datos y consulta para obtener las marcas
-include 'conection.php';
+include 'conection.php'; // Aquí asumo que 'conection.php' maneja la conexión a la base de datos
 
-$conn = conectar();
+$conn = conectar(); // Función conectar() debería establecer la conexión a la base de datos
 
 $query = "SELECT * FROM marca";
 $resultado = mysqli_query($conn, $query);
