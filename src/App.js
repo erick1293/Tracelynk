@@ -12,6 +12,8 @@ import AgregarMecanico from './Axios/Agregar_Mecanico';
 import Editar_mecanico from "./Axios/Editar_mecanico"
 import EditarEstado from './Axios/EditarEstado';
 import TestFiltrado from './Axios/Filtrados';
+import AgregarPoliPunto from './Axios/AgregarPolipunto';
+import EditarPoliPunto from './Axios/EditarPoliPunto';
 
 function App() {
   return (
@@ -30,6 +32,8 @@ function App() {
         <Route path='/Editar_Mecanico' element={<Editar_mecanico/>}/> 
         <Route path='/EditarEstado' element={<EditarEstado/>}/> 
         <Route path='/test' element={<TestFiltrado/>}/>
+        <Route path='/AgregarPoliPunto' element={<AgregarPoliPunto/>}/>
+        <Route path='/EditarPoliPunto' element={<EditarPoliPunto/>}/> 
       </Routes>     
       </BrowserRouter>
     </>

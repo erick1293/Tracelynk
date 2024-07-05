@@ -39,6 +39,18 @@ function Navbar() {
             <a href="/Editar_Mecanico">Modificar/Mostar</a>
           </div>
         </li>
+
+            {/* Dropdown Polipunto */}
+    <li className="dropdown">
+      <a href="/AgregarPolipunto" className="dropbtn">Polipunto</a>
+      <div className="dropdown-content">
+        <a href="/AgregarPoliPunto">Agregar Polígono</a>
+        <a href="/EditarPoliPunto">Editar</a>
+      </div>
+    </li>
+
+
+    
       </ul>
     </nav>
   );
