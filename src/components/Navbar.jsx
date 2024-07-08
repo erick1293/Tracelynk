@@ -11,7 +11,7 @@ function Navbar() {
         <a href="/AgendarCita" className="dropbtn">Agendar Cita</a>
         <div className="dropdown-content">
             <a href="/AgendarCita">Agregar</a>
-            <a href="/AgendarCitas">Mostrar Citas</a>
+            <a href="/EditarCita">Mostrar/Editar Citas</a>
             <a href="/AgendarMantencion">Mantencion</a>
             <a href="/test">Test</a>
           </div></li>
