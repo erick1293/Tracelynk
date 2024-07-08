@@ -3,7 +3,6 @@ import axios from 'axios';
 import { Form, Button, Table } from 'react-bootstrap';
 import Navbar from '../components/Navbar';
 import { Autocomplete, TextField } from '@mui/material';
-import "../stylesheets/AgendarCita.css"
 
 function FiltrarPorFecha() {
   const [fromDate, setFromDate] = useState('');
@@ -102,20 +101,19 @@ function FiltrarPorFecha() {
             <th>Nombre Mecánico</th>
             <th>Descripción</th>
             <th>Patente Vehículo</th>
-            <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
-          {datosFiltrados.map((mantencion) => (
-            <tr key={mantencion.idMantencion}>
-              <td>{mantencion.idMantencion}</td>
-              <td>{mantencion.fecha}</td>
-              <td>{`${mantencion.mecanico_nombre} ${mantencion.mecanico_apellido}`}</td>
-              <td>{mantencion.descripcion}</td>
-              <td>{mantencion.patente}</td>
-             
-            </tr>
-          ))}
+        {datosFiltrados.map((mantencion) => (
+  <tr key={mantencion.cita_id}>
+    <td>{mantencion.cita_id}</td>
+    <td>{mantencion.fecha}</td>
+    <td>{`${mantencion.mecanico_nombre} ${mantencion.mecanico_apellido}`}</td>
+    <td>{mantencion.descripcion}</td>
+    <td>{mantencion.vehiculo_patente}</td>
+  </tr>
+))}
+
         </tbody>
       </Table>
     </div>

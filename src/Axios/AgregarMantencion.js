@@ -13,7 +13,6 @@ function AgregarMantencion() {
     const [mecanicos, setMecanicos] = useState([]);
     const [nuevoMantenimiento, setNuevoMantenimiento] = useState({
         idCita: '',
-        idVehiculo: '',
         fecha: '',
         descripcion: ''
     });
@@ -22,7 +21,6 @@ function AgregarMantencion() {
     const [mantencionSeleccionada, setMantencionSeleccionada] = useState(null);
     const [editarMantenimiento, setEditarMantenimiento] = useState({
         idCita: '',
-        idVehiculo: '',
         fecha: '',
         descripcion: ''
     });
@@ -91,17 +89,7 @@ function AgregarMantencion() {
         }
     };
 
-    const handleVehiculoChange = (e) => {
-        const idVehiculo = e.target.value;
-        const vehiculoSeleccionado = vehiculos.find(vehiculo => vehiculo.id === idVehiculo);
-        if (vehiculoSeleccionado) {
-            setNuevoMantenimiento(prevState => ({
-                ...prevState,
-                idVehiculo: vehiculoSeleccionado.id,
-            }));
-        }
-    };
-
+   
     const handleModificar = (idMantencion) => {
         const mantencion = datosMantencion.find(m => m.idMantencion === idMantencion);
         if (mantencion) {
@@ -168,6 +156,7 @@ function AgregarMantencion() {
     
     const handleSubmit = async (e) => {
         e.preventDefault();
+        console.log(nuevoMantenimiento);
         const fechaDisponible = verificarFechaDisponible(nuevoMantenimiento.fecha);
         const mecanicoDisponible = verificarMecanicoDisponible(nuevoMantenimiento.idCita, nuevoMantenimiento.fecha);
     
@@ -189,7 +178,6 @@ function AgregarMantencion() {
     const limpiarFormulario = () => {
         setNuevoMantenimiento({
             idCita: '',
-            idVehiculo: '',
             fecha: '',
             descripcion: ''
         });
@@ -199,7 +187,6 @@ function AgregarMantencion() {
         setShowModal(false);
         setEditarMantenimiento({
             idCita: '',
-            idVehiculo: '',
             fecha: '',
             descripcion: ''
         });
@@ -222,7 +209,7 @@ function AgregarMantencion() {
 
     const cargarCitasDisponibles = async (idCita, fecha) => {
         try {
-            const response = await axios.get(`http://localhost/Tracelink/Mantenimiento/obtener_citas.php?idCita=${idCita}&fecha=${fecha}`);
+            const response = await axios.get(`http://localhost/Tracelink/Mantenimiento/obtener_citas.php?idCita=${idCita}&fecha`);
             setCitasDisponibles(response.data);
         } catch (error) {
             console.error('Error al obtener las citas disponibles:', error);
@@ -268,7 +255,6 @@ function AgregarMantencion() {
         <tr>
             <th>ID</th>
             <th>Fecha</th>
-            <th>Nombre Mecánico</th>
             <th>Descripción</th>
             <th>Patente vehiculo</th>    
             <th>Acciones</th>
@@ -279,7 +265,6 @@ function AgregarMantencion() {
             <tr key={mantencion.idMantencion}>
                 <td>{mantencion.idMantencion}</td>
                 <td>{mantencion.fecha}</td>
-                <td>{`${mantencion.mecanico_nombre} ${mantencion.mecanico_apellido}`}</td>
                 <td>{mantencion.descripcion}</td>
                 <td>{mantencion.patente}</td>
                 <td>
@@ -307,15 +292,7 @@ function AgregarMantencion() {
                             </Form.Control>
                         </Form.Group>
 
-                        <Form.Group controlId="idVehiculoEditar">
-                            <Form.Label>ID del Vehículo</Form.Label>
-                            <Form.Control as="select" value={editarMantenimiento.idVehiculo} onChange={(e) => setEditarMantenimiento({ ...editarMantenimiento, idVehiculo: e.target.value })}>
-                                <option value="">Seleccione un vehículo</option>
-                                {vehiculos.map(vehiculo => (
-                                    <option key={vehiculo.id} value={vehiculo.id}>{vehiculo.patente}</option>
-                                ))}
-                            </Form.Control>
-                        </Form.Group>
+                       
 
                         <Form.Group controlId="fechaEditar">
                             <Form.Label>Fecha</Form.Label>
