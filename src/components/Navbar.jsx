@@ -1,60 +1,57 @@
 import React from 'react';
 import '../stylesheets/navbar.css'; 
+import { Link } from 'react-router-dom';
 
 function Navbar() {
   return (
     <nav>
       <ul>
-        <li><a href="/">Inicio</a></li>
-         {/* Dropdown Vehículo */}
-         <li className="dropdown">
-        <a href="/AgendarCita" className="dropbtn">Agendar Cita</a>
-        <div className="dropdown-content">
-            <a href="/AgendarCita">Agregar</a>
-            <a href="/EditarCita">Mostrar/Editar Citas</a>
-            <a href="/AgendarMantencion">Mantencion</a>
-            <a href="/test">Test</a>
-          </div></li>
-        <li><a href="/AgregarObjeto">Agregar Objeto</a></li>
-         {/* Dropdown Vehículo */}
-         <li className="dropdown">
-          <a href="/Estados" className="dropbtn">Estados</a>
-            <div className="dropdown-content">
-            <a href="/Estados">Agregar</a>
-            <a href="/EditarEstado">Modificar/Mostar</a>
+        <li><Link to="/">Inicio</Link></li>
+        {/* Dropdown Vehículo */}
+        <li className="dropdown">
+          <Link to="/AgendarCita" className="dropbtn">Agendar Cita</Link>
+          <div className="dropdown-content">
+            <Link to="/AgendarCita">Agregar</Link>
+            <Link to="/EditarCita">Mostrar/Editar Citas</Link>
+            <Link to="/AgendarMantencion">Mantencion</Link>
+            <Link to="/test">Test</Link>
+          </div>
+        </li>
+        <li><Link to="/AgregarObjeto">Agregar Objeto</Link></li>
+        {/* Dropdown Vehículo */}
+        <li className="dropdown">
+          <Link to="/Estados" className="dropbtn">Estados</Link>
+          <div className="dropdown-content">
+            <Link to="/Estados">Agregar</Link>
+            <Link to="/EditarEstado">Modificar/Mostar</Link>
           </div>
         </li>
         {/* Dropdown Vehículo */}
         <li className="dropdown">
-          <a href="/AgregarVehiculo" className="dropbtn">Vehículo</a>
-            <div className="dropdown-content">
-            <a href="/AgregarVehiculo">Agregar</a>
-            <a href="/ModificarVehiculos">Modificar/Mostar</a>
+          <Link to="/AgregarVehiculo" className="dropbtn">Vehículo</Link>
+          <div className="dropdown-content">
+            <Link to="/AgregarVehiculo">Agregar</Link>
+            <Link to="/ModificarVehiculos">Modificar/Mostar</Link>
           </div>
         </li>
         <li className="dropdown">
-          <a href="/AgregarMecanico" className="dropbtn">Mecanicos</a>
-            <div className="dropdown-content">
-            <a href="/AgregarMecanico">Agregar</a>
-            <a href="/Editar_Mecanico">Modificar/Mostar</a>
+          <Link to="/AgregarMecanico" className="dropbtn">Mecanicos</Link>
+          <div className="dropdown-content">
+            <Link to="/AgregarMecanico">Agregar</Link>
+            <Link to="/Editar_Mecanico">Modificar/Mostar</Link>
           </div>
         </li>
-
-            {/* Dropdown Polipunto */}
-    <li className="dropdown">
-      <a href="/AgregarPolipunto" className="dropbtn">Polipunto</a>
-      <div className="dropdown-content">
-        <a href="/AgregarPoliPunto">Agregar Polígono</a>
-        <a href="/EditarPoliPunto">Editar</a>
-      </div>
-    </li>
-
-
-    
+        {/* Dropdown Polipunto */}
+        <li className="dropdown">
+          <Link to="/AgregarPolipunto" className="dropbtn">Polipunto</Link>
+          <div className="dropdown-content">
+            <Link to="/AgregarPoliPunto">Agregar Polígono</Link>
+            <Link to="/EditarPoliPunto">Editar</Link>
+          </div>
+        </li>
       </ul>
     </nav>
   );
 }
 
 export default Navbar;
-

@@ -10,24 +10,14 @@ function Login({ setAuth }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log(username, password);
     try {
-      console.log({ username, password }); // Verificar los datos antes de enviarlos
-      const response = await axios.post(
-        'http://localhost/Tracelink/Loguin/login.php',
-        { username, password },
-        {
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        }
-      );
-      
-      
+      const response = await axios.post('http://localhost/Tracelink/Loguin/login.php', { username, password });
       if (response.data.success) {
         setAuth(response.data.user);
         navigate('/');
       } else {
-        setError('Invalid credentials');
+        setError('Datos incorrectos');
       }
     } catch (error) {
       console.error('Error during login:', error);
@@ -45,7 +35,7 @@ function Login({ setAuth }) {
         <label>Password:</label>
         <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
       </div>
-      {error && <p>{error}</p>}
+      
       <button type="submit">Login</button>
     </form>
   );
