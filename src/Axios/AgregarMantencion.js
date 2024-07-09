@@ -13,6 +13,7 @@ function AgregarMantencion() {
     const [mecanicos, setMecanicos] = useState([]);
     const [nuevoMantenimiento, setNuevoMantenimiento] = useState({
         idCita: '',
+        vehiculo_id: '',
         fecha: '',
         descripcion: ''
     });
@@ -21,6 +22,7 @@ function AgregarMantencion() {
     const [mantencionSeleccionada, setMantencionSeleccionada] = useState(null);
     const [editarMantenimiento, setEditarMantenimiento] = useState({
         idCita: '',
+        vehiculo_id: '',
         fecha: '',
         descripcion: ''
     });
@@ -58,6 +60,7 @@ function AgregarMantencion() {
         }
     };
 
+
     const cargarVehiculos = async () => {
         try {
             const response = await axios.get('http://localhost/Tracelink/Mantenimiento/Vehiculos.php');
@@ -85,18 +88,20 @@ function AgregarMantencion() {
             setNuevoMantenimiento(prevState => ({
                 ...prevState,
                 idCita: citaSeleccionada.id,
+                vehiculo_id: citaSeleccionada.vehiculo_id
             }));
         }
     };
 
-   
+
+
     const handleModificar = (idMantencion) => {
         const mantencion = datosMantencion.find(m => m.idMantencion === idMantencion);
         if (mantencion) {
             setMantencionSeleccionada(mantencion);
             setEditarMantenimiento({
                 idCita: mantencion.cita_id,
-                idVehiculo: mantencion.vehiculo_id,
+                vehiculo_id: mantencion.vehiculo_id,
                 fecha: mantencion.fecha,
                 descripcion: mantencion.descripcion
             });
@@ -105,6 +110,7 @@ function AgregarMantencion() {
             console.error('Mantención no encontrada con el ID:', idMantencion);
         }
     };
+
 
     const handleSubmitEditar = async (e) => {
         e.preventDefault();
@@ -146,20 +152,20 @@ function AgregarMantencion() {
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setNuevoMantenimiento({ ...nuevoMantenimiento, [name]: value });
-    
+
         if (name === 'fecha') {
             cargarCitasDisponibles(nuevoMantenimiento.idCita, value); // Aquí estaba `nuevoMantenimiento.idMecanico`
         }
     };
 
 
-    
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         console.log(nuevoMantenimiento);
         const fechaDisponible = verificarFechaDisponible(nuevoMantenimiento.fecha);
         const mecanicoDisponible = verificarMecanicoDisponible(nuevoMantenimiento.idCita, nuevoMantenimiento.fecha);
-    
+
         if (fechaDisponible && mecanicoDisponible) {
             try {
                 await axios.post('http://localhost/Tracelink/Mantenimiento/AgregarMantencion.php', nuevoMantenimiento);
@@ -172,8 +178,8 @@ function AgregarMantencion() {
             alert('La fecha y/o el mecánico seleccionado no están disponibles. Por favor, elija otra fecha/mecánico.');
         }
     };
-    
-    
+
+
 
     const limpiarFormulario = () => {
         setNuevoMantenimiento({
@@ -197,15 +203,15 @@ function AgregarMantencion() {
         const citaExistente = citas.find(cita => cita.id === idCita && cita.fecha === fecha);
         return !citaExistente; // Devuelve true si el mecánico está disponible en esa fecha, false si no lo está
     };
-    
-    
+
+
 
     const verificarFechaDisponible = (fecha) => {
         const citaExistente = citas.find(cita => cita.fecha === fecha);
         return !citaExistente; // Devuelve true si la fecha está disponible, false si no lo está
     };
 
-   
+
 
     const cargarCitasDisponibles = async (idCita, fecha) => {
         try {
@@ -215,7 +221,7 @@ function AgregarMantencion() {
             console.error('Error al obtener las citas disponibles:', error);
         }
     };
-    
+
 
     return (
         <div>
@@ -229,7 +235,9 @@ function AgregarMantencion() {
                     <Form.Control as="select" value={nuevoMantenimiento.idCita} onChange={handleCitaChange}>
                         <option value="">Seleccione una cita</option>
                         {citas.map(cita => (
-                            <option key={cita.id} value={cita.id}> {cita.fecha} { cita.descripcion} </option>
+                            <option key={cita.id} value={cita.id}>
+                                {cita.fecha} - {cita.descripcion} - {cita.patente} ({cita.marca} {cita.modelo})
+                            </option>
                         ))}
                     </Form.Control>
                 </Form.Group>
@@ -249,32 +257,33 @@ function AgregarMantencion() {
                 </Button>
             </Form>
 
+
             <h2>Lista de Mantenciones</h2>
             <Table striped bordered hover>
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Fecha</th>
-            <th>Descripción</th>
-            <th>Patente vehiculo</th>    
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        {datosMantencion.map((mantencion) => (
-            <tr key={mantencion.idMantencion}>
-                <td>{mantencion.idMantencion}</td>
-                <td>{mantencion.fecha}</td>
-                <td>{mantencion.descripcion}</td>
-                <td>{mantencion.patente}</td>
-                <td>
-                    <Button variant="warning" onClick={() => handleModificar(mantencion.idMantencion)}>Modificar</Button>
-                    <Button variant="danger" onClick={() => handleDelete(mantencion.idMantencion)}>Eliminar</Button>
-                </td>
-            </tr>
-        ))}
-    </tbody>
-</Table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Fecha</th>
+                        <th>Descripción</th>
+                        <th>Patente vehiculo</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {datosMantencion.map((mantencion) => (
+                        <tr key={mantencion.idMantencion}>
+                            <td>{mantencion.idMantencion}</td>
+                            <td>{mantencion.fecha}</td>
+                            <td>{mantencion.descripcion}</td>
+                            <td>{mantencion.patente}</td>
+                            <td>
+                                <Button variant="warning" onClick={() => handleModificar(mantencion.idMantencion)}>Modificar</Button>
+                                <Button variant="danger" onClick={() => handleDelete(mantencion.idMantencion)}>Eliminar</Button>
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </Table>
 
             <Modal show={showModal} onHide={handleCloseModal}>
                 <Modal.Header closeButton>
@@ -287,12 +296,12 @@ function AgregarMantencion() {
                             <Form.Control as="select" value={editarMantenimiento.idCita} onChange={(e) => setEditarMantenimiento({ ...editarMantenimiento, idCita: e.target.value })}>
                                 <option value="">Seleccione una cita</option>
                                 {citas.map(cita => (
-                                    <option key={cita.id} value={cita.id}>{cita.nombre} {cita.fecha} { cita.descripcion}  </option>
+                                    <option key={cita.id} value={cita.id}>
+                                        {cita.fecha} - {cita.descripcion} - {cita.patente} ({cita.marca} {cita.modelo})
+                                    </option>
                                 ))}
                             </Form.Control>
                         </Form.Group>
-
-                       
 
                         <Form.Group controlId="fechaEditar">
                             <Form.Label>Fecha</Form.Label>
@@ -310,6 +319,7 @@ function AgregarMantencion() {
                     </Form>
                 </Modal.Body>
             </Modal>
+
         </div>
     );
 }

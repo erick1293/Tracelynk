@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Form, Button, Table, Modal } from 'react-bootstrap';
+import { Form, Button, Table,Modal } from 'react-bootstrap';
 import Navbar from '../components/Navbar';
 import { Autocomplete, TextField } from '@mui/material';
 
 function FiltrarPorFecha() {
   const [fromDate, setFromDate] = useState('');
+
   const [toDate, setToDate] = useState('');
   const [selectedMechanic, setSelectedMechanic] = useState(null);
   const [datosFiltrados, setDatosFiltrados] = useState([]);
@@ -39,7 +40,6 @@ function FiltrarPorFecha() {
       .catch(error => {
         console.error("Hubo un error al obtener los mecánicos: ", error);
       });
-
     const cargarDatosIniciales = async () => {
       await cargarMecanicos();
       await cargarDatosMantencion();
@@ -47,6 +47,7 @@ function FiltrarPorFecha() {
       await cargarVehiculos();
     };
     cargarDatosIniciales();
+
   }, []);
 
   const handleMecanicoChange = (event, newValue) => {
@@ -80,6 +81,7 @@ function FiltrarPorFecha() {
     }
   };
 
+
   const handleModificar = (idMantencion) => {
     const mantencion = datosMantencion.find(m => m.idMantencion === idMantencion);
     if (mantencion) {
@@ -98,7 +100,7 @@ function FiltrarPorFecha() {
 
   const handleSubmitEditar = async (e) => {
     e.preventDefault();
-    console.log(editarMantenimiento);
+    console.log(mantencionSeleccionada);
     try {
       const response = await axios.post('http://localhost/Tracelink/Mantenimiento/editar_mantencion.php', {
         idMantencion: mantencionSeleccionada.idMantencion,
@@ -115,6 +117,7 @@ function FiltrarPorFecha() {
       alert('Error al editar la mantención: ' + (error.message || 'Ocurrió un error desconocido'));
     }
   };
+
 
   const handleCloseModal = () => {
     setShowModal(false);
@@ -143,7 +146,6 @@ function FiltrarPorFecha() {
       alert('Error al eliminar la mantención: ' + (error.message || 'Ocurrió un error desconocido'));
     }
   };
-
   const cargarDatosMantencion = async () => {
     try {
       const response = await axios.get('http://localhost/Tracelink/Mantenimiento/dato.php');
@@ -166,6 +168,7 @@ function FiltrarPorFecha() {
       setError('Error al obtener los datos de citas.');
     }
   };
+
 
   const cargarVehiculos = async () => {
     try {
@@ -234,6 +237,7 @@ function FiltrarPorFecha() {
             <th>Nombre Mecánico</th>
             <th>Descripción</th>
             <th>Patente Vehículo</th>
+            <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
@@ -244,19 +248,23 @@ function FiltrarPorFecha() {
               <td>{`${mantencion.mecanico_nombre} ${mantencion.mecanico_apellido}`}</td>
               <td>{mantencion.descripcion}</td>
               <td>{mantencion.vehiculo_patente}</td>
+              <td>
+                <Button variant="warning" onClick={() => handleModificar(mantencion.idMantencion)}>Modificar</Button>
+                <Button variant="danger" onClick={() => handleDelete(mantencion.idMantencion)}>Eliminar</Button>
+              </td>
             </tr>
           ))}
+
         </tbody>
       </Table>
-<h2>Tabla de Mantenciones </h2>
-<Table striped bordered hover>
+
+      <Table striped bordered hover>
         <thead>
           <tr>
             <th>ID</th>
             <th>Fecha</th>
             <th>Descripción</th>
             <th>Patente vehiculo</th>
-            <th>Acciones</th>
           
           </tr>
         </thead>
@@ -275,14 +283,13 @@ function FiltrarPorFecha() {
           ))}
         </tbody>
       </Table>
-
       <Modal show={showModal} onHide={handleCloseModal}>
-        <Modal.Header closeButton>
-          <Modal.Title>Editar Mantención</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form onSubmit={handleSubmitEditar}>
-          <Form.Group controlId="idCitaEditar">
+                <Modal.Header closeButton>
+                    <Modal.Title>Modificar Mantención</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form onSubmit={handleSubmitEditar}>
+                        <Form.Group controlId="idCitaEditar">
                             <Form.Label>ID de la Cita</Form.Label>
                             <Form.Control as="select" value={editarMantenimiento.idCita} onChange={(e) => setEditarMantenimiento({ ...editarMantenimiento, idCita: e.target.value })}>
                                 <option value="">Seleccione una cita</option>
@@ -293,43 +300,24 @@ function FiltrarPorFecha() {
                                 ))}
                             </Form.Control>
                         </Form.Group>
-            <Form.Group controlId="editarMantencionVehiculoId">
-              <Form.Label>Patente del Vehículo</Form.Label>
-              <Autocomplete
-                options={vehiculos}
-                getOptionLabel={(option) => option.patente}
-                value={vehiculos.find(v => v.id === editarMantenimiento.vehiculo_id) || null}
-                onChange={(event, newValue) => {
-                  setEditarMantenimiento({ ...editarMantenimiento, vehiculo_id: newValue ? newValue.id : '' });
-                }}
-                renderInput={(params) => <TextField {...params} placeholder="Seleccione la patente del vehículo" />}
-              />
-            </Form.Group>
-            <Form.Group controlId="editarMantencionFecha">
-              <Form.Label>Fecha</Form.Label>
-              <Form.Control
-                type="date"
-                value={editarMantenimiento.fecha}
-                onChange={(e) => setEditarMantenimiento({ ...editarMantenimiento, fecha: e.target.value })}
-              />
-            </Form.Group>
-            <Form.Group controlId="editarMantencionDescripcion">
-              <Form.Label>Descripción</Form.Label>
-              <Form.Control
-                as="textarea"
-                value={editarMantenimiento.descripcion}
-                onChange={(e) => setEditarMantenimiento({ ...editarMantenimiento, descripcion: e.target.value })}
-              />
-            </Form.Group>
-            <Button variant="primary" type="submit">
-              Guardar Cambios
-            </Button>
-            <Button variant="secondary" onClick={handleCloseModal}>
-              Cancelar
-            </Button>
-          </Form>
-        </Modal.Body>
-      </Modal>
+
+                        <Form.Group controlId="fechaEditar">
+                            <Form.Label>Fecha</Form.Label>
+                            <Form.Control type="date" name="fecha" value={editarMantenimiento.fecha} onChange={(e) => setEditarMantenimiento({ ...editarMantenimiento, fecha: e.target.value })} />
+                        </Form.Group>
+
+                        <Form.Group controlId="descripcionEditar">
+                            <Form.Label>Descripción</Form.Label>
+                            <Form.Control as="textarea" name="descripcion" value={editarMantenimiento.descripcion} onChange={(e) => setEditarMantenimiento({ ...editarMantenimiento, descripcion: e.target.value })} />
+                        </Form.Group>
+
+                        <Button variant="primary" type="submit">
+                            Guardar Cambios
+                        </Button>
+                    </Form>
+                </Modal.Body>
+            </Modal>
+
     </div>
   );
 }
