@@ -248,7 +248,7 @@ function FiltrarPorFecha() {
           ))}
         </tbody>
       </Table>
-<h2>Tabla de Mantenciones </h2>
+<h2>Tabla de Mantenciones Ya creadas ,</h2>
 <Table striped bordered hover>
         <thead>
           <tr>
