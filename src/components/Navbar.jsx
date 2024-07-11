@@ -14,7 +14,7 @@ function Navbar() {
             <Link to="/AgendarCita">Agregar</Link>
             <Link to="/EditarCita">Mostrar/Editar Citas</Link>
             <Link to="/AgendarMantencion">Mantencion</Link>
-            <Link to="/test">Test</Link>
+            <Link to="/test">Filtro Mantencion/Citas</Link>
           </div>
         </li>
         <li><Link to="/AgregarObjeto">Agregar Objeto</Link></li>
@@ -32,14 +32,16 @@ function Navbar() {
           <div className="dropdown-content">
             <Link to="/AgregarVehiculo">Agregar</Link>
             <Link to="/ModificarVehiculos">Modificar/Mostar</Link>
+            <Link to="/Alerta_Vehiculos">Alertas Vehiculos</Link>
           </div>
         </li>
         <li className="dropdown">
-          <Link to="/AgregarMecanico" className="dropbtn">Mecanicos</Link>
+          <Link to="/Taller_Mecanico" className="dropbtn">Taller Mecanico</Link>
           <div className="dropdown-content">
-            <Link to="/AgregarMecanico">Agregar</Link>
-            <Link to="/Editar_Mecanico">Modificar/Mostar</Link>
-          </div>
+            <Link to="/Taller_Mecanico">Agregar</Link>
+         {// <Link to="/Editar_Mecanico">Modificar/Mostar</Link>
+}</div>
+         
         </li>
         {/* Dropdown Polipunto */}
         <li className="dropdown">
@@ -47,6 +49,14 @@ function Navbar() {
           <div className="dropdown-content">
             <Link to="/AgregarPoliPunto">Agregar Polígono</Link>
             <Link to="/EditarPoliPunto">Editar</Link>
+          </div>
+        </li>
+        {/* Dropdown Usuarios */}
+        <li className="dropdown login-dropdown">
+          <Link to="/Login" className="dropbtn">Login</Link>
+          <div className="dropdown-content">
+            <Link to="/Login">Login</Link>
+            <Link to="/Register">Registrar</Link>
           </div>
         </li>
       </ul>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Button, Form } from 'react-bootstrap';
+import { Button, Form } from 'react-bootstrap';
 import axios from './axiosConfig';
 import Navbar from '../components/Navbar';
 import '../stylesheets/AgregarVehiculo.css';
@@ -7,7 +7,6 @@ import '../stylesheets/AgregarVehiculo.css';
 // Componente para agregar un vehículo
 const AgregarVehiculo = ({ onAgregar }) => {
     // Definición de estados utilizando useState
-    const [show, setShow] = useState(false); // Estado para controlar la visibilidad del modal
     const [marca, setMarca] = useState(''); // Estado para el nombre de la marca del vehículo
     const [modelo, setModelo] = useState(''); // Estado para el modelo del vehículo
     const [anio, setAnio] = useState(''); // Estado para el año del vehículo
@@ -19,12 +18,6 @@ const AgregarVehiculo = ({ onAgregar }) => {
     const [marcas, setMarcas] = useState([]); // Estado para almacenar las marcas obtenidas de la API
     const [modelos, setModelos] = useState([]); // Estado para almacenar los modelos obtenidos de la API
     const [modelosLoading, setModelosLoading] = useState(false); // Estado para indicar carga de modelos
-
-    // Función para cerrar el modal
-    const handleClose = () => setShow(false);
-
-    // Función para mostrar el modal
-    const handleShow = () => setShow(true);
 
     // useEffect para obtener las marcas al montar el componente
     useEffect(() => {
@@ -61,7 +54,6 @@ const AgregarVehiculo = ({ onAgregar }) => {
             setModelosLoading(false);
         }
     };
-    
 
     // Función para manejar el cambio de marca
     const handleMarcaChange = (e) => {
@@ -121,7 +113,6 @@ const AgregarVehiculo = ({ onAgregar }) => {
                 setKilometrajeinicial('');
                 setKilometrajeactual('');
                 setError(null);
-                handleClose();
             } else {
                 setError('Error al agregar vehículo: ' + (response.data.error || 'Unknown error'));
             }
@@ -135,61 +126,55 @@ const AgregarVehiculo = ({ onAgregar }) => {
         <>
             <Navbar />
             <div className="container">
-               
-
-                <Modal show={true} onHide={handleClose}>
-                    <Modal.Body>
-                        {error && <p className="text-danger">{error}</p>}
-                        <Form onSubmit={handleSubmit}>
-                            <Form.Group controlId="formMarca">
-                                <Form.Label>Marca:</Form.Label>
-                                <Form.Control as="select" value={marca} onChange={handleMarcaChange} required>
-                                    <option value="">Seleccionar</option>
-                                    {Array.isArray(marcas) && marcas.map(marca => (
-                                        <option key={marca.idMarca} value={marca.Nombre_marca}>{marca.Nombre_marca}</option>
-                                    ))}
-                                </Form.Control>
-                            </Form.Group>
-                            <Form.Group controlId="formModelo">
-                                <Form.Label>Modelo:</Form.Label>
-                               <Form.Control as="select" value={modelo} onChange={(e) => setModelo(e.target.value)} required disabled={!marca || modelosLoading}>
-    <option value="">Seleccionar</option>
-    {modelos.map((modelo, index) => (
-        <option key={index} value={modelo}>{modelo}</option>
-    ))}
-</Form.Control>
-
-                            </Form.Group>
-                            <Form.Group controlId="formAnio">
-                                <Form.Label>Año:</Form.Label>
-                                <Form.Control type="number" value={anio} onChange={(e) => setAnio(e.target.value)} required />
-                            </Form.Group>
-                            <Form.Group controlId="formTransmision">
-                                <Form.Label>Transmisión:</Form.Label>
-                                <Form.Control as="select" value={transmision} onChange={(e) => setTransmision(e.target.value)} required>
-                                    <option value="">Seleccionar</option>
-                                    <option value="Automatico">Automático</option>
-                                    <option value="Manual">Manual</option>
-                                </Form.Control>
-                            </Form.Group>
-                            <Form.Group controlId="formPatente">
-                                <Form.Label>Patente:</Form.Label>
-                                <Form.Control type="text" value={patente} onChange={(e) => setPatente(e.target.value)} required />
-                            </Form.Group>
-                            <Form.Group controlId="formKilometrajeinicial">
-                                <Form.Label>Kilometraje Inicial:</Form.Label>
-                                <Form.Control type="text" value={kilometrajeinicial} onChange={(e) => setKilometrajeinicial(e.target.value)} required />
-                            </Form.Group>
-                            <Form.Group controlId="formKilometrajeactual">
-                                <Form.Label>Kilometraje Actual:</Form.Label>
-                                <Form.Control type="text" value={kilometrajeactual} onChange={(e) => setKilometrajeactual(e.target.value)} required />
-                            </Form.Group>
-                            <Button variant="primary" type="submit">
-                                Agregar
-                            </Button>
-                        </Form>
-                    </Modal.Body>
-                </Modal>
+                <h1>Agregar Vehículo</h1> <br/>
+                {error && <p className="text-danger">{error}</p>}
+                <Form onSubmit={handleSubmit}>
+                    <Form.Group controlId="formMarca">
+                        <Form.Label>Marca:</Form.Label>
+                        <Form.Control as="select" value={marca} onChange={handleMarcaChange} required>
+                            <option value="">Seleccionar</option>
+                            {Array.isArray(marcas) && marcas.map(marca => (
+                                <option key={marca.idMarca} value={marca.Nombre_marca}>{marca.Nombre_marca}</option>
+                            ))}
+                        </Form.Control>
+                    </Form.Group>
+                    <Form.Group controlId="formModelo">
+                        <Form.Label>Modelo:</Form.Label>
+                        <Form.Control as="select" value={modelo} onChange={(e) => setModelo(e.target.value)} required disabled={!marca || modelosLoading}>
+                            <option value="">Seleccionar</option>
+                            {modelos.map((modelo, index) => (
+                                <option key={index} value={modelo}>{modelo}</option>
+                            ))}
+                        </Form.Control>
+                    </Form.Group>
+                    <Form.Group controlId="formAnio">
+                        <Form.Label>Año:</Form.Label>
+                        <Form.Control type="number" value={anio} onChange={(e) => setAnio(e.target.value)} required />
+                    </Form.Group>
+                    <Form.Group controlId="formTransmision">
+                        <Form.Label>Transmisión:</Form.Label>
+                        <Form.Control as="select" value={transmision} onChange={(e) => setTransmision(e.target.value)} required>
+                            <option value="">Seleccionar</option>
+                            <option value="Automatico">Automático</option>
+                            <option value="Manual">Manual</option>
+                        </Form.Control>
+                    </Form.Group>
+                    <Form.Group controlId="formPatente">
+                        <Form.Label>Patente:</Form.Label>
+                        <Form.Control type="text" value={patente} onChange={(e) => setPatente(e.target.value)} required />
+                    </Form.Group>
+                    <Form.Group controlId="formKilometrajeinicial">
+                        <Form.Label>Kilometraje Inicial:</Form.Label>
+                        <Form.Control type="text" value={kilometrajeinicial} onChange={(e) => setKilometrajeinicial(e.target.value)} required />
+                    </Form.Group>
+                    <Form.Group controlId="formKilometrajeactual">
+                        <Form.Label>Kilometraje Actual:</Form.Label>
+                        <Form.Control type="text" value={kilometrajeactual} onChange={(e) => setKilometrajeactual(e.target.value)} required />
+                    </Form.Group>
+                    <Button variant="primary" type="submit">
+                        Agregar
+                    </Button>
+                </Form>
             </div>
         </>
     );

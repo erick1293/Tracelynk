@@ -1,12 +1,13 @@
 .container {
+
 }
+
 .row {
-  display: flex;
+  display: flex; 
 }
 
 .menuDerecho {
+  
   position: relative;
-    left: 400px;
 
 }
-

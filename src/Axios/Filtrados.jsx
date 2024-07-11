@@ -211,7 +211,7 @@ function FiltrarPorFecha() {
           />
         </Form.Group>
         <Form.Group controlId="formNombreMecanico">
-          <Form.Label>Nombre del Mecánico</Form.Label>
+          <Form.Label>Nombre del Taller</Form.Label>
           <Autocomplete
             options={mecanicos}
             getOptionLabel={(option) => `${option.nombre} ${option.apellido}`}
@@ -231,7 +231,7 @@ function FiltrarPorFecha() {
           <tr>
             <th>ID</th>
             <th>Fecha</th>
-            <th>Nombre Mecánico</th>
+            <th>Nombre Del taller</th>
             <th>Descripción</th>
             <th>Patente Vehículo</th>
           </tr>
@@ -248,8 +248,8 @@ function FiltrarPorFecha() {
           ))}
         </tbody>
       </Table>
-<h2>Tabla de Mantenciones Ya creadas ,</h2>
-<Table striped bordered hover>
+      <h2>Tabla de Mantenciones </h2>
+      <Table striped bordered hover>
         <thead>
           <tr>
             <th>ID</th>
@@ -257,7 +257,7 @@ function FiltrarPorFecha() {
             <th>Descripción</th>
             <th>Patente vehiculo</th>
             <th>Acciones</th>
-          
+
           </tr>
         </thead>
         <tbody>
@@ -282,17 +282,17 @@ function FiltrarPorFecha() {
         </Modal.Header>
         <Modal.Body>
           <Form onSubmit={handleSubmitEditar}>
-          <Form.Group controlId="idCitaEditar">
-                            <Form.Label>ID de la Cita</Form.Label>
-                            <Form.Control as="select" value={editarMantenimiento.idCita} onChange={(e) => setEditarMantenimiento({ ...editarMantenimiento, idCita: e.target.value })}>
-                                <option value="">Seleccione una cita</option>
-                                {citas.map(cita => (
-                                    <option key={cita.id} value={cita.id}>
-                                        {cita.fecha} - {cita.descripcion} - {cita.patente} ({cita.marca} {cita.modelo})
-                                    </option>
-                                ))}
-                            </Form.Control>
-                        </Form.Group>
+            <Form.Group controlId="idCitaEditar">
+              <Form.Label>ID de la Cita</Form.Label>
+              <Form.Control as="select" value={editarMantenimiento.idCita} onChange={(e) => setEditarMantenimiento({ ...editarMantenimiento, idCita: e.target.value })}>
+                <option value="">Seleccione una cita</option>
+                {citas.map(cita => (
+                  <option key={cita.id} value={cita.id}>
+                    {cita.fecha} - {cita.descripcion} - {cita.patente} ({cita.marca} {cita.modelo})
+                  </option>
+                ))}
+              </Form.Control>
+            </Form.Group>
             <Form.Group controlId="editarMantencionVehiculoId">
               <Form.Label>Patente del Vehículo</Form.Label>
               <Autocomplete

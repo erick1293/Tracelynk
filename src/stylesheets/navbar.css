@@ -51,3 +51,6 @@ nav {
   .dropdown:hover .dropdown-content {
     display: block;
   }
+  .login-dropdown {
+    margin-left: 50%; /* Esto moverá el dropdown de login a la derecha */
+  }

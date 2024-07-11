@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Autocomplete, TextField } from '@mui/material';
-import { Table, Button, Modal, Form } from 'react-bootstrap';
+import { Table, Button, Modal } from 'react-bootstrap';
 import Navbar from '../components/Navbar';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 
 const EditarCita = () => {
   const [mecanicos, setMecanicos] = useState([]);
@@ -12,25 +14,24 @@ const EditarCita = () => {
     fecha: '',
     hora: '',
     descripcion: '',
-    mecanico_id: '', 
+    mecanico_id: '',
     vehiculo_id: '',
   });
   const [error, setError] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [citaSeleccionada, setCitaSeleccionada] = useState(null);
 
-  // Función para obtener las citas desde el servidor
   const fetchCitas = async () => {
     try {
       const response = await axios.get('http://localhost/Tracelink/cita/obtener_citas.php');
       setCitas(response.data);
+      console.log('Citas:', response.data);
     } catch (error) {
       setError('Error al obtener las citas: ' + error.message);
     }
   };
 
   useEffect(() => {
-    // Funciones para obtener mecánicos y vehículos
     const fetchMecanicos = async () => {
       try {
         const response = await axios.get('http://localhost/Tracelink/mecanicos/obtenerMecanicos.php');
@@ -49,11 +50,11 @@ const EditarCita = () => {
       }
     };
 
-    // Obtener las citas una vez que se monte el componente
     fetchMecanicos();
     fetchVehiculos();
     fetchCitas();
-  }, []); // Ejecutar solo una vez al montar el componente
+    console.log("Component mounted");
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -64,6 +65,7 @@ const EditarCita = () => {
   };
 
   const handleEditClick = (cita) => {
+    console.log('Editing cita:', cita);
     setCitaSeleccionada(cita);
     setFormData({
       fecha: cita.fecha,
@@ -79,10 +81,9 @@ const EditarCita = () => {
     try {
       const response = await axios.delete(`http://localhost/Tracelink/cita/eliminarCita.php?id=${cita.cita_id}`);
       console.log('Cita eliminada:', response.data);
-      fetchCitas(); // Actualizar la lista de citas después de eliminar
+      fetchCitas();
     } catch (error) {
       console.error('Error al eliminar la cita:', error);
-      // Manejar el error, mostrar un mensaje de error, etc.
     }
   };
 
@@ -91,13 +92,11 @@ const EditarCita = () => {
     console.log("Datos enviado hacia el php ", formData);
     try {
       const response = await axios.put(`http://localhost/Tracelink/cita/Editar_cita_test.php?id=${citaSeleccionada.cita_id}`, formData);
-
       console.log('Cita actualizada exitosamente:', response.data);
-      fetchCitas(); // Actualizar la lista de citas después de editar
-      closeModal(); // Cerrar el modal después de la edición exitosa
+      fetchCitas();
+      closeModal();
     } catch (error) {
       console.error('Error al actualizar la cita:', error);
-      // Manejar el error, por ejemplo, mostrar un mensaje de error
     }
   };
 
@@ -113,11 +112,27 @@ const EditarCita = () => {
     });
   };
 
+  const descargarPDF = () => {
+    const doc = new jsPDF();
+    doc.autoTable({
+      head: [['ID', 'Fecha', 'Hora', 'Descripción', 'Mecánico', 'Vehículo']],
+      body: citas.map(cita => [
+        cita.cita_id,
+        cita.fecha,
+        cita.hora,
+        cita.descripcion,
+        `${cita.nombre_mecanico} ${cita.apellido_mecanico}`,
+        cita.patente
+      ])
+    });
+    doc.save('lista_citas.pdf');
+  };
+
   return (
     <div>
       <Navbar />
-      {/* Mostrar tabla de citas */}
       <h2>Citas Registradas</h2>
+      <Button onClick={descargarPDF}>Descargar PDF</Button>
       {error && <p>{error}</p>}
       <Table striped bordered hover responsive>
         <thead>
@@ -141,20 +156,21 @@ const EditarCita = () => {
               <td>{`${cita.nombre_mecanico} ${cita.apellido_mecanico}`}</td>
               <td>{cita.patente}</td>
               <td>
-                <button onClick={() => handleEliminar(cita)}>Eliminar</button>
-                <button onClick={() => handleEditClick(cita)}>Editar</button>
+                <Button variant="dark" onClick={() => handleEliminar(cita)}>Eliminar</Button>
+                <Button variant="success" onClick={() => handleEditClick(cita)}>Editar</Button>
               </td>
             </tr>
           ))}
         </tbody>
       </Table>
 
-      {/* Modal para editar cita */}
-      {modalOpen && (
-        <div className="modal">
-          <div className="modal-content">
-            <span className="close" onClick={closeModal}>&times;</span>
-            <form onSubmit={handleSubmit}>
+      <Modal show={modalOpen} onHide={closeModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Editar Cita</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <form onSubmit={handleSubmit}>
+            <div className="mb-3">
               <Autocomplete
                 options={mecanicos}
                 getOptionLabel={(option) => `${option.nombre} ${option.apellido}`}
@@ -163,56 +179,80 @@ const EditarCita = () => {
                   if (newValue) {
                     setFormData({
                       ...formData,
-                      mecanico_id: newValue.idMecanico, // Establecer el ID del mecánico seleccionado
+                      mecanico_id: newValue.idMecanico,
                     });
                   } else {
                     setFormData({
                       ...formData,
-                      mecanico_id: '', // Limpiar el ID del mecánico si se deselecciona
+                      mecanico_id: '',
                     });
                   }
                 }}
-                renderInput={(params) => <TextField {...params} label="Nombre del Mecánico" />}
+                renderInput={(params) => <TextField {...params} label="Nombre del Mecánico" fullWidth />}
               />
-
-              <div>
-                <label>Fecha:</label>
-                <input type="date" name="fecha" value={formData.fecha} onChange={handleInputChange} />
-              </div>
-              <div>
-                <label>Hora:</label>
-                <input type="time" name="hora" value={formData.hora} onChange={handleInputChange} />
-              </div>
-              <div>
-                <label>Descripción:</label>
-                <textarea name="descripcion" value={formData.descripcion} onChange={handleInputChange} />
-              </div>
-              <div>
-                <Autocomplete
-                  options={vehiculos}
-                  getOptionLabel={(option) => `${option.marca} ${option.modelo} (${option.patente})`}
-                  value={vehiculos.find(vehiculo => vehiculo.id === formData.vehiculo_id) || null}
-                  onChange={(e, newValue) => {
-                    if (newValue) {
-                      setFormData({
-                        ...formData,
-                        vehiculo_id: newValue.id,
-                      });
-                    } else {
-                      setFormData({
-                        ...formData,
-                        vehiculo_id: '',
-                      });
-                    }
-                  }}
-                  renderInput={(params) => <TextField {...params} label="Vehículo" />}
-                />
-              </div>
-              <button type="submit">Guardar Cambios</button>
-            </form>
-          </div>
-        </div>
-      )}
+            </div>
+            <div className="mb-3">
+              <TextField
+                label="Fecha"
+                type="date"
+                name="fecha"
+                value={formData.fecha}
+                onChange={handleInputChange}
+                fullWidth
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+            </div>
+            <div className="mb-3">
+              <TextField
+                label="Hora"
+                type="time"
+                name="hora"
+                value={formData.hora}
+                onChange={handleInputChange}
+                fullWidth
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+            </div>
+            <div className="mb-3">
+              <TextField
+                label="Descripción"
+                name="descripcion"
+                value={formData.descripcion}
+                onChange={handleInputChange}
+                fullWidth
+                multiline
+                rows={4}
+              />
+            </div>
+            <div className="mb-3">
+              <Autocomplete
+                options={vehiculos}
+                getOptionLabel={(option) => option.patente}
+                value={vehiculos.find(vehiculo => vehiculo.id === formData.vehiculo_id) || null}
+                onChange={(e, newValue) => {
+                  if (newValue) {
+                    setFormData({
+                      ...formData,
+                      vehiculo_id: newValue.id,
+                    });
+                  } else {
+                    setFormData({
+                      ...formData,
+                      vehiculo_id: '',
+                    });
+                  }
+                }}
+                renderInput={(params) => <TextField {...params} label="Patente del Vehículo" fullWidth />}
+              />
+            </div>
+            <Button type="submit" variant="primary">Guardar cambios</Button>
+          </form>
+        </Modal.Body>
+      </Modal>
     </div>
   );
 };

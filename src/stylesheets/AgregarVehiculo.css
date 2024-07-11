@@ -1,6 +1,6 @@
 /* Estilo para el contenedor del botón y el modal */
 .container {
-    display: flex;
+    
     justify-content: center;
     margin-top: 20px;
 }

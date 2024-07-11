@@ -4,6 +4,8 @@ import { Table, Form, Button, Modal } from 'react-bootstrap';
 import axios from 'axios';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 
 function AgregarMantencion() {
     const [datosMantencion, setDatosMantencion] = useState([]);
@@ -60,7 +62,6 @@ function AgregarMantencion() {
         }
     };
 
-
     const cargarVehiculos = async () => {
         try {
             const response = await axios.get('http://localhost/Tracelink/Mantenimiento/Vehiculos.php');
@@ -93,8 +94,6 @@ function AgregarMantencion() {
         }
     };
 
-
-
     const handleModificar = (idMantencion) => {
         const mantencion = datosMantencion.find(m => m.idMantencion === idMantencion);
         if (mantencion) {
@@ -110,7 +109,6 @@ function AgregarMantencion() {
             console.error('Mantención no encontrada con el ID:', idMantencion);
         }
     };
-
 
     const handleSubmitEditar = async (e) => {
         e.preventDefault();
@@ -154,11 +152,9 @@ function AgregarMantencion() {
         setNuevoMantenimiento({ ...nuevoMantenimiento, [name]: value });
 
         if (name === 'fecha') {
-            cargarCitasDisponibles(nuevoMantenimiento.idCita, value); // Aquí estaba `nuevoMantenimiento.idMecanico`
+            cargarCitasDisponibles(nuevoMantenimiento.idCita, value);
         }
     };
-
-
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -178,8 +174,6 @@ function AgregarMantencion() {
             alert('La fecha y/o el mecánico seleccionado no están disponibles. Por favor, elija otra fecha/mecánico.');
         }
     };
-
-
 
     const limpiarFormulario = () => {
         setNuevoMantenimiento({
@@ -201,17 +195,13 @@ function AgregarMantencion() {
 
     const verificarMecanicoDisponible = (idCita, fecha) => {
         const citaExistente = citas.find(cita => cita.id === idCita && cita.fecha === fecha);
-        return !citaExistente; // Devuelve true si el mecánico está disponible en esa fecha, false si no lo está
+        return !citaExistente;
     };
-
-
 
     const verificarFechaDisponible = (fecha) => {
         const citaExistente = citas.find(cita => cita.fecha === fecha);
-        return !citaExistente; // Devuelve true si la fecha está disponible, false si no lo está
+        return !citaExistente;
     };
-
-
 
     const cargarCitasDisponibles = async (idCita, fecha) => {
         try {
@@ -222,6 +212,19 @@ function AgregarMantencion() {
         }
     };
 
+    const descargarPDF = () => {
+        const doc = new jsPDF();
+        doc.autoTable({
+            head: [['ID', 'Fecha', 'Descripción', 'Patente Vehículo']],
+            body: datosMantencion.map(mantencion => [
+                mantencion.idMantencion,
+                mantencion.fecha,
+                mantencion.descripcion,
+                mantencion.patente
+            ])
+        });
+        doc.save('lista_mantenciones.pdf');
+    };
 
     return (
         <div>
@@ -257,8 +260,8 @@ function AgregarMantencion() {
                 </Button>
             </Form>
 
-
             <h2>Lista de Mantenciones</h2>
+            <Button variant="secondary" onClick={descargarPDF}>Descargar PDF</Button>
             <Table striped bordered hover>
                 <thead>
                     <tr>
@@ -325,3 +328,4 @@ function AgregarMantencion() {
 }
 
 export default AgregarMantencion;
+

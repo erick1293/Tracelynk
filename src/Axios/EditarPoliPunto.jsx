@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
 
-
 function MostrarPuntos() {
   const [puntos, setPuntos] = useState([]);
   const [poligonos, setPoligonos] = useState([]);
@@ -29,8 +28,7 @@ function MostrarPuntos() {
   }, []);
 
   const handleEditarPunto = (idPuntos) => {
-    console.log("Intentando modificar cita con ID:", idPuntos);
-    const PoliPuntos = idPuntos.find(c => c.idPuntos === idPuntos);
+    console.log("Intentando modificar punto con ID:", idPuntos);
     const editItem = editData.find(item => item.idPuntos === idPuntos);
     if (editItem) {
       // Buscar el ID del polígono basado en el nombre
@@ -39,10 +37,12 @@ function MostrarPuntos() {
         editItem.Poligono_idPoligono = poligono.idPoligono;
       }
 
+      console.log('Datos a enviar:', editItem);
+
       axios.post('http://localhost/Tracelink/poligonos/EditarPoliPunto.php', editItem)
         .then(response => {
           alert(response.data.message);
-          setEditData(editData.filter(item => item.idPuntos !== idPuntos)); // Remove item from editData after it's been updated
+          setEditData(editData.filter(item => item.idPuntos !== idPuntos)); // Eliminar el ítem de editData después de actualizarlo
         })
         .catch((error) => {
           console.error('Error:', error);
@@ -72,8 +72,8 @@ function MostrarPuntos() {
   };
 
   return (
-      <div>
-        <Navbar/>
+    <div>
+      <Navbar />
       <h1>Puntos</h1>
       <table>
         <thead>

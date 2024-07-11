@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Form, Button, Table } from 'react-bootstrap';
+import { Form, Button, Table, Alert } from 'react-bootstrap';
 import Navbar from '../components/Navbar';
 import { Autocomplete, TextField } from '@mui/material';
 import "../stylesheets/AgendarCita.css";
@@ -18,6 +18,7 @@ const AgregarCita = () => {
     const [mecanicos, setMecanicos] = useState([]);
     const [vehiculos, setVehiculos] = useState([]);
     const [error, setError] = useState(null);
+    const [showAlert, setShowAlert] = useState(false);
 
     useEffect(() => {
         // Obtener mecánicos
@@ -87,14 +88,21 @@ const AgregarCita = () => {
                     descripcion: '',
                     vehiculos: []
                 });
+                setShowAlert(true); // Mostrar alerta
+                setTimeout(() => setShowAlert(false), 3000); // Ocultar alerta después de 3 segundos
             })
             .catch(error => console.error("Hubo un error al agregar la cita: ", error));
+    };
+
+    const redireccionarMostrarCitas = () => {
+        window.location.href = 'http://localhost:3000/EditarCita';
     };
 
     return (
         <div>
             <Navbar />
             <div className="container mt-4">
+                {showAlert && <Alert variant="success">Cita agregada correctamente!</Alert>}
                 <Form onSubmit={handleSubmit}>
                     <h2>Agregar Nueva Cita</h2>
                     <Form.Group controlId="formNombreMecanico">
@@ -148,6 +156,9 @@ const AgregarCita = () => {
                     </Form.Group>
                     <Button variant="primary" type="submit">
                         Agregar Cita
+                    </Button>
+                    <Button variant="secondary" onClick={redireccionarMostrarCitas} className="ml-2">
+                        Mostrar Citas
                     </Button>
                 </Form>
             </div>
