@@ -17,7 +17,7 @@ import EditarCita from './Axios/EditarCita';
 import Login from './components/Login';
 import Register from './components/Register';
 import Alerta_Vehiculos from './Axios/Alerta_Vehiculos';
-import { isAuthenticated, getUserData, removeUserData, getUserRole } from './components/auth';
+import { isAuthenticated, getUserData, removeUserData, getUserRoleId , getUserRoleName } from './components/auth';
 import PrivateRoute from './components/PrivateRoute';
 import AccessDenied from './Axios/access-denied';
 import Navbar from './components/Navbar';  
@@ -57,7 +57,7 @@ function AppContent() {
                 <Route path='/AgendarCita' element={<PrivateRoute element={AgendarCita} auth={auth} rolesAllowed={[1, 2]} />} />
                 <Route path='/AgendarMantencion' element={<PrivateRoute element={Mantencion} auth={auth} rolesAllowed={[1, 2]} />} />
                 <Route path="/test" element={<PrivateRoute element={TestFiltrado} auth={auth} rolesAllowed={[1]} />} />
-                <Route path="/register" element={<PrivateRoute element={Register} auth={auth} rolesAllowed={[1]} />} />
+                <Route path="/register" element={<PrivateRoute element={Register} auth={auth} rolesAllowed={[1 ,3]} />} />
                 <Route path='/AgregarObjeto' element={<PrivateRoute element={AgregarObjeto} auth={auth} rolesAllowed={[1]} />} />
                 <Route path='/Estados' element={<PrivateRoute element={Estados} auth={auth} rolesAllowed={[1]} />} />
                 <Route path='/AgregarVehiculo' element={<PrivateRoute element={AgregarVehiculo} auth={auth} rolesAllowed={[1, 2]} />} />

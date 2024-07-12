@@ -1,13 +1,13 @@
 import React from 'react';
 import { Maps, MenuDerecha } from './Home'; // Importa Maps y MenuDerecha desde Home.js
 import Mapa from './Mapa'; // Importa el componente Mapa
-import { getUserRole } from '../components/auth'; // Importa función para obtener el rol del usuario
+import { getUserRoleId ,  getUserRoleName,  Use} from '../components/auth'; // Importa función para obtener el rol del usuario
 import '../stylesheets/Home.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function Inicio({ userData, handleLogout }) {
-    const userRole = getUserRole();
-
+    const userRole = getUserRoleId();
+    const userName = getUserRoleName ();
     return (
         <> 
             <div className="container">
@@ -19,7 +19,9 @@ function Inicio({ userData, handleLogout }) {
                     <div className="col-4">
                     <div>
                             <h3>Bienvenido, {userData ? userData.username : 'Usuario'}</h3>
-                            <p>Rol: {userRole}</p>
+                            <p>Rol: id  {userRole} Nombre roll: {userName} </p>
+                            
+
                             <button onClick={handleLogout}>Cerrar sesión</button>
                             {/* Otro contenido de la página de inicio */}
                         </div>

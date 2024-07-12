@@ -1,13 +1,13 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
-import { getUserRole } from './auth';
+import { getUserRoleId } from './auth';
 
 const PrivateRoute = ({ element: Element, auth, rolesAllowed }) => {
     if (!auth) {
         return <Navigate to="/login" />;
     }
 
-    const userRole = getUserRole();
+    const userRole = getUserRoleId();
     if (!rolesAllowed.includes(userRole)) {
         return <Navigate to="/access-denied" />;
     }
@@ -16,3 +16,4 @@ const PrivateRoute = ({ element: Element, auth, rolesAllowed }) => {
 };
 
 export default PrivateRoute;
+

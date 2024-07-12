@@ -41,7 +41,6 @@ const Register = () => {
 
   return (
     <div>
-      <Navbar/>
       <h2>Register</h2>
       {alertMessage && <div className={alertMessage.includes('Error') ? 'error' : 'success'}>{alertMessage}</div>}
       <form onSubmit={handleSubmit}>
