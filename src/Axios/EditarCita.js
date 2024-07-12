@@ -130,7 +130,6 @@ const EditarCita = () => {
 
   return (
     <div>
-      <Navbar />
       <h2>Citas Registradas</h2>
       <Button onClick={descargarPDF}>Descargar PDF</Button>
       {error && <p>{error}</p>}

@@ -100,7 +100,6 @@ const AgregarCita = () => {
 
     return (
         <div>
-            <Navbar />
             <div className="container mt-4">
                 {showAlert && <Alert variant="success">Cita agregada correctamente!</Alert>}
                 <Form onSubmit={handleSubmit}>

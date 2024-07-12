@@ -190,7 +190,6 @@ const Vehiculos = () => {
 
     return (
         <div>
-            <Navbar />
             <h1>Vehículos</h1>
             <FormControl type="text" placeholder="Buscar..." className="mb-3" onChange={handleBuscar} />
             <Table>

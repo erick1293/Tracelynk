@@ -192,7 +192,6 @@ function FiltrarPorFecha() {
 
   return (
     <div>
-      <Navbar />
       <h2>Filtrar Mantenciones por Fecha y Mecánico</h2>
       {error && <p>Error: {error}</p>}
 

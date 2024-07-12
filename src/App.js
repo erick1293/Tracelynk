@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter, Route, Routes,  } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
 import AgendarCita from './Axios/AgendarCita';
 import AgregarObjeto from './components/AgregarObjeto';
 import Estados from './components/Estados';
@@ -14,54 +14,62 @@ import TestFiltrado from './Axios/Filtrados';
 import AgregarPoliPunto from './Axios/AgregarPolipunto';
 import EditarPoliPunto from './Axios/EditarPoliPunto';
 import EditarCita from './Axios/EditarCita';
-import Login from './components/Login';  
-import Register from './components/Register';  
+import Login from './components/Login';
+import Register from './components/Register';
 import Alerta_Vehiculos from './Axios/Alerta_Vehiculos';
-import { isAuthenticated, getUserData, removeUserData, getUserRole }from './components/auth'; 
+import { isAuthenticated, getUserData, removeUserData, getUserRole } from './components/auth';
+import PrivateRoute from './components/PrivateRoute';
+import AccessDenied from './Axios/access-denied';
+import Navbar from './components/Navbar';  
 function App() {
-    const [auth, setAuth] = useState(isAuthenticated());  // Estado de autenticación inicial
-    const [userData, setUserData] = useState(null);      // Estado para almacenar datos del usuario
+    return (
+        <BrowserRouter>
+            <AppContent />
+        </BrowserRouter>
+    );
+}
+
+function AppContent() {
+    const [auth, setAuth] = useState(isAuthenticated());
+    const [userData, setUserData] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
-        // Obtener y establecer datos del usuario al cargar la aplicación
         if (auth) {
             const user = getUserData();
             setUserData(user);
         }
     }, [auth]);
 
-  // Función para cerrar sesión
-  const handleLogout = () => {
-    // Eliminar datos del usuario del localStorage usando removeUserData
-    removeUserData();
-    // Actualizar estado de autenticación a falso
-    setAuth(false);
-};
+    const handleLogout = () => {
+        removeUserData();
+        setAuth(false);
+        navigate('/login');
+    };
 
     return (
         <>
-            <BrowserRouter>
-                <Routes>
-                <Route path="/" element={<Inicio userData={userData} handleLogout={handleLogout}  />} />
-                    <Route path='/AgendarCita' element={<AgendarCita />} />
-                    <Route path='/AgendarMantencion' element={<Mantencion />} />
-                    <Route path='/AgregarObjeto' element={<AgregarObjeto />} />
-                    <Route path='/Estados' element={<Estados />} />
-                    <Route path='/AgregarVehiculo' element={<AgregarVehiculo />} />
-                    <Route path='/ModificarVehiculos' element={<ModificarVehiculos />} />
-                    <Route path='/Taller_Mecanico' element={<Taller_Mecanico />} />
-                    <Route path='/Editar_Mecanico' element={<Editar_mecanico />} />
-                    <Route path='/EditarEstado' element={<EditarEstado />} />
-                    <Route path='/test' element={<TestFiltrado />} />
-                    <Route path='/AgregarPoliPunto' element={<AgregarPoliPunto />} />
-                    <Route path='/EditarPoliPunto' element={<EditarPoliPunto />} />
-                    <Route path='/Editarcita' element={<EditarCita />} />
-                    <Route path="/login" element={<Login setAuth={setAuth} />} />
-                    <Route path='/register' element={<Register />} />  
-                    <Route path='/Alerta_Vehiculos' element={<Alerta_Vehiculos />} />  
-
-                </Routes>
-            </BrowserRouter>
+            <Navbar userData={userData} handleLogout={handleLogout} /> {/* Pasa userData a Navbar */}
+            <Routes>
+                <Route path="/" element={<Inicio userData={userData} handleLogout={handleLogout} />} />
+                <Route path="/login" element={<Login setAuth={setAuth} />} />
+                <Route path="/access-denied" element={<AccessDenied />} />
+                <Route path='/AgendarCita' element={<PrivateRoute element={AgendarCita} auth={auth} rolesAllowed={[1, 2]} />} />
+                <Route path='/AgendarMantencion' element={<PrivateRoute element={Mantencion} auth={auth} rolesAllowed={[1, 2]} />} />
+                <Route path="/test" element={<PrivateRoute element={TestFiltrado} auth={auth} rolesAllowed={[1]} />} />
+                <Route path="/register" element={<PrivateRoute element={Register} auth={auth} rolesAllowed={[1]} />} />
+                <Route path='/AgregarObjeto' element={<PrivateRoute element={AgregarObjeto} auth={auth} rolesAllowed={[1]} />} />
+                <Route path='/Estados' element={<PrivateRoute element={Estados} auth={auth} rolesAllowed={[1]} />} />
+                <Route path='/AgregarVehiculo' element={<PrivateRoute element={AgregarVehiculo} auth={auth} rolesAllowed={[1, 2]} />} />
+                <Route path='/ModificarVehiculos' element={<PrivateRoute element={ModificarVehiculos} auth={auth} rolesAllowed={[1]} />} />
+                <Route path='/Taller_Mecanico' element={<PrivateRoute element={Taller_Mecanico} auth={auth} rolesAllowed={[1, 2]} />} />
+                <Route path='/Editar_Mecanico' element={<PrivateRoute element={Editar_mecanico} auth={auth} rolesAllowed={[1]} />} />
+                <Route path='/EditarEstado' element={<PrivateRoute element={EditarEstado} auth={auth} rolesAllowed={[1]} />} />
+                <Route path='/AgregarPoliPunto' element={<PrivateRoute element={AgregarPoliPunto} auth={auth} rolesAllowed={[1]} />} />
+                <Route path='/EditarPoliPunto' element={<PrivateRoute element={EditarPoliPunto} auth={auth} rolesAllowed={[1]} />} />
+                <Route path='/Editarcita' element={<PrivateRoute element={EditarCita} auth={auth} rolesAllowed={[1, 2]} />} />
+                <Route path='/Alerta_Vehiculos' element={<PrivateRoute element={Alerta_Vehiculos} auth={auth} rolesAllowed={[1, 2]} />} />
+            </Routes>
         </>
     );
 }

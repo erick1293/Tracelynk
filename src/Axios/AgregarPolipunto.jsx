@@ -75,7 +75,6 @@ axios.get('http://localhost/Tracelink/poligonos/MostrarPoligonos.php')
 
   return (
     <div>
-       <Navbar />
       <h1>Agregar Polígono</h1>
       <form onSubmit={handleSubmit}>
         <label>

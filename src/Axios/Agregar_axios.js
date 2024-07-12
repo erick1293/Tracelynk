@@ -124,7 +124,6 @@ const AgregarVehiculo = ({ onAgregar }) => {
 
     return (
         <>
-            <Navbar />
             <div className="container">
                 <h1>Agregar Vehículo</h1> <br/>
                 {error && <p className="text-danger">{error}</p>}

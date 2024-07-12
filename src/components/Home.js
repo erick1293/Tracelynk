@@ -6,7 +6,6 @@ import "../stylesheets/Home.css";
 export function Home() {
   return (
     <div className="container">
-      <Navbar />
       <div className="row">
         <div className="col-md-6">
           <Mapa />

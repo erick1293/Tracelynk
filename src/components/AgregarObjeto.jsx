@@ -84,7 +84,6 @@ function AgregarObjeto() {
 
   return (
     <div>
-      <Navbar />
       <form>
         <label>
           Nombre del objeto:

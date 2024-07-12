@@ -116,7 +116,6 @@ function AgregarMecanico() {
 
   return (
     <div>
-      <Navbar />
       <form>
         <label>
           Nombre de taller mecanico:

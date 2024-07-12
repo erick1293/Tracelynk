@@ -1,20 +1,18 @@
 import React from 'react';
-import { Route, Navigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
+import { getUserRole } from './auth';
 
-const PrivateRoute = ({ element: Element, auth, rolesAllowed, ...rest }) => {
-    // Verificar si el usuario está autenticado
-    if (!auth.authenticated) {
+const PrivateRoute = ({ element: Element, auth, rolesAllowed }) => {
+    if (!auth) {
         return <Navigate to="/login" />;
     }
 
-    // Verificar si el rol del usuario tiene permiso para acceder a la ruta
-    if (!rolesAllowed.includes(auth.role)) {
-        // Si el rol del usuario no está en rolesAllowed, redirigir a una página de acceso denegado u otra ruta según necesites
+    const userRole = getUserRole();
+    if (!rolesAllowed.includes(userRole)) {
         return <Navigate to="/access-denied" />;
     }
 
-    // Permitir el acceso a la ruta si pasa todas las verificaciones
-    return <Route {...rest} element={<Element />} />;
+    return <Element />;
 };
 
 export default PrivateRoute;

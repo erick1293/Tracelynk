@@ -228,7 +228,6 @@ function AgregarMantencion() {
 
     return (
         <div>
-            <Navbar />
             <h2>Agregar Mantención</h2>
             {error && <p>Error: {error}</p>}
 

@@ -74,7 +74,6 @@ function AgregarMecanico() {
 
   return (
     <div>
-      <Navbar />
       <Form inline>
         <FormControl type="text" placeholder="Buscar" className="mr-sm-2" value={filtro} onChange={(e) => setFiltro(e.target.value)} />
       </Form>

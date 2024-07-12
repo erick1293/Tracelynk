@@ -62,7 +62,7 @@ function FiltrarPorFecha() {
       };
 
       if (selectedMechanic) {
-        params.mechanic_name = selectedMechanic.nombre; // Asegúrate de usar 'nombre' del objeto selectedMechanic
+        params.mechanic_name = selectedMechanic.nombre; 
       }
 
       const response = await axios.get('http://localhost/Tracelink/Mantenimiento/filtrar_mantencion.php', {
@@ -189,7 +189,6 @@ function FiltrarPorFecha() {
 
   return (
     <div>
-      <Navbar />
       <h2>Filtrar Mantenciones por Fecha y Mecánico</h2>
       {error && <p>Error: {error}</p>}
 

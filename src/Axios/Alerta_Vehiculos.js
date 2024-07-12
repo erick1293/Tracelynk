@@ -46,7 +46,6 @@ function Vehiculos() {
 
   return (
     <div>
-    <Navbar/>
       <h1>Alertas de Vehiculos con exceso de Kilometraje</h1>
       {vehiculosMantenimiento.length > 0 ? (
         <div>

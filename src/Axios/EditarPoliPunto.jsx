@@ -73,7 +73,6 @@ function MostrarPuntos() {
 
   return (
     <div>
-      <Navbar />
       <h1>Puntos</h1>
       <table>
         <thead>

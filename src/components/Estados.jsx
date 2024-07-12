@@ -72,7 +72,6 @@ function EstadoComponent() {
 
   return (
     <div>
-      <Navbar />
       <form onSubmit={(e) => { e.preventDefault(); estadoAModificar ? aplicarModificacion() : agregarEstado(e); }}>
         <label>
           Estado

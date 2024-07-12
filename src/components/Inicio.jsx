@@ -1,5 +1,4 @@
 import React from 'react';
-import Navbar from './Navbar';
 import { Maps, MenuDerecha } from './Home'; // Importa Maps y MenuDerecha desde Home.js
 import Mapa from './Mapa'; // Importa el componente Mapa
 import { getUserRole } from '../components/auth'; // Importa función para obtener el rol del usuario
@@ -11,7 +10,6 @@ function Inicio({ userData, handleLogout }) {
 
     return (
         <> 
-            <Navbar />
             <div className="container">
                 <div className="row">
                     <div className="col-8">

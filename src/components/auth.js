@@ -11,12 +11,10 @@ export const getUserData = () => {
 };
 
 // Función para obtener el ID del rol del usuario
-
 export const getUserRole = () => {
     const userData = getUserData();
     return userData ? userData.role_id : null;
 };
-
 
 // Función para eliminar los datos del usuario del localStorage
 export const removeUserData = () => {
