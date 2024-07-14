@@ -74,14 +74,30 @@ const Mapa = () => {
         const nextIndex = (currentIndex + 1) % ubicaciones.length;
         const nextUbicacion = ubicaciones[nextIndex];
         if (nextUbicacion) {
-          setPosition([parseFloat(nextUbicacion.latitud), parseFloat(nextUbicacion.longitud)]);
+          const newLat = parseFloat(nextUbicacion.latitud);
+          const newLng = parseFloat(nextUbicacion.longitud);
+
+          // Verifica si la latitud y longitud son válidas
+          if (!isNaN(newLat) && !isNaN(newLng)) {
+            setPosition([newLat, newLng]);
+
+            // Verificar si la ubicación del vehículo está dentro del polígono
+            if (polygonCoordinates.length > 0) {
+              const vehicleLocation = L.latLng(newLat, newLng);
+              const polygon = L.polygon(polygonCoordinates);
+              if (!polygon.getBounds().contains(vehicleLocation)) {
+                console.log("¡Alerta! El vehículo ha salido del polígono");
+               // alert("¡Alerta! El vehículo ha salido del polígono");
+              }
+            }
+          }
         }
         return nextUbicacion.idUbicacion;
       });
-    }, 2000); // Cambiar cada 2 segundos
+    }, 2000);
 
     return () => clearInterval(intervalId);
-  }, [ubicaciones]);
+  }, [ubicaciones, polygonCoordinates]);
 
   const handlePoligonoChange = (e) => {
     setSelectedPoligono(e.target.value);
