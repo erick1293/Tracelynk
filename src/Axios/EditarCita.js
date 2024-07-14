@@ -6,7 +6,7 @@ import Navbar from '../components/Navbar';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 
-const EditarCita = () => {
+const EditarCita = ({ userRole }) => {
   const [mecanicos, setMecanicos] = useState([]);
   const [vehiculos, setVehiculos] = useState([]);
   const [citas, setCitas] = useState([]);
@@ -142,8 +142,11 @@ const EditarCita = () => {
             <th>Descripción</th>
             <th>Mecánico</th>
             <th>Vehículo</th>
-            <th>Acciones</th>
-          </tr>
+            <th>  {(userRole === 1 || userRole === 3) && (
+              
+              <p> Acciones </p>  )}
+              </th>
+              </tr>
         </thead>
         <tbody>
           {citas.map((cita) => (
@@ -155,8 +158,12 @@ const EditarCita = () => {
               <td>{`${cita.nombre_mecanico} ${cita.apellido_mecanico}`}</td>
               <td>{cita.patente}</td>
               <td>
-                <Button variant="dark" onClick={() => handleEliminar(cita)}>Eliminar</Button>
-                <Button variant="success" onClick={() => handleEditClick(cita)}>Editar</Button>
+                {(userRole === 1 || userRole === 3) && (
+                  <>
+                    <Button variant="dark" onClick={() => handleEliminar(cita)}>Eliminar</Button>
+                    <Button variant="success" onClick={() => handleEditClick(cita)}>Editar</Button>
+                  </>
+                )}
               </td>
             </tr>
           ))}
@@ -248,7 +255,9 @@ const EditarCita = () => {
                 renderInput={(params) => <TextField {...params} label="Patente del Vehículo" fullWidth />}
               />
             </div>
-            <Button type="submit" variant="primary">Guardar cambios</Button>
+            <Button variant="success" type="submit">
+              Guardar Cambios
+            </Button>
           </form>
         </Modal.Body>
       </Modal>

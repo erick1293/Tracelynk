@@ -12,8 +12,7 @@ const PrivateRoute = ({ element: Element, auth, rolesAllowed }) => {
         return <Navigate to="/access-denied" />;
     }
 
-    return <Element />;
+    return <Element userRole={userRole} />;
 };
 
 export default PrivateRoute;
-

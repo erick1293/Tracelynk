@@ -31,6 +31,7 @@ function Vehiculos() {
   const descargarPDF = () => {
     const doc = new jsPDF();
     doc.autoTable({
+
       head: [['Marca', 'Modelo', 'Año', 'Patente', 'Kilometraje Inicial', 'Kilometraje Actual']],
       body: vehiculosMantenimiento.map(vehiculo => [
         vehiculo.marca,
@@ -74,6 +75,7 @@ function Vehiculos() {
               ))}
             </tbody>
           </table>
+          
           <button onClick={redireccionarAMantenimiento}>
             Agendar Cita para Mantenimiento
           </button>

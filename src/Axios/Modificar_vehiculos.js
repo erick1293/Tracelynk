@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Table, Button, Modal, Form, FormControl } from 'react-bootstrap';
 import Navbar from '../components/Navbar';
 
-const Vehiculos = () => {
+const Vehiculos = ({ userRole }) => {
     const [data, setData] = useState([]);
     const [marcas, setMarcas] = useState([]);
     const [modelos, setModelos] = useState([]);
@@ -220,8 +220,11 @@ const Vehiculos = () => {
                             <td>{v.kilometrajeactual}</td>
                             <td>{mapEstado(v.idEstado)}</td>
                             <td>
+                            {(userRole === 1 || userRole === 3) && (
+                                <>
                                 <Button variant="primary" onClick={() => handleModificar(v.id)}>Modificar</Button>
                                 <Button variant="danger" onClick={() => handleDelete(v.id)}>Eliminar</Button>
+                                </> )}
                             </td>
                         </tr>
                     ))}

@@ -21,8 +21,10 @@ function Inicio({ userData, handleLogout }) {
                             <h3>Bienvenido, {userData ? userData.username : 'Usuario'}</h3>
                             <p>Rol: id  {userRole} Nombre roll: {userName} </p>
                             
+                            {
 
-                            <button onClick={handleLogout}>Cerrar sesión</button>
+                            // </div></div></div></div>button onClick={handleLogout}>Cerrar sesión</button>
+                            }
                             {/* Otro contenido de la página de inicio */}
                         </div>
                         <MenuDerecha /> {/* Utiliza el componente MenuDerecha aquí */}
