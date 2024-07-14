@@ -204,7 +204,9 @@ const Vehiculos = ({ userRole }) => {
                         <th>kilometraje Inicial</th>
                         <th>kilometraje Actual</th>
                         <th>Estado Vehiculo</th>
-                        <th>Acciones</th>
+                        <th>  {(userRole === 1 || userRole === 3) && (
+              <p> Acciones </p>  )}
+              </th>
                     </tr>
                 </thead>
                 <tbody>

@@ -61,18 +61,18 @@ function AppContent() {
                 <Route path='/AgendarCita' element={<PrivateRoute element={AgendarCita} auth={auth} rolesAllowed={[1, 3]} />} />
                 <Route path='/AgendarMantencion' element={<PrivateRoute element={Mantencion} auth={auth} rolesAllowed={[1, 3]} />} />
                 <Route path="/test" element={<PrivateRoute element={TestFiltrado} auth={auth} rolesAllowed={[1,3]} />} />
-                <Route path="/register" element={<PrivateRoute element={Register} auth={auth} rolesAllowed={[1 ,3]} />} />
-                <Route path='/AgregarObjeto' element={<PrivateRoute element={AgregarObjeto} auth={auth} rolesAllowed={[1]} />} />
-                <Route path='/Estados' element={<PrivateRoute element={Estados} auth={auth} rolesAllowed={[1]} />} />
-                <Route path='/AgregarVehiculo' element={<PrivateRoute element={AgregarVehiculo} auth={auth} rolesAllowed={[1, 2]} />} />
+                <Route path="/register" element={<PrivateRoute element={Register} auth={auth} rolesAllowed={[1]} />} />
+                <Route path='/AgregarObjeto' element={<PrivateRoute element={AgregarObjeto} auth={auth} rolesAllowed={[1 , 3]} />} />
+                <Route path='/Estados' element={<PrivateRoute element={Estados} auth={auth} rolesAllowed={[1,3]} />} />
+                <Route path='/AgregarVehiculo' element={<PrivateRoute element={AgregarVehiculo} auth={auth} rolesAllowed={[1, 3]} />} />
                 <Route path='/ModificarVehiculos' element={<PrivateRoute element={ModificarVehiculos} auth={auth} rolesAllowed={[1 , 3 ,2]} />} />
-                <Route path='/Taller_Mecanico' element={<PrivateRoute element={Taller_Mecanico} auth={auth} rolesAllowed={[1, 2]} />} />
-                <Route path='/Editar_Mecanico' element={<PrivateRoute element={Editar_mecanico} auth={auth} rolesAllowed={[1]} />} />
-                <Route path='/EditarEstado' element={<PrivateRoute element={EditarEstado} auth={auth} rolesAllowed={[1]} />} />
-                <Route path='/AgregarPoliPunto' element={<PrivateRoute element={AgregarPoliPunto} auth={auth} rolesAllowed={[1]} />} />
-                <Route path='/EditarPoliPunto' element={<PrivateRoute element={EditarPoliPunto} auth={auth} rolesAllowed={[1]} />} />
+                <Route path='/Taller_Mecanico' element={<PrivateRoute element={Taller_Mecanico} auth={auth} rolesAllowed={[1,3]} />} />
+                <Route path='/Editar_Mecanico' element={<PrivateRoute element={Editar_mecanico} auth={auth} rolesAllowed={[1 ,3]} />} />
+                <Route path='/EditarEstado' element={<PrivateRoute element={EditarEstado} auth={auth} rolesAllowed={[1 ,3 ]} />} />
+                <Route path='/AgregarPoliPunto' element={<PrivateRoute element={AgregarPoliPunto} auth={auth} rolesAllowed={[1 ,3 ]} />} />
+                <Route path='/EditarPoliPunto' element={<PrivateRoute element={EditarPoliPunto} auth={auth} rolesAllowed={[1 ,3]} />} />
                 <Route path='/Editarcita' element={<PrivateRoute element={EditarCita} auth={auth} rolesAllowed={[1, 3 ,2]}  />} />
-                <Route path='/Alerta_Vehiculos' element={<PrivateRoute element={Alerta_Vehiculos} auth={auth} rolesAllowed={[1, 2]} />} />
+                <Route path='/Alerta_Vehiculos' element={<PrivateRoute element={Alerta_Vehiculos} auth={auth} rolesAllowed={[1, 2 ,3]} />} />
                 <Route path='/mostrar_mante' element={<PrivateRoute element={Mostrar_mante} auth={auth} rolesAllowed={[2]} />} />
                 <Route path='/ver_tallers' element={<PrivateRoute element={Ver_Tallers} auth={auth} rolesAllowed={[2]} />} />
 

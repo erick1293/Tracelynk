@@ -70,7 +70,7 @@ function Navbar({ userData, handleLogout }) {
 
 
 
-        {userData && userData.role_id === 1 && (
+     {userData && (userData.role_id === 1 || userData.role_id === 3) && (
           <>
             <li className="dropdown">
               <Link to="/Taller_Mecanico" className="dropbtn">Taller Mecanico</Link>
