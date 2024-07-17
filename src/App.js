@@ -23,6 +23,8 @@ import AccessDenied from './Axios/access-denied';
 import Navbar from './components/Navbar';  
 import Mostrar_mante from './Axios/Mostrar_Mante_u';  
 import Ver_Tallers from './Axios/Ver_Tallers';  
+import AñadirEstadoObjeto  from './Axios/AgregarEstadoObjeto'; 
+
 function App() {
     return (
         <BrowserRouter>
@@ -75,7 +77,7 @@ function AppContent() {
                 <Route path='/Alerta_Vehiculos' element={<PrivateRoute element={Alerta_Vehiculos} auth={auth} rolesAllowed={[1, 2 ,3]} />} />
                 <Route path='/mostrar_mante' element={<PrivateRoute element={Mostrar_mante} auth={auth} rolesAllowed={[2]} />} />
                 <Route path='/ver_tallers' element={<PrivateRoute element={Ver_Tallers} auth={auth} rolesAllowed={[2]} />} />
-
+                <Route path='/AñadirEstadoObjeto' element={<PrivateRoute element={AñadirEstadoObjeto} auth={auth} rolesAllowed={[1,3]} />} />
             </Routes>
         </>
     );

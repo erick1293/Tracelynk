@@ -33,16 +33,28 @@ function Navbar({ userData, handleLogout }) {
 
 
 
-        {userData && (userData.role_id === 1 || userData.role_id === 3) && (
+{userData && (userData.role_id === 1 || userData.role_id === 3) && (
+          <li className="dropdown">
+            <Link to="/AgregarObjeto" className="dropbtn">Carga </Link>
+            <div className="dropdown-content">
+            <Link to="/AgregarObjeto" className="dropbtn">Agregar Objetos</Link>
+              <Link to="/AñadirEstadoObjeto">Añadir estado / Objeto</Link>
+            </div>
+
+          </li>
+        )}
+
+{userData && (userData.role_id === 1 || userData.role_id === 3) && (
           <>
-            <li><Link to="/AgregarObjeto">Agregar Objeto</Link></li>
             <li className="dropdown">
-              <Link to="/Estados" className="dropbtn">Estados</Link>
+            <Link to="/Estados" className="dropbtn">Estados Vehiculos</Link>
               <div className="dropdown-content">
-                <Link to="/Estados">Agregar</Link>
+                <Link to="/Estados">Estado Vehiculo</Link>
                 <Link to="/EditarEstado">Modificar/Mostrar</Link>
               </div>
+            
             </li>
+
           </>
         )}
 

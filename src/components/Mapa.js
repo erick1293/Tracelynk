@@ -67,37 +67,64 @@ const Mapa = () => {
     }
   }, [selectedPoligono, allPoints]);
 
+  const enviarAlerta = () => {
+      axios.post('http://localhost/Tracelink/Alertas/Envia_Alertas.php', {
+          alert: true
+      })
+      .then(response => {
+          console.log(response.data.message);
+      })
+      .catch(error => {
+          console.error("Hubo un error al enviar la alerta:", error);
+      });
+  };
+  
+  // Llama a esta función cuando necesites enviar la alerta
+  enviarAlerta();
+  
   useEffect(() => {
     const intervalId = setInterval(() => {
-      setSelectedUbicacion(prevSelectedUbicacion => {
-        const currentIndex = ubicaciones.findIndex(ubicacion => ubicacion.idUbicacion === prevSelectedUbicacion);
-        const nextIndex = (currentIndex + 1) % ubicaciones.length;
-        const nextUbicacion = ubicaciones[nextIndex];
-        if (nextUbicacion) {
-          const newLat = parseFloat(nextUbicacion.latitud);
-          const newLng = parseFloat(nextUbicacion.longitud);
+        setSelectedUbicacion(prevSelectedUbicacion => {
+            const currentIndex = ubicaciones.findIndex(ubicacion => ubicacion.idUbicacion === prevSelectedUbicacion);
+            const nextIndex = (currentIndex + 1) % ubicaciones.length;
+            const nextUbicacion = ubicaciones[nextIndex];
+            if (nextUbicacion) {
+                const newLat = parseFloat(nextUbicacion.latitud);
+                const newLng = parseFloat(nextUbicacion.longitud);
 
-          // Verifica si la latitud y longitud son válidas
-          if (!isNaN(newLat) && !isNaN(newLng)) {
-            setPosition([newLat, newLng]);
+                // Verifica si la latitud y longitud son válidas
+                if (!isNaN(newLat) && !isNaN(newLng)) {
+                    setPosition([newLat, newLng]);
 
-            // Verificar si la ubicación del vehículo está dentro del polígono
-            if (polygonCoordinates.length > 0) {
-              const vehicleLocation = L.latLng(newLat, newLng);
-              const polygon = L.polygon(polygonCoordinates);
-              if (!polygon.getBounds().contains(vehicleLocation)) {
-                console.log("¡Alerta! El vehículo ha salido del polígono");
-               // alert("¡Alerta! El vehículo ha salido del polígono");
-              }
+                    // Verificar si la ubicación del vehículo está dentro del polígono
+                    if (polygonCoordinates.length > 0) {
+                        const vehicleLocation = L.latLng(newLat, newLng);
+                        const polygon = L.polygon(polygonCoordinates);
+                        if (!polygon.getBounds().contains(vehicleLocation)) {
+                            console.log("¡Alerta! El vehículo ha salido del polígono");
+
+                            // Enviar alerta al servidor PHP
+                            axios.post('http://localhost/Tracelink/Alertas/Envia_Alertas.php', {
+                                alert: true
+                            })
+                            .then(response => {
+                                console.log(response.data.message);
+                            })
+                            .catch(error => {
+                                console.error('Error al enviar la alerta:', error);
+                            });
+                        }
+                    }
+                }
             }
-          }
-        }
-        return nextUbicacion.idUbicacion;
-      });
-    }, 2000);
+            return nextUbicacion.idUbicacion;
+        });
+    }, 2000000);
 
     return () => clearInterval(intervalId);
-  }, [ubicaciones, polygonCoordinates]);
+}, [ubicaciones, polygonCoordinates]);
+
+  
 
   const handlePoligonoChange = (e) => {
     setSelectedPoligono(e.target.value);
