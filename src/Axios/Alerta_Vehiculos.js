@@ -4,7 +4,7 @@ import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import Navbar from "../components/Navbar";
 
-function Vehiculos() {
+function Vehiculos({ userRole }) {  // Añade userRole como prop
   const [vehiculos, setVehiculos] = useState([]);
   const [vehiculosMantenimiento, setVehiculosMantenimiento] = useState([]);
 
@@ -86,10 +86,14 @@ function Vehiculos() {
               ))}
             </tbody>
           </table>
-          <button onClick={redireccionarAMantenimiento}>
-            Agendar Cita para Mantenimiento
-          </button>
-          <button onClick={enviarCorreo}>Enviar Correo</button>
+          {(userRole === 1 || userRole === 3) && (  // Mostrar botones solo para administrador o secretario
+            <>
+              <button onClick={redireccionarAMantenimiento}>
+                Agendar Cita para Mantenimiento
+              </button>
+              <button onClick={enviarCorreo}>Enviar Correo</button>
+            </>
+          )}
         </div>
       ) : (
         <p>No hay vehículos que necesiten mantenimiento.</p>
