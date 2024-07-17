@@ -15,7 +15,6 @@ function AgregarMantencion() {
     const [mecanicos, setMecanicos] = useState([]);
     const [nuevoMantenimiento, setNuevoMantenimiento] = useState({
         idCita: '',
-        vehiculo_id: '',
         fecha: '',
         descripcion: ''
     });
@@ -24,7 +23,6 @@ function AgregarMantencion() {
     const [mantencionSeleccionada, setMantencionSeleccionada] = useState(null);
     const [editarMantenimiento, setEditarMantenimiento] = useState({
         idCita: '',
-        vehiculo_id: '',
         fecha: '',
         descripcion: ''
     });
@@ -84,23 +82,24 @@ function AgregarMantencion() {
 
     const handleCitaChange = (e) => {
         const idCita = e.target.value;
+        const vehiculoId = e.target.options[e.target.selectedIndex].getAttribute('data-vehiculo-id');
+    
         const citaSeleccionada = citas.find(cita => cita.id === idCita);
         if (citaSeleccionada) {
             setNuevoMantenimiento(prevState => ({
                 ...prevState,
                 idCita: citaSeleccionada.id,
-                vehiculo_id: citaSeleccionada.vehiculo_id
+                vehiculo_id: vehiculoId // Asegúrate de asignar vehiculo_id correctamente
             }));
         }
     };
-
+    
     const handleModificar = (idMantencion) => {
         const mantencion = datosMantencion.find(m => m.idMantencion === idMantencion);
         if (mantencion) {
             setMantencionSeleccionada(mantencion);
             setEditarMantenimiento({
                 idCita: mantencion.cita_id,
-                vehiculo_id: mantencion.vehiculo_id,
                 fecha: mantencion.fecha,
                 descripcion: mantencion.descripcion
             });
@@ -115,10 +114,11 @@ function AgregarMantencion() {
         try {
             const response = await axios.post('http://localhost/Tracelink/Mantenimiento/editar_mantencion.php', {
                 idMantencion: mantencionSeleccionada.idMantencion,
-                ...editarMantenimiento
+                fecha: editarMantenimiento.fecha,
+                descripcion: editarMantenimiento.descripcion
             });
-            if (response.data.message) {
-                alert(response.data.message);
+            if (response.data.success) {
+                alert(response.data.success);
                 cargarDatosMantencion();
                 handleCloseModal();
             } else {
@@ -128,6 +128,9 @@ function AgregarMantencion() {
             alert('Error al editar la mantención: ' + (error.message || 'Ocurrió un error desconocido'));
         }
     };
+    
+    
+    
 
     const handleDelete = async (mantencionId) => {
         try {
@@ -158,13 +161,19 @@ function AgregarMantencion() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        
         console.log(nuevoMantenimiento);
         const fechaDisponible = verificarFechaDisponible(nuevoMantenimiento.fecha);
         const mecanicoDisponible = verificarMecanicoDisponible(nuevoMantenimiento.idCita, nuevoMantenimiento.fecha);
-
+    
         if (fechaDisponible && mecanicoDisponible) {
             try {
-                await axios.post('http://localhost/Tracelink/Mantenimiento/AgregarMantencion.php', nuevoMantenimiento);
+                await axios.post('http://localhost/Tracelink/Mantenimiento/AgregarMantencion.php', {
+                    idCita: nuevoMantenimiento.idCita,
+                    fecha: nuevoMantenimiento.fecha,
+                    descripcion: nuevoMantenimiento.descripcion,
+                    vehiculo_id: nuevoMantenimiento.vehiculo_id // Asegúrate de incluir vehiculo_id aquí
+                });
                 limpiarFormulario();
                 cargarDatosMantencion();
             } catch (error) {
@@ -174,6 +183,7 @@ function AgregarMantencion() {
             alert('La fecha y/o el mecánico seleccionado no están disponibles. Por favor, elija otra fecha/mecánico.');
         }
     };
+    
 
     const limpiarFormulario = () => {
         setNuevoMantenimiento({
@@ -215,9 +225,10 @@ function AgregarMantencion() {
     const descargarPDF = () => {
         const doc = new jsPDF();
         doc.autoTable({
-            head: [['ID', 'Fecha', 'Descripción', 'Patente Vehículo']],
+            head: [['ID',"citas_idcitas" ,'Fecha', 'Descripción', 'Patente Vehículo']],
             body: datosMantencion.map(mantencion => [
                 mantencion.idMantencion,
+                mantencion.citas_idcitas,
                 mantencion.fecha,
                 mantencion.descripcion,
                 mantencion.patente
@@ -232,17 +243,18 @@ function AgregarMantencion() {
             {error && <p>Error: {error}</p>}
 
             <Form onSubmit={handleSubmit}>
-                <Form.Group controlId="idCita">
-                    <Form.Label>ID de la Cita</Form.Label>
-                    <Form.Control as="select" value={nuevoMantenimiento.idCita} onChange={handleCitaChange}>
-                        <option value="">Seleccione una cita</option>
-                        {citas.map(cita => (
-                            <option key={cita.id} value={cita.id}>
-                                {cita.fecha} - {cita.descripcion} - {cita.patente} ({cita.marca} {cita.modelo})
-                            </option>
-                        ))}
-                    </Form.Control>
-                </Form.Group>
+            <Form.Group controlId="idCita">
+    <Form.Label>ID de la Cita</Form.Label>
+    <Form.Control as="select" value={nuevoMantenimiento.idCita} onChange={handleCitaChange}>
+        <option value="">Seleccione una cita</option>
+        {citas.map(cita => (
+            <option key={cita.id} value={cita.id} data-vehiculo-id={cita.vehiculo_id}>
+                {cita.fecha} - {cita.descripcion} - {cita.patente} ({cita.marca} {cita.modelo})
+            </option>
+        ))}
+    </Form.Control>
+</Form.Group>
+
 
                 <Form.Group controlId="fecha">
                     <Form.Label>Fecha</Form.Label>
@@ -264,7 +276,8 @@ function AgregarMantencion() {
             <Table striped bordered hover>
                 <thead>
                     <tr>
-                        <th>ID</th>
+                        <th>ID Mantencion</th>
+                        <th>ID Cita</th>
                         <th>Fecha</th>
                         <th>Descripción</th>
                         <th>Patente vehiculo</th>
@@ -275,6 +288,7 @@ function AgregarMantencion() {
                     {datosMantencion.map((mantencion) => (
                         <tr key={mantencion.idMantencion}>
                             <td>{mantencion.idMantencion}</td>
+                            <td>{mantencion.citas_idcitas}</td>
                             <td>{mantencion.fecha}</td>
                             <td>{mantencion.descripcion}</td>
                             <td>{mantencion.patente}</td>
@@ -292,33 +306,41 @@ function AgregarMantencion() {
                     <Modal.Title>Modificar Mantención</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <Form onSubmit={handleSubmitEditar}>
-                        <Form.Group controlId="idCitaEditar">
-                            <Form.Label>ID de la Cita</Form.Label>
-                            <Form.Control as="select" value={editarMantenimiento.idCita} onChange={(e) => setEditarMantenimiento({ ...editarMantenimiento, idCita: e.target.value })}>
-                                <option value="">Seleccione una cita</option>
-                                {citas.map(cita => (
-                                    <option key={cita.id} value={cita.id}>
-                                        {cita.fecha} - {cita.descripcion} - {cita.patente} ({cita.marca} {cita.modelo})
-                                    </option>
-                                ))}
-                            </Form.Control>
-                        </Form.Group>
+                <Form onSubmit={handleSubmitEditar}>
+    <Form.Group controlId="formEditarCita">
+        <Form.Label>Cita</Form.Label>
+        <Form.Control as="select" value={editarMantenimiento.idCita} onChange={(e) => setEditarMantenimiento({ ...editarMantenimiento, idCita: e.target.value })}>
+            <option value="">Selecciona una cita</option>
+            {citas.map(cita => (
+                <option key={cita.id} value={cita.id}>
+                    {cita.id} - {cita.descripcion}- {cita.fecha} - {cita.patente}
+                </option>
+            ))}
+        </Form.Control>
+    </Form.Group>
+    <Form.Group controlId="formEditarFecha">
+        <Form.Label>Fecha</Form.Label>
+        <Form.Control
+            type="date"
+            name="fecha"
+            value={editarMantenimiento.fecha}
+            onChange={(e) => setEditarMantenimiento({ ...editarMantenimiento, fecha: e.target.value })}
+        />
+    </Form.Group>
+    <Form.Group controlId="formEditarDescripcion">
+        <Form.Label>Descripción</Form.Label>
+        <Form.Control
+            type="text"
+            name="descripcion"
+            value={editarMantenimiento.descripcion}
+            onChange={(e) => setEditarMantenimiento({ ...editarMantenimiento, descripcion: e.target.value })}
+        />
+    </Form.Group>
+    <Button variant="primary" type="submit">
+        Guardar Cambios
+    </Button>
+</Form>
 
-                        <Form.Group controlId="fechaEditar">
-                            <Form.Label>Fecha</Form.Label>
-                            <Form.Control type="date" name="fecha" value={editarMantenimiento.fecha} onChange={(e) => setEditarMantenimiento({ ...editarMantenimiento, fecha: e.target.value })} />
-                        </Form.Group>
-
-                        <Form.Group controlId="descripcionEditar">
-                            <Form.Label>Descripción</Form.Label>
-                            <Form.Control as="textarea" name="descripcion" value={editarMantenimiento.descripcion} onChange={(e) => setEditarMantenimiento({ ...editarMantenimiento, descripcion: e.target.value })} />
-                        </Form.Group>
-
-                        <Button variant="primary" type="submit">
-                            Guardar Cambios
-                        </Button>
-                    </Form>
                 </Modal.Body>
             </Modal>
 
