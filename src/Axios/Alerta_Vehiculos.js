@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
-import Navbar from "../components/Navbar"
+import Navbar from "../components/Navbar";
+
 function Vehiculos() {
   const [vehiculos, setVehiculos] = useState([]);
   const [vehiculosMantenimiento, setVehiculosMantenimiento] = useState([]);
@@ -31,7 +32,6 @@ function Vehiculos() {
   const descargarPDF = () => {
     const doc = new jsPDF();
     doc.autoTable({
-
       head: [['Marca', 'Modelo', 'Año', 'Patente', 'Kilometraje Inicial', 'Kilometraje Actual']],
       body: vehiculosMantenimiento.map(vehiculo => [
         vehiculo.marca,
@@ -43,6 +43,17 @@ function Vehiculos() {
       ])
     });
     doc.save('vehiculos_mantenimiento.pdf');
+  };
+
+  const enviarCorreo = () => {
+    console.log('Enviando correo con los siguientes vehículos:', vehiculosMantenimiento);
+    axios.post('http://localhost/Tracelink/Alertas/EnviarCorreoVehiculos.php', vehiculosMantenimiento)
+      .then(response => {
+        alert(response.data.message);
+      })
+      .catch(error => {
+        console.error('Error al enviar el correo:', error);
+      });
   };
 
   return (
@@ -75,10 +86,10 @@ function Vehiculos() {
               ))}
             </tbody>
           </table>
-          
           <button onClick={redireccionarAMantenimiento}>
             Agendar Cita para Mantenimiento
           </button>
+          <button onClick={enviarCorreo}>Enviar Correo</button>
         </div>
       ) : (
         <p>No hay vehículos que necesiten mantenimiento.</p>
@@ -88,4 +99,3 @@ function Vehiculos() {
 }
 
 export default Vehiculos;
-
