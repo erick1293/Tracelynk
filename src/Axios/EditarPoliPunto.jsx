@@ -6,6 +6,7 @@ function MostrarPuntos() {
   const [puntos, setPuntos] = useState([]);
   const [poligonos, setPoligonos] = useState([]);
   const [editData, setEditData] = useState([]);
+  const [selectedPoligono, setSelectedPoligono] = useState('');
 
   useEffect(() => {
     // Obtener los puntos al cargar el componente
@@ -71,9 +72,23 @@ function MostrarPuntos() {
     });
   };
 
+  const handlePoligonoChange = (e) => {
+    setSelectedPoligono(e.target.value);
+  };
+
   return (
-    <div>
+    <div> 
       <h1>Puntos</h1>
+      <div>
+        <select onChange={handlePoligonoChange}>
+          <option value="">Seleccione un polígono</option>
+          {poligonos.map((poligono) => (
+            <option key={poligono.idPoligono} value={poligono.idPoligono}>
+              {poligono.nombre}
+            </option>
+          ))}
+        </select>
+      </div>
       <table>
         <thead>
           <tr>
@@ -85,28 +100,30 @@ function MostrarPuntos() {
           </tr>
         </thead>
         <tbody>
-          {puntos.map((punto, index) => (
-            <tr key={index}>
-              <td>{punto.idPuntos}</td>
-              <td><input type="text" defaultValue={punto.Longitud} onBlur={(e) => handleInputChange(punto.idPuntos, 'Longitud', e.target.value)} /></td>
-              <td><input type="text" defaultValue={punto.Latitud} onBlur={(e) => handleInputChange(punto.idPuntos, 'Latitud', e.target.value)} /></td>
-              <td>
-                <select defaultValue={punto.Poligono_idPoligono} onBlur={(e) => handleInputChange(punto.idPuntos, 'Poligono_idPoligono', e.target.value)}>
-                  {poligonos.map((poligono, index) => (
-                    <option key={index} value={poligono.idPoligono}>{poligono.nombre}</option>
-                  ))}
-                </select>
-              </td>
-              <td>
-                <button onClick={() => handleEditarPunto(punto.idPuntos)}>Editar</button>
-                <button>Eliminar</button>
-              </td>
-            </tr>
-          ))}
+          {puntos
+            .filter(punto => selectedPoligono === '' || punto.Poligono_idPoligono === selectedPoligono)
+            .map((punto, index) => (
+              <tr key={index}>
+                <td>{punto.idPuntos}</td>
+                <td><input type="text" defaultValue={punto.Longitud} onBlur={(e) => handleInputChange(punto.idPuntos, 'Longitud', e.target.value)} /></td>
+                <td><input type="text" defaultValue={punto.Latitud} onBlur={(e) => handleInputChange(punto.idPuntos, 'Latitud', e.target.value)} /></td>
+                <td>
+                  <select defaultValue={punto.Poligono_idPoligono} onBlur={(e) => handleInputChange(punto.idPuntos, 'Poligono_idPoligono', e.target.value)}>
+                    {poligonos.map((poligono, index) => (
+                      <option key={index} value={poligono.idPoligono}>{poligono.nombre}</option>
+                    ))}
+                  </select>
+                </td>
+                <td>
+                  <button onClick={() => handleEditarPunto(punto.idPuntos)}>Editar</button>
+                  <button>Eliminar</button>
+                </td>
+              </tr>
+            ))}
         </tbody>
       </table>
     </div>
   );
-};
+}
 
 export default MostrarPuntos;
