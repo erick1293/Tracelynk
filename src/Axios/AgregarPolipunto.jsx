@@ -19,7 +19,7 @@ function AgregarPoligono() {
   const [poligonos, setPoligonos] = useState([]);
   const [poligonoSeleccionado, setPoligonoSeleccionado] = useState('');
   const [puntos, setPuntos] = useState([]);
-  const [position, setPosition] = useState([-27.360535800413754, -70.3350422675603]); // Default position
+  const [position, setPosition] = useState([-27.360535800413754, -70.3350422675603]); 
 
   const cargarPoligonos = () => {
     axios.get('http://localhost/Tracelink/poligonos/MostrarPoligonos.php')
