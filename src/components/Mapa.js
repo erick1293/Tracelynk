@@ -88,6 +88,7 @@ const Mapa = () => {
             const currentIndex = ubicaciones.findIndex(ubicacion => ubicacion.idUbicacion === prevSelectedUbicacion);
             const nextIndex = (currentIndex + 1) % ubicaciones.length;
             const nextUbicacion = ubicaciones[nextIndex];
+            
             if (nextUbicacion) {
                 const newLat = parseFloat(nextUbicacion.latitud);
                 const newLng = parseFloat(nextUbicacion.longitud);
@@ -119,7 +120,7 @@ const Mapa = () => {
             }
             return nextUbicacion.idUbicacion;
         });
-    }, 2000000);
+    }, 20000000); // 2000 para que avance normal
 
     return () => clearInterval(intervalId);
 }, [ubicaciones, polygonCoordinates]);

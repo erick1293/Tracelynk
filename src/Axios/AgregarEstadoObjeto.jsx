@@ -94,7 +94,7 @@ function AgregarObjeto() {
         <tbody>
           {cargaFiltradas.map(c => (
             <tr key={c.id}>
-              <td>{c.id}</td>
+              <td>{c.idnp}</td>
               <td>{c.vehiculo_id}</td>
               <td>{c.nombre}</td>
               <td>{c.estado_objeto}</td>
