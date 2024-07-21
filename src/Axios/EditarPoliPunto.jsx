@@ -51,6 +51,20 @@ function MostrarPuntos() {
     }
   };
 
+  const handleEliminarPunto = (idPuntos) => {
+    const confirmDelete = window.confirm("¿Estás seguro de que deseas eliminar este punto?");
+    if (confirmDelete) {
+      axios.post('http://localhost/Tracelink/poligonos/EliminarPoliPunto.php', { idPuntos })
+        .then(response => {
+          alert(response.data.message);
+          setPuntos(puntos.filter(item => item.idPuntos !== idPuntos));
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+    }
+  };
+
   const handleInputChange = (idPuntos, field, value) => {
     setEditData(prevEditData => {
       let editItem = prevEditData.find(item => item.idPuntos === idPuntos);
@@ -77,7 +91,7 @@ function MostrarPuntos() {
   };
 
   return (
-    <div> 
+    <div>
       <h1>Puntos</h1>
       <div>
         <select onChange={handlePoligonoChange}>
@@ -108,7 +122,7 @@ function MostrarPuntos() {
                 <td><input type="text" defaultValue={punto.Longitud} onBlur={(e) => handleInputChange(punto.idPuntos, 'Longitud', e.target.value)} /></td>
                 <td><input type="text" defaultValue={punto.Latitud} onBlur={(e) => handleInputChange(punto.idPuntos, 'Latitud', e.target.value)} /></td>
                 <td>
-                  <select defaultValue={punto.Poligono_idPoligono} onBlur={(e) => handleInputChange(punto.idPuntos, 'Poligono_idPoligono', e.target.value)}>
+                  <select defaultValue={punto.Poligono_idPoligono} onChange={(e) => handleInputChange(punto.idPuntos, 'Poligono_idPoligono', e.target.value)}>
                     {poligonos.map((poligono, index) => (
                       <option key={index} value={poligono.idPoligono}>{poligono.nombre}</option>
                     ))}
@@ -116,7 +130,7 @@ function MostrarPuntos() {
                 </td>
                 <td>
                   <button onClick={() => handleEditarPunto(punto.idPuntos)}>Editar</button>
-                  <button>Eliminar</button>
+                  <button onClick={() => handleEliminarPunto(punto.idPuntos)}>Eliminar</button>
                 </td>
               </tr>
             ))}

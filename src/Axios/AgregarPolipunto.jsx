@@ -5,6 +5,8 @@ import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import Navbar from '../components/Navbar';
 
+// al agregar los puntos tiene que ser el punto de arriba , derecha , abajo , izquierda , en forma de c invertida
+
 // Fix marker icons issue with Leaflet in React
 delete L.Icon.Default.prototype._getIconUrl;
 
