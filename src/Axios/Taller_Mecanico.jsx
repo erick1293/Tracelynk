@@ -36,11 +36,21 @@ function AgregarMecanico() {
     })
     .sort((a, b) => a.nombre.localeCompare(b.nombre)); // Ordenar por nombre ascendente
 
-  // Función para validar el formato de RUT (básica)
+  // Función para validar el formato de RUT con módulo 11
   const validarRut = (rut) => {
-    // Formato básico: XX.XXX.XXX-Y
-    const regex = /^(\d{1,2}\.)?(\d{3}\.)?\d{3}-[\dkK]$/;
-    return regex.test(rut);
+    if (!/^[0-9]+-[0-9kK]{1}$/.test(rut)) {
+      return false;
+    }
+    const [rutBase, dv] = rut.split('-');
+    let total = 0;
+    let factor = 2;
+    for (let i = rutBase.length - 1; i >= 0; i--) {
+      total += parseInt(rutBase[i]) * factor;
+      factor = factor === 7 ? 2 : factor + 1;
+    }
+    const dvEsperado = 11 - (total % 11);
+    const dvCalculado = dvEsperado === 11 ? '0' : dvEsperado === 10 ? 'K' : dvEsperado.toString();
+    return dv.toUpperCase() === dvCalculado;
   };
 
   // Manejar cambios en los campos del formulario
@@ -188,7 +198,7 @@ function AgregarMecanico() {
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowModal(false)} className="btn btn-secondary">Cerrar</Button>
-          <Button variant="primary" onClick={manejarGuardarEdicion} className="btn btn-primary">Guardar cambios</Button>
+          <Button variant="primary" onClick={manejarGuardarEdicion} className="btn btn-primary">Guardar Cambios</Button>
         </Modal.Footer>
       </Modal>
     </div>
