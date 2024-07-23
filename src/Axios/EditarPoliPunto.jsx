@@ -1,143 +1,191 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import Navbar from '../components/Navbar';
+import { MapContainer, TileLayer, Marker, Polygon } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
 
-function MostrarPuntos() {
-  const [puntos, setPuntos] = useState([]);
+// Fix marker icons issue with Leaflet in React
+delete L.Icon.Default.prototype._getIconUrl;
+
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon-2x.png',
+  iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
+  shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
+});
+
+function EditarPoligono() {
   const [poligonos, setPoligonos] = useState([]);
-  const [editData, setEditData] = useState([]);
-  const [selectedPoligono, setSelectedPoligono] = useState('');
+  const [poligonoSeleccionado, setPoligonoSeleccionado] = useState('');
+  const [puntos, setPuntos] = useState([]);
+  const [position, setPosition] = useState([-27.360535800413754, -70.3350422675603]);
 
   useEffect(() => {
-    // Obtener los puntos al cargar el componente
-    axios.get('http://localhost/Tracelink/poligonos/MostrarPunto.php')
-      .then(response => {
-        setPuntos(response.data);
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-      });
-
-    // Obtener los polígonos al cargar el componente
     axios.get('http://localhost/Tracelink/poligonos/MostrarPoligonos.php')
       .then(response => {
         setPoligonos(response.data);
       })
-      .catch((error) => {
-        console.error('Error:', error);
+      .catch(error => {
+        console.error('Error al obtener los polígonos:', error);
       });
   }, []);
 
-  const handleEditarPunto = (idPuntos) => {
-    console.log("Intentando modificar punto con ID:", idPuntos);
-    const editItem = editData.find(item => item.idPuntos === idPuntos);
-    if (editItem) {
-      // Buscar el ID del polígono basado en el nombre
-      const poligono = poligonos.find(p => p.nombre === editItem.Poligono_idPoligono);
-      if (poligono) {
-        editItem.Poligono_idPoligono = poligono.idPoligono;
-      }
-
-      console.log('Datos a enviar:', editItem);
-
-      axios.post('http://localhost/Tracelink/poligonos/EditarPoliPunto.php', editItem)
+  useEffect(() => {
+    if (poligonoSeleccionado) {
+      axios.get(`http://localhost/Tracelink/poligonos/MostrarPunto.php?poligono=${poligonoSeleccionado}`)
         .then(response => {
-          alert(response.data.message);
-          setEditData(editData.filter(item => item.idPuntos !== idPuntos)); // Eliminar el ítem de editData después de actualizarlo
-        })
-        .catch((error) => {
-          console.error('Error:', error);
-        });
-    }
-  };
-
-  const handleEliminarPunto = (idPuntos) => {
-    const confirmDelete = window.confirm("¿Estás seguro de que deseas eliminar este punto?");
-    if (confirmDelete) {
-      axios.post('http://localhost/Tracelink/poligonos/EliminarPoliPunto.php', { idPuntos })
-        .then(response => {
-          alert(response.data.message);
-          setPuntos(puntos.filter(item => item.idPuntos !== idPuntos));
+          const puntosFiltrados = response.data.filter(punto => punto.Poligono_idPoligono === poligonoSeleccionado);
+          setPuntos(puntosFiltrados);
         })
         .catch(error => {
-          console.error('Error:', error);
+          console.error('Error al obtener los puntos del polígono:', error);
         });
+    } else {
+      setPuntos([]);
+    }
+  }, [poligonoSeleccionado]);
+
+  const handleGuardarCambios = () => {
+    puntos.forEach((punto, index) => {
+      if (punto.idPuntos && punto.Latitud && punto.Longitud) {
+        console.log(`Enviando punto ${index + 1}:`, punto);
+        axios.post('http://localhost/Tracelink/poligonos/EditarPunto.php', punto)
+          .then(response => {
+            console.log(`Punto ${index + 1}: ${response.data.message}`);
+          })
+          .catch(error => {
+            console.error('Error al enviar el punto:', error);
+          });
+      } else {
+        console.warn(`Punto ${index + 1} tiene campos undefined:`, punto);
+      }
+    });
+    alert('Todos los puntos han sido actualizados exitosamente.');
+  };
+
+  const handleEliminarPunto = (idPunto) => {
+    axios.post('http://localhost/Tracelink/poligonos/EliminarPoliPunto.php', { idPuntos: idPunto })
+      .then(response => {
+        if (response.data.success) {
+          alert('Punto eliminado correctamente');
+          setPuntos(puntos.filter(punto => punto.idPuntos !== idPunto));
+        } else {
+          alert('Error al eliminar el punto');
+        }
+      })
+      .catch(error => {
+        console.error('Error al eliminar el punto:', error);
+      });
+  };
+
+  const handleDragEnd = (index, e) => {
+    const { lat, lng } = e.target.getLatLng();
+    const newPuntos = [...puntos];
+    newPuntos[index].Latitud = lat.toString();
+    newPuntos[index].Longitud = lng.toString();
+    setPuntos(newPuntos);
+
+    const updatedPunto = {
+      idPuntos: newPuntos[index].idPuntos,
+      Latitud: newPuntos[index].Latitud,
+      Longitud: newPuntos[index].Longitud,
+    };
+
+    console.log(`Actualizando punto ${index + 1}:`, updatedPunto);
+    if (updatedPunto.idPuntos && updatedPunto.Latitud && updatedPunto.Longitud) {
+      axios.post('http://localhost/Tracelink/poligonos/EditarPunto.php', updatedPunto)
+        .then(response => {
+          console.log(`Punto ${index + 1}: ${response.data.message}`);
+        })
+        .catch(error => {
+          console.error('Error al actualizar el punto:', error);
+        });
+    } else {
+      console.warn(`Punto ${index + 1} tiene campos undefined:`, updatedPunto);
     }
   };
 
-  const handleInputChange = (idPuntos, field, value) => {
-    setEditData(prevEditData => {
-      let editItem = prevEditData.find(item => item.idPuntos === idPuntos);
-      if (editItem) {
-        if (field === 'Poligono_idPoligono') {
-          // Si se está cambiando el polígono, guardar el nombre en lugar del ID
-          const poligono = poligonos.find(p => p.idPoligono === value);
-          if (poligono) {
-            editItem[field] = poligono.nombre;
-          }
-        } else {
-          editItem[field] = value;
-        }
-      } else {
-        editItem = { idPuntos, [field]: value };
-        prevEditData.push(editItem);
-      }
-      return [...prevEditData];
-    });
-  };
-
-  const handlePoligonoChange = (e) => {
-    setSelectedPoligono(e.target.value);
+  const getPolygonCoordinates = () => {
+    return puntos.map(punto => [parseFloat(punto.Latitud), parseFloat(punto.Longitud)]);
   };
 
   return (
-    <div>
-      <h1>Puntos</h1>
-      <div>
-        <select onChange={handlePoligonoChange}>
-          <option value="">Seleccione un polígono</option>
-          {poligonos.map((poligono) => (
-            <option key={poligono.idPoligono} value={poligono.idPoligono}>
-              {poligono.nombre}
-            </option>
-          ))}
-        </select>
-      </div>
-      <table>
-        <thead>
-          <tr>
-            <th>idPuntos</th>
-            <th>Longitud</th>
-            <th>Latitud</th>
-            <th>Nombre del Polígono</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          {puntos
-            .filter(punto => selectedPoligono === '' || punto.Poligono_idPoligono === selectedPoligono)
-            .map((punto, index) => (
-              <tr key={index}>
-                <td>{punto.idPuntos}</td>
-                <td><input type="text" defaultValue={punto.Longitud} onBlur={(e) => handleInputChange(punto.idPuntos, 'Longitud', e.target.value)} /></td>
-                <td><input type="text" defaultValue={punto.Latitud} onBlur={(e) => handleInputChange(punto.idPuntos, 'Latitud', e.target.value)} /></td>
-                <td>
-                  <select defaultValue={punto.Poligono_idPoligono} onChange={(e) => handleInputChange(punto.idPuntos, 'Poligono_idPoligono', e.target.value)}>
-                    {poligonos.map((poligono, index) => (
-                      <option key={index} value={poligono.idPoligono}>{poligono.nombre}</option>
-                    ))}
-                  </select>
-                </td>
-                <td>
-                  <button onClick={() => handleEditarPunto(punto.idPuntos)}>Editar</button>
-                  <button onClick={() => handleEliminarPunto(punto.idPuntos)}>Eliminar</button>
-                </td>
-              </tr>
+    <div style={{ display: 'flex' }}>
+      <div style={{ width: '50%', padding: '10px' }}>
+        <h1>Editar Puntos</h1>
+        <label>
+          Selecciona un Polígono:
+          <select value={poligonoSeleccionado} onChange={(e) => setPoligonoSeleccionado(e.target.value)}>
+            <option value="">Seleccione un polígono</option>
+            {poligonos.map((poligono, index) => (
+              <option key={index} value={poligono.idPoligono}>{poligono.nombre}</option>
             ))}
-        </tbody>
-      </table>
+          </select>
+        </label>
+        <h1>Editar Puntos</h1>
+        {puntos.map((punto, index) => (
+          <div key={index} style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+            <label style={{ marginRight: '10px' }}>
+              Latitud:
+              <input
+                type="text"
+                value={punto.Latitud}
+                onChange={(e) => {
+                  const newPuntos = [...puntos];
+                  newPuntos[index].Latitud = e.target.value;
+                  setPuntos(newPuntos);
+                }}
+                required
+              />
+            </label>
+            <label style={{ marginRight: '10px' }}>
+              Longitud:
+              <input
+                type="text"
+                value={punto.Longitud}
+                onChange={(e) => {
+                  const newPuntos = [...puntos];
+                  newPuntos[index].Longitud = e.target.value;
+                  setPuntos(newPuntos);
+                }}
+                required
+              />
+            </label>
+            <button onClick={() => handleEliminarPunto(punto.idPuntos)}>Eliminar</button>
+          </div>
+        ))}
+        <button onClick={handleGuardarCambios}>Guardar Cambios</button>
+      </div>
+
+      <div style={{ width: '50%', height: '500px' }}>
+        <MapContainer center={position} zoom={14} style={{ height: '100%', width: '100%' }}>
+          <TileLayer
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          />
+          {puntos.map((punto, index) => {
+            const lat = parseFloat(punto.Latitud);
+            const lng = parseFloat(punto.Longitud);
+            if (!isNaN(lat) && !isNaN(lng)) {
+              return (
+                <Marker
+                  key={index}
+                  position={[lat, lng]}
+                  draggable={true}
+                  eventHandlers={{
+                    dragend: (e) => handleDragEnd(index, e),
+                  }}
+                />
+              );
+            }
+            return null;
+          })}
+          {puntos.length > 2 && (
+            <Polygon positions={getPolygonCoordinates()} color="purple" />
+          )}
+        </MapContainer>
+      </div>
     </div>
   );
 }
 
-export default MostrarPuntos;
+export default EditarPoligono;

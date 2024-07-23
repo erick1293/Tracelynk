@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Polygon, useMapEvents } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import Navbar from '../components/Navbar';
-
-// al agregar los puntos tiene que ser el punto de arriba , derecha , abajo , izquierda , en forma de c invertida
 
 // Fix marker icons issue with Leaflet in React
 delete L.Icon.Default.prototype._getIconUrl;
@@ -19,9 +17,21 @@ L.Icon.Default.mergeOptions({
 function AgregarPoligono() {
   const [nombre, setNombre] = useState('');
   const [poligonos, setPoligonos] = useState([]);
-  const [poligonoSeleccionado, setPoligonoSeleccionado] = useState('');
+  const [poligonoSeleccionado, setPoligonoSeleccionado] = useState(null);
   const [puntos, setPuntos] = useState([]);
-  const [position, setPosition] = useState([-27.360535800413754, -70.3350422675603]); 
+  const [position, setPosition] = useState([-27.360535800413754, -70.3350422675603]);
+
+  useEffect(() => {
+    cargarPoligonos();
+  }, []);
+
+  useEffect(() => {
+    if (poligonoSeleccionado) {
+      cargarPuntos(poligonoSeleccionado.idPoligono);
+    } else {
+      setPuntos([]);
+    }
+  }, [poligonoSeleccionado]);
 
   const cargarPoligonos = () => {
     axios.get('http://localhost/Tracelink/poligonos/MostrarPoligonos.php')
@@ -33,9 +43,16 @@ function AgregarPoligono() {
       });
   };
 
-  useEffect(() => {
-    cargarPoligonos();
-  }, []);
+  const cargarPuntos = (idPoligono) => {
+    axios.get(`http://localhost/Tracelink/poligonos/MostrarPunto.php?poligono=${idPoligono}`)
+      .then(response => {
+        const puntosFiltrados = response.data.filter(punto => punto.Poligono_idPoligono === idPoligono);
+        setPuntos(puntosFiltrados.map(punto => ({ latitud: punto.Latitud, longitud: punto.Longitud })));
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -61,23 +78,53 @@ function AgregarPoligono() {
     setPuntos(newPuntos);
   };
 
+
   const handleAgregarPuntos = () => {
-    const idPoligono = poligonos.find(poligono => poligono.nombre === poligonoSeleccionado).idPoligono;
+    if (!poligonoSeleccionado) {
+      alert('Por favor, selecciona un polígono.');
+      return;
+    }
+
+    const idPoligono = poligonoSeleccionado.idPoligono;
     for (let i = 0; i < puntos.length; i++) {
       const punto = puntos[i];
       const formData = new FormData();
       formData.append('longitud', punto.longitud);
       formData.append('latitud', punto.latitud);
       formData.append('idPoligono', idPoligono);
-      axios.post('http://localhost/Tracelink/poligonos/AgregarPunto.php', formData)
+  
+      // Verificar si el punto ya está registrado en la base de datos
+      axios.get(`http://localhost/Tracelink/poligonos/VerificarPunto.php?latitud=${punto.latitud}&longitud=${punto.longitud}&idPoligono=${idPoligono}`)
         .then(response => {
-          console.log(`Punto ${i + 1}: ${response.data.message}`);
+          if (response.data.exists) {
+            console.log(`El punto ${i + 1} ya está registrado en la base de datos.`);
+          } else {
+            // Si el punto no está registrado, agregarlo a la base de datos
+            axios.post('http://localhost/Tracelink/poligonos/AgregarPunto.php', formData)
+              .then(response => {
+                console.log(`Punto ${i + 1}: ${response.data.message}`);
+              })
+              .catch((error) => {
+                console.error('Error:', error);
+              });
+          }
         })
         .catch((error) => {
           console.error('Error:', error);
         });
     }
-    alert('Todos los puntos han sido agregados exitosamente.');
+    alert('Todos los puntos han sido verificados y los nuevos puntos han sido agregados exitosamente.');
+  };
+  
+
+  const getPolygonCoordinates = () => {
+    return puntos
+      .map(punto => {
+        const lat = parseFloat(punto.latitud);
+        const lng = parseFloat(punto.longitud);
+        return !isNaN(lat) && !isNaN(lng) ? [lat, lng] : null;
+      })
+      .filter(coord => coord !== null);
   };
 
   const MapClickHandler = () => {
@@ -96,71 +143,74 @@ function AgregarPoligono() {
   };
 
   return (
-    <div>
-      <h1>Agregar Polígono</h1>
-      <form onSubmit={handleSubmit}>
-        <label>
-          Nombre del Polígono:
-          <input
-            type="text"
-            value={nombre}
-            onChange={(e) => setNombre(e.target.value)}
-            required
-          />
-        </label>
-        <button type="submit">Agregar Polígono</button>
-      </form>
+    <div style={{ display: 'flex' }}>
+      <div style={{ width: '50%', padding: '10px' }}>
+        <h1>Agregar Polígono</h1>
+        <form onSubmit={handleSubmit}>
+          <label>
+            Nombre del Polígono:
+            <input
+              type="text"
+              value={nombre}
+              onChange={(e) => setNombre(e.target.value)}
+              required
+            />
+          </label>
+          <button type="submit">Agregar Polígono</button>
+        </form>
 
-      <h1>Agregar Punto</h1>
-      <form onSubmit={handleAgregarPuntos}>
-        <label>
-          Selecciona un Polígono:
-          <select value={poligonoSeleccionado} onChange={(e) => setPoligonoSeleccionado(e.target.value)}>
-            {poligonos.map((poligono, index) => (
-              <option key={index} value={poligono.nombre}>{poligono.nombre}</option>
-            ))}
-          </select>
-        </label>
-        {puntos.map((punto, index) => (
-          <div key={index}>
-            <label>
-              Latitud:
-              <input
-                type="text"
-                value={punto.latitud}
-                onChange={(e) => {
-                  const newPuntos = [...puntos];
-                  newPuntos[index].latitud = e.target.value;
-                  setPuntos(newPuntos);
-                }}
-                required
-              />
-            </label>
-            <label>
-              Longitud:
-              <input
-                type="text"
-                value={punto.longitud}
-                onChange={(e) => {
-                  const newPuntos = [...puntos];
-                  newPuntos[index].longitud = e.target.value;
-                  setPuntos(newPuntos);
-                }}
-                required
-              />
-            </label>
-            <button type="button" onClick={() => handleRemovePunto(index)}>Quitar Punto</button>
-          </div>
-        ))}
-        <button type="button" onClick={handleAddPunto}>Añadir Punto</button>
-        <button type="submit">Enviar Puntos</button>
-      </form>
+        <h1>Agregar Punto</h1>
+        <form onSubmit={(e) => { e.preventDefault(); handleAgregarPuntos(); }}>
+          <label>
+            Selecciona un Polígono:
+            <select value={poligonoSeleccionado && poligonoSeleccionado.idPoligono} onChange={(e) => setPoligonoSeleccionado(poligonos.find(poligono => poligono.idPoligono === e.target.value))}>
+              <option value="">Seleccione un polígono</option>
+              {poligonos.map((poligono, index) => (
+                <option key={index} value={poligono.idPoligono}>{poligono.nombre}</option>
+              ))}
+            </select>
+          </label>
+          {puntos.map((punto, index) => (
+            <div key={index}>
+              <label>
+                Latitud:
+                <input
+                  type="text"
+                  value={punto.latitud}
+                  onChange={(e) => {
+                    const newPuntos = [...puntos];
+                    newPuntos[index].latitud = e.target.value;
+                    setPuntos(newPuntos);
+                  }}
+                  required
+                />
+              </label>
+              <label>
+                Longitud:
+                <input
+                  type="text"
+                  value={punto.longitud}
+                  onChange={(e) => {
+                    const newPuntos = [...puntos];
+                    newPuntos[index].longitud = e.target.value;
+                    setPuntos(newPuntos);
+                  }}
+                  required
+                />
+              </label>
+              <button type="button" onClick={() => handleRemovePunto(index)}>Quitar Punto</button>
+            </div>
+          ))}
+          <button type="button" onClick={handleAddPunto}>Añadir Punto</button>
+          <button type="submit">Enviar Puntos</button>
+        </form>
+      </div>
 
-      <div style={{ height: "500px", width: "100%", marginTop: "20px" }}>
-        <MapContainer center={position} zoom={14} style={{ height: "100%", width: "100%" }}>
+      <div style={{ width: '50%', height: '500px' }}>
+        <MapContainer center={position} zoom={14} style={{ height: '100%', width: '100%' }}>
           <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            attribution='© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           />
           {puntos.map((punto, index) => {
             const lat = parseFloat(punto.latitud);
@@ -170,11 +220,14 @@ function AgregarPoligono() {
             }
             return null;
           })}
+          {getPolygonCoordinates().length > 2 && (
+            <Polygon positions={getPolygonCoordinates()} color="purple" />
+          )}
           <MapClickHandler />
         </MapContainer>
       </div>
     </div>
   );
-};
+}
 
 export default AgregarPoligono;
