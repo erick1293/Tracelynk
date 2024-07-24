@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { MapContainer, TileLayer, Marker, Polygon } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Polygon, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 
@@ -124,6 +124,15 @@ function EditarPoligono() {
         <h1>Editar Puntos</h1>
         {puntos.map((punto, index) => (
           <div key={index} style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+            <label>
+                  Id:
+                  <input
+                    type="text"
+                    value={punto.idPuntos}
+                    disabled
+                  />
+                </label>
+
             <label style={{ marginRight: '10px' }}>
               Latitud:
               <input
@@ -174,7 +183,13 @@ function EditarPoligono() {
                   eventHandlers={{
                     dragend: (e) => handleDragEnd(index, e),
                   }}
-                />
+                >
+                  <Popup>
+                    ID del Punto: {punto.idPuntos || 'Nuevo'}<br />
+                    Latitud: {punto.Latitud}<br />
+                    Longitud: {punto.Longitud}
+                  </Popup>
+                </Marker>
               );
             }
             return null;
