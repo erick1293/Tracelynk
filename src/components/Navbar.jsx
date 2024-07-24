@@ -1,11 +1,14 @@
 import React from 'react';
 import '../stylesheets/navbar.css';
 import { Link } from 'react-router-dom';
-
+import logo from '../stylesheets/imagen.png';
 function Navbar({ userData, handleLogout }) {
   return (
     <nav>
+      
       <ul>
+      <img src={logo} className="navbar-logo" alt="Logo" /> 
+      
         <li><Link to="/">Inicio</Link></li>
 
         {userData && (userData.role_id === 1 || userData.role_id === 3) && (

@@ -178,7 +178,7 @@
                   Id:
                   <input
                     type="text"
-                    value={punto.idPunto}
+                    value={punto.id}
                     disabled
                   />
                 </label>

@@ -54,3 +54,10 @@ nav {
   .login-dropdown {
     margin-left: 50%; /* Esto moverá el dropdown de login a la derecha */
   }
+
+  .navbar-logo {
+    height: 50px;
+    width: auto;
+    margin-right: 20px;
+  }
+  
