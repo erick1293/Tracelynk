@@ -24,10 +24,10 @@ function Vehiculos({ userRole }) {  // Añade userRole como prop
       });
   }, []);
 
-  const redireccionarAMantenimiento = () => {
-    console.log('Redireccionando a la página de Agendar Cita...');
-    window.location.href = 'http://localhost:3000/AgendarCita';
-  };
+    const redireccionarAMantenimiento = () => {
+      console.log('Redireccionando a la página de Agendar Cita...');
+      window.location.href = 'http://localhost:3000/AgendarCita';
+    };
 
   const descargarPDF = () => {
     const doc = new jsPDF();
@@ -86,8 +86,8 @@ function Vehiculos({ userRole }) {  // Añade userRole como prop
               ))}
             </tbody>
           </table>
-          {(userRole === 1 || userRole === 3) && (  // Mostrar botones solo para administrador o secretario
-            <>
+            {(userRole === 1 || userRole === 3) && (  // Mostrar botones solo para administrador o secretario
+              <>
               <button onClick={redireccionarAMantenimiento}>
                 Agendar Cita para Mantenimiento
               </button>

@@ -232,7 +232,7 @@ function FiltrarPorFecha() {
             <th>Fecha</th>
             <th>Nombre Del taller</th>
             <th>Descripción</th>
-            <th>Patente Vehículo</th>
+            <th>Patente Vehículo</th> 
           </tr>
         </thead>
         <tbody>
