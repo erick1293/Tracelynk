@@ -120,7 +120,7 @@ const Mapa = () => {
             }
             return nextUbicacion.idUbicacion;
         });
-    }, 2000000); // 2000 para que avance normal
+    }, 20000000); // 2000 para que avance normal
 
     return () => clearInterval(intervalId);
 }, [ubicaciones, polygonCoordinates]);
