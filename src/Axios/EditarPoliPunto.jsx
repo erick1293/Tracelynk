@@ -110,7 +110,7 @@ function EditarPoligono() {
 
   return (
     <div style={{ display: 'flex' }}>
-      <div style={{ width: '50%', padding: '10px' }}>
+      <div style={{ width: '40%', padding: '10px' }}>
         <h1>Editar Puntos</h1>
         <label>
           Selecciona un Polígono:
@@ -165,7 +165,7 @@ function EditarPoligono() {
         <button onClick={handleGuardarCambios}>Guardar Cambios</button>
       </div>
 
-      <div style={{ width: '50%', height: '500px' }}>
+      <div style={{ width: '60%', height: '700px' }}>
         <MapContainer center={position} zoom={14} style={{ height: '100%', width: '100%' }}>
           <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

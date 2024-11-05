@@ -4,10 +4,12 @@
 
 .row {
   display: flex; 
+  flex-direction: row-reverse;
 }
 
 .menuDerecho {
   
-  position: relative;
+position: relative;
 
 }
+ 
