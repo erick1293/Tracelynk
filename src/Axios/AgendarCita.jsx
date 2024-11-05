@@ -22,12 +22,12 @@ const AgregarCita = () => {
 
     useEffect(() => {
         // Obtener mecánicos
-        axios.get('http://localhost/Tracelink/mecanicos/obtenerMecanicos.php')
+        axios.get('http://ec2-54-221-134-204.compute-1.amazonaws.com/Mecanicos/obtenerMecanicos.php')
             .then(response => setMecanicos(response.data))
             .catch(error => console.error("Hubo un error al obtener los mecánicos: ", error));
 
         // Obtener vehículos
-        axios.get('http://localhost/Tracelink/Mantenimiento/Vehiculos.php')
+        axios.get('http://ec2-54-221-134-204.compute-1.amazonaws.com/Mantenimiento/Vehiculos.php')
             .then(response => setVehiculos(response.data))
             .catch(error => {
                 console.error('Error al obtener los datos de vehículos:', error);
@@ -77,7 +77,7 @@ const AgregarCita = () => {
             return;
         }
 
-        axios.post('http://localhost/Tracelink/cita/agregar_cita.php', formData)
+        axios.post('http://ec2-54-221-134-204.compute-1.amazonaws.com/cita/agregar_cita.php', formData)
             .then(response => {
                 setCitas([...citas, response.data]);
                 setFormData({
@@ -113,17 +113,17 @@ const AgregarCita = () => {
                             renderInput={(params) => <TextField {...params} placeholder="Seleccione el nombre del mecánico" />}
                         />
                     </Form.Group>
-                    <Form.Group controlId="idVehiculo">
-                        <Form.Label>Vehículo</Form.Label>
-                        <Form.Control as="select" onChange={handleVehiculoChange}>
-                            <option value="">Seleccione un vehículo</option>
-                            {vehiculos.map(vehiculo => (
-                                <option key={vehiculo.id} value={vehiculo.id}>
-                                    {vehiculo.marca} {vehiculo.modelo} {vehiculo.patente} {vehiculo.anio}
-                                </option>
-                            ))}
-                        </Form.Control>
-                    </Form.Group>
+                        <Form.Group controlId="idVehiculo">
+                            <Form.Label>Vehículo</Form.Label>
+                            <Form.Control as="select" onChange={handleVehiculoChange}>
+                                <option value="">Seleccione un vehículo</option>
+                                {vehiculos.map(vehiculo => (
+                                    <option key={vehiculo.id} value={vehiculo.id}>
+                                        {vehiculo.marca} {vehiculo.modelo} {vehiculo.patente} {vehiculo.anio}
+                                    </option>
+                                ))}
+                            </Form.Control>
+                        </Form.Group>
                     <Form.Group controlId="formFecha">
                         <Form.Label>Fecha</Form.Label>
                         <Form.Control

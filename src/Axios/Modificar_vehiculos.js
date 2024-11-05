@@ -40,7 +40,7 @@ const Vehiculos = ({ userRole }) => {
 
     const fetchData = async () => {
         try {
-            const response = await axios.get('http://localhost/Tracelink/conexion.php');
+            const response = await axios.get('http://ec2-54-221-134-204.compute-1.amazonaws.com/conexion.php');
             setData(response.data);
         } catch (error) {
             setError(error);

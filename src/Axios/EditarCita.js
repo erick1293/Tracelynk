@@ -23,7 +23,7 @@ const EditarCita = ({ userRole }) => {
 
   const fetchCitas = async () => {
     try {
-      const response = await axios.get('http://localhost/Tracelink/cita/obtener_citas.php');
+      const response = await axios.get('http://ec2-54-221-134-204.compute-1.amazonaws.com/cita/obtener_citas.php');
       setCitas(response.data);
       console.log('Citas:', response.data);
     } catch (error) {
