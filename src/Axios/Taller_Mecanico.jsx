@@ -19,7 +19,7 @@ function AgregarMecanico() {
 
   // useEffect para obtener la lista de mecánicos al montar el componente
   useEffect(() => {
-    axios.get('http://ec2-54-221-134-204.compute-1.amazonaws.com/Loguin//Mecanicos/obtenerMecanicos.php')
+    axios.get('http://localhost/Tracelink/Mecanicos/obtenerMecanicos.php')
       .then(response => setMecanicos(response.data))
       .catch(error => console.error('Error al obtener los mecánicos:', error));
   }, []);
