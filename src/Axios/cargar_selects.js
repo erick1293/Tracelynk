@@ -26,7 +26,7 @@ const Cargar_selec = () => {
     ];
 
     useEffect(() => {
-        axios.get('http://localhost/Tracelink/poligonos/MostrarPoligonos.php')
+        axios.get('http://ec2-54-221-134-204.compute-1.amazonaws.com/poligonos/MostrarPoligonos.php')
             .then(response => {
                 setPoligonos(response.data);
             })

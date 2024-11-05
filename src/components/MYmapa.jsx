@@ -24,7 +24,7 @@ const Mapa = () => {
 
   // Obtener los polígonos disponibles
   useEffect(() => {
-    axios.get('http://localhost/Tracelink/poligonos/MostrarPoligonos.php')
+    axios.get('http://ec2-54-221-134-204.compute-1.amazonaws.com/poligonos/MostrarPoligonos.php')
       .then(response => {
         setPoligonos(response.data);
       })
@@ -33,7 +33,7 @@ const Mapa = () => {
       });
 
     // Obtener todos los puntos una vez
-    axios.get('http://localhost/tracelink/poligonos/MostrarPunto.php')
+    axios.get('http://ec2-54-221-134-204.compute-1.amazonaws.com/poligonos/MostrarPunto.php')
       .then(response => {
         setAllPoints(response.data);
       })
@@ -42,7 +42,7 @@ const Mapa = () => {
       });
 
     // Obtener la ubicación del vehículo
-    axios.get('http://localhost/tracelink/poligonos/MostrarUbicacion.php')
+    axios.get('http://ec2-54-221-134-204.compute-1.amazonaws.com/poligonos/MostrarUbicacion.php')
       .then(response => {
         setUbicaciones(response.data);
         if (response.data.length > 0) {
@@ -68,7 +68,7 @@ const Mapa = () => {
   }, [selectedPoligono, allPoints]);
 
   const enviarAlerta = () => {
-      axios.post('http://localhost/Tracelink/Alertas/Envia_Alertas.php', {
+      axios.post('http://ec2-54-221-134-204.compute-1.amazonaws.com/Alertas/Envia_Alertas.php', {
           alert: true
       })
       .then(response => {
@@ -105,7 +105,7 @@ const Mapa = () => {
                             console.log("¡Alerta! El vehículo ha salido del polígono");
 
                             // Enviar alerta al servidor PHP
-                            axios.post('http://localhost/Tracelink/Alertas/Envia_Alertas.php', {
+                            axios.post('http://ec2-54-221-134-204.compute-1.amazonaws.com/Alertas/Envia_Alertas.php', {
                                 alert: true
                             })
                             .then(response => {

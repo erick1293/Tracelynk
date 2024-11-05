@@ -20,7 +20,7 @@ function EditarPoligono() {
   const [position, setPosition] = useState([-27.360535800413754, -70.3350422675603]);
 
   useEffect(() => {
-    axios.get('http://localhost/Tracelink/poligonos/MostrarPoligonos.php')
+    axios.get('http://ec2-54-221-134-204.compute-1.amazonaws.com/poligonos/MostrarPoligonos.php')
       .then(response => {
         setPoligonos(response.data);
       })
@@ -31,7 +31,7 @@ function EditarPoligono() {
 
   useEffect(() => {
     if (poligonoSeleccionado) {
-      axios.get(`http://localhost/Tracelink/poligonos/MostrarPunto.php?poligono=${poligonoSeleccionado}`)
+      axios.get(`http://ec2-54-221-134-204.compute-1.amazonaws.com/poligonos/MostrarPunto.php?poligono=${poligonoSeleccionado}`)
         .then(response => {
           const puntosFiltrados = response.data.filter(punto => punto.Poligono_idPoligono === poligonoSeleccionado);
           setPuntos(puntosFiltrados);
@@ -48,7 +48,7 @@ function EditarPoligono() {
     puntos.forEach((punto, index) => {
       if (punto.idPuntos && punto.Latitud && punto.Longitud) {
         console.log(`Enviando punto ${index + 1}:`, punto);
-        axios.post('http://localhost/Tracelink/poligonos/EditarPunto.php', punto)
+        axios.post('http://ec2-54-221-134-204.compute-1.amazonaws.com/poligonos/EditarPunto.php', punto)
           .then(response => {
             console.log(`Punto ${index + 1}: ${response.data.message}`);
           })
@@ -63,7 +63,7 @@ function EditarPoligono() {
   };
 
   const handleEliminarPunto = (idPunto) => {
-    axios.post('http://localhost/Tracelink/poligonos/EliminarPoliPunto.php', { idPuntos: idPunto })
+    axios.post('http://ec2-54-221-134-204.compute-1.amazonaws.com/poligonos/EliminarPoliPunto.php', { idPuntos: idPunto })
       .then(response => {
         if (response.data.success) {
           alert('Punto eliminado correctamente');
@@ -92,7 +92,7 @@ function EditarPoligono() {
 
     console.log(`Actualizando punto ${index + 1}:`, updatedPunto);
     if (updatedPunto.idPuntos && updatedPunto.Latitud && updatedPunto.Longitud) {
-      axios.post('http://localhost/Tracelink/poligonos/EditarPunto.php', updatedPunto)
+      axios.post('http://ec2-54-221-134-204.compute-1.amazonaws.com/poligonos/EditarPunto.php', updatedPunto)
         .then(response => {
           console.log(`Punto ${index + 1}: ${response.data.message}`);
         })

@@ -49,7 +49,7 @@ const Vehiculos = ({ userRole }) => {
 
     const handleDelete = async (vehiculoId) => {
         try {
-            const response = await axios.post('http://localhost/Tracelink/vehiculo/eliminar_vehiculo.php', { id: vehiculoId });
+            const response = await axios.post('http://ec2-54-221-134-204.compute-1.amazonaws.com/vehiculo/eliminar_vehiculo.php', { id: vehiculoId });
             alert(response.data.message); // Mostrar mensaje de éxito o error
             // Actualizar la lista de vehículos después de eliminar
             fetchData();
@@ -61,7 +61,7 @@ const Vehiculos = ({ userRole }) => {
 
     const fetchMarcas = async () => {
         try {
-            const response = await axios.get('http://localhost/Tracelink/vehiculo/obtener_marcas.php');
+            const response = await axios.get('http://ec2-54-221-134-204.compute-1.amazonaws.com/vehiculo/obtener_marcas.php');
             setMarcas(response.data);
         } catch (error) {
             console.error('Error al obtener marcas:', error);
@@ -70,7 +70,7 @@ const Vehiculos = ({ userRole }) => {
 
     const fetchModelos = async (marcaId) => {
         try {
-            const response = await axios.get(`http://localhost/Tracelink/vehiculo/obtener_modelos.php?marca=${marcaId}`);
+            const response = await axios.get(`http://ec2-54-221-134-204.compute-1.amazonaws.com/vehiculo/obtener_modelos.php?marca=${marcaId}`);
             setModelos(response.data);
         } catch (error) {
             console.error('Error al obtener modelos:', error);
@@ -79,7 +79,7 @@ const Vehiculos = ({ userRole }) => {
 
     const fetchEstados = async () => {
         try {
-            const response = await axios.get('http://localhost/Tracelink/vehiculo/obtener_Estado.php');
+            const response = await axios.get('http://ec2-54-221-134-204.compute-1.amazonaws.com/vehiculo/obtener_Estado.php');
             setEstado(response.data);
         } catch (error) {
             console.error('Error al obtener Estados:', error);
@@ -119,9 +119,9 @@ const Vehiculos = ({ userRole }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("Nuevo vehículo:", nuevoVehiculo); // Agregar este console.log para ver el estado actual de nuevoVehiculo
+        console.log("Nuevo vehículo:", nuevoVehiculo); // Verificar el objeto que se envía
         try {
-            const response = await axios.post('http://localhost/Tracelink/vehiculo/editar_vehiculo.php', nuevoVehiculo);
+            const response = await axios.post('http://ec2-54-221-134-204.compute-1.amazonaws.com/vehiculo/editar_vehiculo.php', nuevoVehiculo);
             console.log("Respuesta del servidor:", response.data);
             alert(response.data.message); // Mostrar mensaje de éxito o error
             // Actualizar la lista de vehículos después de editar
@@ -146,6 +146,7 @@ const Vehiculos = ({ userRole }) => {
             alert('Error al editar vehículo: ' + error.message);
         }
     };
+
 
     const handleModeloChange = (e) => {
         const modelo = e.target.value;

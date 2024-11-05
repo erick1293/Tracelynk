@@ -8,7 +8,7 @@ function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost/register.php', {
+      const response = await axios.post('http://ec2-54-221-134-204.compute-1.amazonaws.com/register.php', {
         username,
         password
       });

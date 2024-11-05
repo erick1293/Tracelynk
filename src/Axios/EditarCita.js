@@ -34,7 +34,7 @@ const EditarCita = ({ userRole }) => {
   useEffect(() => {
     const fetchMecanicos = async () => {
       try {
-        const response = await axios.get('http://localhost/Tracelink/mecanicos/obtenerMecanicos.php');
+        const response = await axios.get('http://ec2-54-221-134-204.compute-1.amazonaws.com/Mecanicos/obtenerMecanicos.php');
         setMecanicos(response.data);
       } catch (error) {
         console.error('Error fetching mechanics:', error);
@@ -43,7 +43,7 @@ const EditarCita = ({ userRole }) => {
 
     const fetchVehiculos = async () => {
       try {
-        const response = await axios.get('http://localhost/Tracelink/Mantenimiento/Vehiculos.php');
+        const response = await axios.get('http://ec2-54-221-134-204.compute-1.amazonaws.com/Mantenimiento/Vehiculos.php');
         setVehiculos(response.data);
       } catch (error) {
         console.error('Error fetching vehicles:', error);
@@ -79,7 +79,7 @@ const EditarCita = ({ userRole }) => {
 
   const handleEliminar = async (cita) => {
     try {
-      const response = await axios.delete(`http://localhost/Tracelink/cita/eliminarCita.php?id=${cita.cita_id}`);
+      const response = await axios.delete(`http://ec2-54-221-134-204.compute-1.amazonaws.com/cita/eliminarCita.php?id=${cita.cita_id}`);
       console.log('Cita eliminada:', response.data);
       fetchCitas();
     } catch (error) {
@@ -91,7 +91,7 @@ const EditarCita = ({ userRole }) => {
     e.preventDefault();
     console.log("Datos enviado hacia el php ", formData);
     try {
-      const response = await axios.put(`http://localhost/Tracelink/cita/Editar_cita_test.php?id=${citaSeleccionada.cita_id}`, formData);
+      const response = await axios.put(`http://ec2-54-221-134-204.compute-1.amazonaws.com/cita/Editar_cita_test.php?id=${citaSeleccionada.cita_id}`, formData);
       console.log('Cita actualizada exitosamente:', response.data);
       fetchCitas();
       closeModal();

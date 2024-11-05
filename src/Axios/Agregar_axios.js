@@ -34,7 +34,7 @@ const AgregarVehiculo = ({ onAgregar }) => {
     // Función para obtener las marcas desde la API
     const fetchMarcas = async () => {
         try {
-            const response = await axios.get('http://ec2-54-221-134-204.compute-1.amazonaws.com/vehiculo/obtener_marcas.php');  //holaaa
+            const response = await axios.get('http://ec2-54-221-134-204.compute-1.amazonaws.com/vehiculo/obtener_marcas.php');  
             setMarcas(response.data);
         } catch (error) {
             console.error('Error al obtener marcas:', error);

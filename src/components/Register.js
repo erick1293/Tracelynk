@@ -13,7 +13,7 @@ const Register = () => {
     console.log('Datos a enviar:', { username, password, role_id });
 
     try {
-      const response = await axios.post('http://ec2-54-221-134-204.compute-1.amazonaws.com/Loguin//Loguin/register.php', {
+      const response = await axios.post('http://ec2-54-221-134-204.compute-1.amazonaws.com/Loguin/register.php', {
         username,
         password,
         role_id,

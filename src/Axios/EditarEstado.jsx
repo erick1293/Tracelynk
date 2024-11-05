@@ -11,7 +11,7 @@ function ModificarEstado() {
   const [filtro, setFiltro] = useState('');
 
   useEffect(() => {
-    axios.get('http://localhost/Tracelink/Estados/obtenerEstados.php')
+    axios.get('http://ec2-54-221-134-204.compute-1.amazonaws.com/Estados/obtenerEstados.php')
       .then(response => setEstados(response.data))
       .catch(error => console.error('Error al obtener los estados:', error));
   }, []);
@@ -33,7 +33,7 @@ function ModificarEstado() {
       return;
     }
 
-    axios.post('http://localhost/Tracelink/Estados/agregarEstado.php', formulario)
+    axios.post('http://ec2-54-221-134-204.compute-1.amazonaws.com/Estados/agregarEstado.php', formulario)
       .then(response => {
         setFormulario({ idEstado: '', estado: '', fecha: '' });
         setEstados([...estados, { ...formulario, idEstado: response.data.idEstado }]);
@@ -48,7 +48,7 @@ function ModificarEstado() {
   };
 
   const manejarGuardarEdicion = () => {
-    axios.post('http://localhost/Tracelink/Estados/editarEstado.php', estadoSeleccionado)
+    axios.post('http://ec2-54-221-134-204.compute-1.amazonaws.com/Estados/editarEstado.php', estadoSeleccionado)
       .then(response => {
         setEstados(estados.map(e => e.idEstado === estadoSeleccionado.idEstado ? estadoSeleccionado : e));
         setShowModal(false);
@@ -58,7 +58,7 @@ function ModificarEstado() {
   };
 
   const manejarBorrar = (idEstado) => {
-    axios.post('http://localhost/Tracelink/Estados/borrarEstado.php', { idEstado })
+    axios.post('http://ec2-54-221-134-204.compute-1.amazonaws.com/Estados/borrarEstado.php', { idEstado })
       .then(response => {
         setEstados(estados.filter(e => e.idEstado !== idEstado));
         alert('Estado borrado con éxito');

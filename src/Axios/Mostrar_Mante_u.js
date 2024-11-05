@@ -40,7 +40,7 @@ function Mostrar_mante() {
     }, []);
     const cargarDatosMantencion = async () => {
         try {
-            const response = await axios.get('http://localhost/Tracelink/Mantenimiento/dato.php');
+            const response = await axios.get('http://ec2-54-221-134-204.compute-1.amazonaws.com/Mantenimiento/dato.php');
             if (response.data.error) {
                 throw new Error(response.data.error);
             }
@@ -53,7 +53,7 @@ function Mostrar_mante() {
 
     const cargarCitas = async () => {
         try {
-            const response = await axios.get('http://localhost/Tracelink/Mantenimiento/obtener_citas.php');
+            const response = await axios.get('http://ec2-54-221-134-204.compute-1.amazonaws.com/Mantenimiento/obtener_citas.php');
             setCitas(response.data);
         } catch (error) {
             console.error('Error al obtener los datos de citas:', error);
@@ -63,7 +63,7 @@ function Mostrar_mante() {
 
     const cargarVehiculos = async () => {
         try {
-            const response = await axios.get('http://localhost/Tracelink/Mantenimiento/Vehiculos.php');
+            const response = await axios.get('http://ec2-54-221-134-204.compute-1.amazonaws.com/Mantenimiento/Vehiculos.php');
             setVehiculos(response.data);
         } catch (error) {
             console.error('Error al obtener los datos de vehículos:', error);
@@ -73,7 +73,7 @@ function Mostrar_mante() {
 
     const cargarMecanicos = async () => {
         try {
-            const response = await axios.get('http://localhost/Tracelink/Mantenimiento/obtenerMecanicos.php');
+            const response = await axios.get('http://ec2-54-221-134-204.compute-1.amazonaws.com/Mantenimiento/obtenerMecanicos.php');
             setMecanicos(response.data);
         } catch (error) {
             console.error('Error al obtener los datos de mecánicos:', error);
@@ -82,7 +82,7 @@ function Mostrar_mante() {
     };
     const cargarCitasDisponibles = async (idCita, fecha) => {
         try {
-            const response = await axios.get(`http://localhost/Tracelink/Mantenimiento/obtener_citas.php?idCita=${idCita}&fecha`);
+            const response = await axios.get(`http://ec2-54-221-134-204.compute-1.amazonaws.com/Mantenimiento/obtener_citas.php?idCita=${idCita}&fecha`);
             setCitasDisponibles(response.data);
         } catch (error) {
             console.error('Error al obtener las citas disponibles:', error);

@@ -11,7 +11,7 @@ function AgregarMecanico() {
   const [filtro, setFiltro] = useState('');
 
   useEffect(() => {
-    axios.get('http://localhost/Tracelink/Mecanicos/obtenerMecanicos.php')
+    axios.get('http://ec2-54-221-134-204.compute-1.amazonaws.com/Mecanicos/obtenerMecanicos.php')
       .then(response => setMecanicos(response.data))
       .catch(error => console.error('Error al obtener los mecánicos:', error));
   }, []);
@@ -35,7 +35,7 @@ function AgregarMecanico() {
       return;
     }
 
-    axios.post('http://localhost/Tracelink/Mecanicos/agregarMecanico.php', formulario)
+    axios.post('http://ec2-54-221-134-204.compute-1.amazonaws.com/Mecanicos/agregarMecanico.php', formulario)
       .then(response => {
         setFormulario({ idMecanico: '', nombre: '', apellido: '', rut: '', especialidad: '' });
         setMecanicos([...mecanicos, { ...formulario, idMecanico: response.data.idMecanico }]);
@@ -50,7 +50,7 @@ function AgregarMecanico() {
   };
 
   const manejarGuardarEdicion = () => {
-    axios.post('http://localhost/Tracelink/Mecanicos/editarMecanico.php', mecanicoSeleccionado)
+    axios.post('http://ec2-54-221-134-204.compute-1.amazonaws.com/Mecanicos/editarMecanico.php', mecanicoSeleccionado)
       .then(response => {
         setMecanicos(mecanicos.map(m => m.idMecanico === mecanicoSeleccionado.idMecanico ? mecanicoSeleccionado : m));
         setShowModal(false);
@@ -60,7 +60,7 @@ function AgregarMecanico() {
   };
 
   const manejarBorrar = (idMecanico) => {
-    axios.post('http://localhost/Tracelink/Mecanicos/borrarMecanico.php', { idMecanico })
+    axios.post('http://ec2-54-221-134-204.compute-1.amazonaws.com/Mecanicos/borrarMecanico.php', { idMecanico })
       .then(response => {
         setMecanicos(mecanicos.filter(m => m.idMecanico !== idMecanico));
         alert('Mecánico borrado con éxito');

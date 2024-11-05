@@ -10,7 +10,7 @@ function Vehiculos({ userRole }) {  // Añade userRole como prop
 
   useEffect(() => {
     // Obtener los datos de los vehículos al cargar el componente
-    axios.get('http://localhost/Tracelink/vehiculo/conexion.php')
+    axios.get('http://ec2-54-221-134-204.compute-1.amazonaws.com/vehiculo/conexion.php')
       .then(response => {
         setVehiculos(response.data);
         // Filtrar vehículos con kilometraje actual mayor al inicial
@@ -26,7 +26,7 @@ function Vehiculos({ userRole }) {  // Añade userRole como prop
 
     const redireccionarAMantenimiento = () => {
       console.log('Redireccionando a la página de Agendar Cita...');
-      window.location.href = 'http://localhost:3000/AgendarCita';
+      window.location.href = 'http://ec2-54-221-134-204.compute-1.amazonaws.com/AgendarCita';
     };
 
   const descargarPDF = () => {
@@ -47,7 +47,7 @@ function Vehiculos({ userRole }) {  // Añade userRole como prop
 
   const enviarCorreo = () => {
     console.log('Enviando correo con los siguientes vehículos:', vehiculosMantenimiento);
-    axios.post('http://localhost/Tracelink/Alertas/EnviarCorreoVehiculos.php', vehiculosMantenimiento)
+    axios.post('http://ec2-54-221-134-204.compute-1.amazonaws.com/Alertas/EnviarCorreoVehiculos.php', vehiculosMantenimiento)
       .then(response => {
         alert(response.data.message);
       })

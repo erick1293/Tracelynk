@@ -1,62 +1,99 @@
+/* navbar.css */
+
+/* Estilos para el contenedor principal del navbar */
 nav {
-  background-color: #66ac9e; 
-  padding: 10px;
+  background-color: #090a0a; /* Color de fondo de la navbar */
+  padding: 10px; /* Espaciado alrededor de los elementos */
 }
 
-ul {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
+/* Estilos para la lista de elementos de navegación */
+.navbar-list {
+  list-style-type: none; /* Quita los puntos de la lista */
+  margin: 0; /* Elimina el margen por defecto */
+  padding: 0; /* Elimina el relleno por defecto */
+  display: flex; /* Muestra los elementos en línea */
+  align-items: center; /* Centra verticalmente los elementos */
+  flex-wrap: nowrap; /* Evita que los elementos se envuelvan */
 }
 
-li {
-  display: inline;
-  margin-right: 20px;
+/* Estilos para los elementos de lista individuales */
+.navbar-list li {
+  margin-right: 20px; /* Espacio entre elementos de la lista */
+  position: relative; /* Asegura que el dropdown-content se posicione correctamente */
 }
 
-a {
-  color: #ecf0f1; 
-  text-decoration: none;
+/* Estilos para los enlaces de la navbar */
+nav a {
+  color: #ecf0f1; /* Color del texto de los enlaces */
+  text-decoration: none; /* Quita el subrayado de los enlaces */
+  font-size: 16px; /* Tamaño de la fuente */
+  padding: 8px 16px; /* Espaciado alrededor del texto */
+  display: block; /* Hace que todo el área del enlace sea clickeable */
 }
 
-a:hover {
-  color: #3498db; 
+/* Estilo al pasar el ratón por encima de los enlaces */
+nav a:hover {
+  color: #9ce6e9; /* Color del texto al pasar el cursor sobre los enlaces */
 }
 
-.dropdown {
-  display: inline-block;
+/* Estilos para el menú desplegable */
+nav .dropdown {
+  display: inline-block; /* Muestra el menú desplegable en línea */
 }
 
-.dropdown-content {
-  display: none;
-  position: absolute;
-  background-color: #f1c40f;
-  min-width: 160px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  z-index: 1;
+/* Estilos para el contenido del menú desplegable */
+nav .dropdown-content {
+  display: none; /* Oculta el contenido desplegable por defecto */
+  position: absolute; /* Posiciona el contenido desplegable de forma absoluta */
+  background-color: #ffffff; /* Color de fondo del contenido desplegable */
+  min-width: 160px; /* Ancho mínimo del contenido desplegable */
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2); /* Sombra del contenido desplegable */
+  z-index: 1000; /* Asegura que el contenido desplegable esté por encima de otros elementos */
 }
 
-.dropdown-content a {
-  color: #2c3e50; 
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
+/* Estilos para los enlaces dentro del contenido desplegable */
+nav .dropdown-content a {
+  color: #2c3e50; /* Color del texto de los enlaces dentro del contenido desplegable */
+  padding: 12px 16px; /* Espaciado dentro de los enlaces */
+  text-decoration: none; /* Quita el subrayado de los enlaces */
+  display: block; /* Muestra los enlaces como bloques */
 }
 
-.dropdown-content a:hover {
-  background-color: #ecf0f1; 
+/* Estilo al pasar el ratón por encima de los enlaces del menú desplegable */
+nav .dropdown-content a:hover {
+  background-color: #dad1d1; /* Color de fondo al pasar el cursor sobre los enlaces */
 }
 
-.dropdown:hover .dropdown-content {
-  display: block;
+/* Muestra el contenido desplegable al pasar el cursor sobre el menú desplegable */
+nav .dropdown:hover .dropdown-content {
+  display: block; /* Muestra el contenido desplegable */
 }
 
-.login-dropdown {
-  margin-left: 50%; 
+/* Estilos específicos para el login-dropdown */
+.navbar-end {
+  margin-left: auto; /* Alinea el elemento al extremo derecho */
+  display: flex; /* Muestra los elementos en línea */
+  align-items: center; /* Centra verticalmente los elementos */
 }
 
+/* Estilos para el logo de la navbar */
 .navbar-logo {
-  height: 50px;
-  width: auto;
-  margin-right: 20px;
+  height: 45px; /* Altura del logo */
+  width: auto; /* Ancho automático del logo */
+  margin-right: 25px; /* Espacio a la derecha del logo */
+}
+
+/* Estilos para el botón de cerrar sesión */
+nav button {
+  background-color: #090a0a;
+  color: #ecf0f1;
+  border: none;
+  padding: 8px 16px;
+  cursor: pointer;
+}
+
+/* Estilo al pasar el ratón por encima del botón de cerrar sesión */
+nav button:hover {
+  background-color: #9ce6e9;
+  color: #2c3e50;
 }

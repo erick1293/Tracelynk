@@ -13,7 +13,7 @@ function EstadoComponent() {
 
   useEffect(() => {
     // Obtener los estados al cargar el componente
-    axios.get('http://localhost/Tracelink/Estados/obtenerEstados.php')
+    axios.get('http://ec2-54-221-134-204.compute-1.amazonaws.com/Estados/obtenerEstados.php')
       .then(response => setEstados(response.data))
       .catch(error => console.error('Error al obtener los estados:', error));
   }, []);
@@ -26,7 +26,7 @@ function EstadoComponent() {
       return;
     }
 
-    axios.post('http://localhost/Tracelink/Estados/Agregar_Estado.php', nuevoEstado)
+    axios.post('http://ec2-54-221-134-204.compute-1.amazonaws.com/Estados/Agregar_Estado.php', nuevoEstado)
       .then(response => {
         if (response.data.success) {
           const nuevoIdEstado = response.data.idEstado.toString();

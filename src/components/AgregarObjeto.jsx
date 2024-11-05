@@ -15,12 +15,12 @@ function AgregarObjeto() {
 
   useEffect(() => {
     // Obtener los vehículos al cargar el componente
-    axios.get('http://localhost/Tracelink/Objetos/obtenerVehiculos.php')
+    axios.get('http://ec2-54-221-134-204.compute-1.amazonaws.com/Objetos/obtenerVehiculos.php')
       .then(response => setVehiculos(response.data))
       .catch(error => console.error('Error al obtener los vehículos:', error));
 
     // Obtener las cargas al cargar el componente
-    axios.get('http://localhost/Tracelink/Objetos/obtenerObjetos.php')
+    axios.get('http://ec2-54-221-134-204.compute-1.amazonaws.com/Objetos/obtenerObjetos.php')
       .then(response => setObjetos(response.data))
       .catch(error => console.error('Error al obtener las cargas:', error));
   }, []);
@@ -45,7 +45,7 @@ function AgregarObjeto() {
       return;
     }
 
-    axios.post('http://localhost/Tracelink/Objetos/agregarObjeto.php', formulario)
+    axios.post('http://ec2-54-221-134-204.compute-1.amazonaws.com/Objetos/agregarObjeto.php', formulario)
       .then(response => {
         setFormulario({ nombre: '', altura: '', ancho: '', vehiculo_id: '' });
         setObjetos([...objetos, { ...formulario, id: response.data.id }]);
@@ -60,7 +60,7 @@ function AgregarObjeto() {
   };
 
   const manejarGuardarEdicion = () => {
-    axios.post('http://localhost/Tracelink/Objetos/editarObjeto.php', cargaSeleccionada)
+    axios.post('http://ec2-54-221-134-204.compute-1.amazonaws.com/Objetos/editarObjeto.php', cargaSeleccionada)
       .then(response => {
         setObjetos(objetos.map(obj => obj.id === cargaSeleccionada.id ? cargaSeleccionada : obj));
         setShowModal(false);
@@ -70,7 +70,7 @@ function AgregarObjeto() {
   };
 
   const manejarBorrar = (id) => {
-    axios.post('http://localhost/Tracelink/Objetos/borrarObjeto.php', { id })
+    axios.post('http://ec2-54-221-134-204.compute-1.amazonaws.com/Objetos/borrarObjeto.php', { id })
       .then(response => {
         setObjetos(objetos.filter(objeto => objeto.id !== id));
         alert('Objeto borrado con éxito');
@@ -100,11 +100,12 @@ function AgregarObjeto() {
         <label>
           Vehículo:
           <select name="vehiculo_id" value={formulario.vehiculo_id} onChange={manejarCambio}>
-            <option value="">Selecciona un vehículo</option>
-            {vehiculos.map(vehiculo => (
-              <option key={vehiculo.id} value={vehiculo.id}>{vehiculo.patente}</option>
-            ))}
-          </select>
+  <option value="">Selecciona un vehículo</option>
+  {vehiculos.map(vehiculo => (
+    <option key={vehiculo.id} value={vehiculo.id}>{vehiculo.patente}</option>
+  ))}
+</select>
+
         </label>
         <button type="button" onClick={manejarAgregar} className="btn btn-primary">Agregar objeto</button>
       </form>
@@ -121,20 +122,21 @@ function AgregarObjeto() {
           </tr>
         </thead>
         <tbody>
-          {cargaFiltradas.map(c => (
-            <tr key={c.id}>
-              <td>{c.id}</td>
-              <td>{c.nombre}</td>
-              <td>{c.altura}</td>
-              <td>{c.ancho}</td>
-              <td>{c.vehiculo_id}</td>
-              <td>
-                <Button variant="warning" onClick={() => manejarEditar(c)}>Editar Carga</Button>
-                <Button variant="danger" onClick={() => manejarBorrar(c.id)}>Eliminar Carga</Button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
+  {cargaFiltradas.map(c => (
+    <tr key={c.id}> {/* Agregamos la clave aquí */}
+      <td>{c.id}</td>
+      <td>{c.nombre}</td>
+      <td>{c.altura}</td>
+      <td>{c.ancho}</td>
+      <td>{c.vehiculo_id}</td>
+      <td>
+        <Button variant="warning" onClick={() => manejarEditar(c)}>Editar Carga</Button>
+        <Button variant="danger" onClick={() => manejarBorrar(c.id)}>Eliminar Carga</Button>
+      </td>
+    </tr>
+  ))}
+</tbody>
+
       </Table>
 
       <Modal show={showModal} onHide={() => setShowModal(false)}>

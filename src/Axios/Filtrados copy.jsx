@@ -33,7 +33,7 @@ function FiltrarPorFecha() {
 
   useEffect(() => {
     // Llamada inicial para obtener la lista de mecánicos
-    axios.get('http://localhost/Tracelink/mecanicos/obtenerMecanicos.php')
+    axios.get('http://ec2-54-221-134-204.compute-1.amazonaws.com/mecanicos/obtenerMecanicos.php')
       .then(response => {
         setMecanicos(response.data);
       })
@@ -66,7 +66,7 @@ function FiltrarPorFecha() {
         params.mechanic_name = selectedMechanic.nombre; // Asegúrate de usar 'nombre' del objeto selectedMechanic
       }
 
-      const response = await axios.get('http://localhost/Tracelink/Mantenimiento/filtrar_mantencion.php', {
+      const response = await axios.get('http://ec2-54-221-134-204.compute-1.amazonaws.com/Mantenimiento/filtrar_mantencion.php', {
         params: params
       });
 
@@ -102,7 +102,7 @@ function FiltrarPorFecha() {
     e.preventDefault();
     console.log(mantencionSeleccionada);
     try {
-      const response = await axios.post('http://localhost/Tracelink/Mantenimiento/editar_mantencion.php', {
+      const response = await axios.post('http://ec2-54-221-134-204.compute-1.amazonaws.com/Mantenimiento/editar_mantencion.php', {
         idMantencion: mantencionSeleccionada.idMantencion,
         ...editarMantenimiento
       });
@@ -132,7 +132,7 @@ function FiltrarPorFecha() {
   const handleDelete = async (mantencionId) => {
     try {
       const response = await axios.post(
-        'http://localhost/Tracelink/Mantenimiento/eliminar_mantencion.php',
+        'http://ec2-54-221-134-204.compute-1.amazonaws.com/Mantenimiento/eliminar_mantencion.php',
         { idMantencion: mantencionId },
         { headers: { 'Content-Type': 'application/json' } }
       );
@@ -148,7 +148,7 @@ function FiltrarPorFecha() {
   };
   const cargarDatosMantencion = async () => {
     try {
-      const response = await axios.get('http://localhost/Tracelink/Mantenimiento/dato.php');
+      const response = await axios.get('http://ec2-54-221-134-204.compute-1.amazonaws.com/Mantenimiento/dato.php');
       if (response.data.error) {
         throw new Error(response.data.error);
       }
@@ -161,7 +161,7 @@ function FiltrarPorFecha() {
 
   const cargarCitas = async () => {
     try {
-      const response = await axios.get('http://localhost/Tracelink/Mantenimiento/obtener_citas.php');
+      const response = await axios.get('http://ec2-54-221-134-204.compute-1.amazonaws.com/Mantenimiento/obtener_citas.php');
       setCitas(response.data);
     } catch (error) {
       console.error('Error al obtener los datos de citas:', error);
@@ -172,7 +172,7 @@ function FiltrarPorFecha() {
 
   const cargarVehiculos = async () => {
     try {
-      const response = await axios.get('http://localhost/Tracelink/Mantenimiento/Vehiculos.php');
+      const response = await axios.get('http://ec2-54-221-134-204.compute-1.amazonaws.com/Mantenimiento/Vehiculos.php');
       setVehiculos(response.data);
     } catch (error) {
       console.error('Error al obtener los datos de vehículos:', error);
@@ -182,7 +182,7 @@ function FiltrarPorFecha() {
 
   const cargarMecanicos = async () => {
     try {
-      const response = await axios.get('http://localhost/Tracelink/Mantenimiento/obtenerMecanicos.php');
+      const response = await axios.get('http://ec2-54-221-134-204.compute-1.amazonaws.com/Mantenimiento/obtenerMecanicos.php');
       setMecanicos(response.data);
     } catch (error) {
       console.error('Error al obtener los datos de mecánicos:', error);

@@ -17,12 +17,12 @@ function AgregarObjeto() {
 
   useEffect(() => {
     // Obtener los vehículos al cargar el componente
-    axios.get('http://localhost/Tracelink/Objetos/obtenerVehiculos.php')
+    axios.get('http://ec2-54-221-134-204.compute-1.amazonaws.com/Objetos/obtenerVehiculos.php')
       .then(response => setVehiculos(response.data))
       .catch(error => console.error('Error al obtener los vehículos:', error));
 
     // Obtener las cargas al cargar el componente
-    axios.get('http://localhost/Tracelink/Objetos/obtenerObjetos.php')
+    axios.get('http://ec2-54-221-134-204.compute-1.amazonaws.com/Objetos/obtenerObjetos.php')
       .then(response => setObjetos(response.data))
       .catch(error => console.error('Error al obtener las cargas:', error));
   }, []);
@@ -44,7 +44,7 @@ function AgregarObjeto() {
   };
 
   const manejarGuardarEdicion = () => {
-    axios.post('http://localhost/Tracelink/Objetos/AgregarEstado.php', cargaSeleccionada)
+    axios.post('http://ec2-54-221-134-204.compute-1.amazonaws.com/Objetos/AgregarEstado.php', cargaSeleccionada)
       .then(response => {
         setObjetos(objetos.map(obj => obj.id === cargaSeleccionada.id ? cargaSeleccionada : obj));
         setShowModal(false);

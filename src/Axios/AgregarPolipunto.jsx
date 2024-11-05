@@ -34,7 +34,7 @@
     }, [poligonoSeleccionado]);
 
     const cargarPoligonos = () => {
-      axios.get('http://localhost/Tracelink/poligonos/MostrarPoligonos.php')
+      axios.get('http://ec2-54-221-134-204.compute-1.amazonaws.com/poligonos/MostrarPoligonos.php')
         .then(response => {
           setPoligonos(response.data);
         })
@@ -44,7 +44,7 @@
     };
 
     const cargarPuntos = (idPoligono) => {
-      axios.get(`http://localhost/Tracelink/poligonos/MostrarPunto.php?poligono=${idPoligono}`)
+      axios.get(`http://ec2-54-221-134-204.compute-1.amazonaws.com/poligonos/MostrarPunto.php?poligono=${idPoligono}`)
         .then(response => {
           const puntosFiltrados = response.data.filter(punto => punto.Poligono_idPoligono === idPoligono);
           setPuntos(puntosFiltrados.map(punto => ({
@@ -61,7 +61,7 @@
     const handleSubmit = (e) => {
       e.preventDefault();
       const poligono = { nombre };
-      axios.post('http://localhost/Tracelink/poligonos/AgregarPoligono.php', poligono)
+      axios.post('http://ec2-54-221-134-204.compute-1.amazonaws.com/poligonos/AgregarPoligono.php', poligono)
         .then(response => {
           alert(response.data.message);
           setNombre('');
@@ -97,13 +97,13 @@
         formData.append('idPoligono', idPoligono);
     
         // Verificar si el punto ya está registrado en la base de datos
-        axios.get(`http://localhost/Tracelink/poligonos/VerificarPunto.php?latitud=${punto.latitud}&longitud=${punto.longitud}&idPoligono=${idPoligono}`)
+        axios.get(`http://ec2-54-221-134-204.compute-1.amazonaws.com/poligonos/VerificarPunto.php?latitud=${punto.latitud}&longitud=${punto.longitud}&idPoligono=${idPoligono}`)
           .then(response => {
             if (response.data.exists) {
               console.log(`El punto ${i + 1} ya está registrado en la base de datos.`);
             } else {
               // Si el punto no está registrado, agregarlo a la base de datos
-              axios.post('http://localhost/Tracelink/poligonos/AgregarPunto.php', formData)
+              axios.post('http://ec2-54-221-134-204.compute-1.amazonaws.com/poligonos/AgregarPunto.php', formData)
                 .then(response => {
                   console.log(`Punto ${i + 1}: ${response.data.message}`);
                 })
