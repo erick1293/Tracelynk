@@ -95,7 +95,7 @@ const AgregarCita = () => {
     };
 
     const redireccionarMostrarCitas = () => {
-        window.location.href = 'http://localhost:3000/EditarCita';
+        window.location.href = '/EditarCita';
     };
 
     return (

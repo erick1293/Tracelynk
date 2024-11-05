@@ -12,7 +12,7 @@ function Login({ setAuth }) {
     e.preventDefault();
     console.log(username, password);
     try {
-      const response = await axios.post('http://localhost/Tracelink/Loguin/login.php', { username, password });
+      const response = await axios.post('http://ec2-54-221-134-204.compute-1.amazonaws.com/Loguin/login.php', { username, password });
       if (response.data.success) {
         setAuth(response.data.user);
         navigate('/');

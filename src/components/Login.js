@@ -10,7 +10,7 @@ const Login = ({ setAuth }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        fetch('http://localhost/tracelink/Loguin/login.php', {
+        fetch('http://ec2-54-221-134-204.compute-1.amazonaws.com/Loguin/login.php', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

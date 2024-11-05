@@ -39,7 +39,7 @@ function AgregarMantencion() {
 
     const cargarDatosMantencion = async () => {
         try {
-            const response = await axios.get('http://localhost/Tracelink/Mantenimiento/dato.php');
+            const response = await axios.get('http://ec2-54-221-134-204.compute-1.amazonaws.com/Mantenimiento/dato.php');
             if (response.data.error) {
                 throw new Error(response.data.error);
             }
@@ -52,7 +52,7 @@ function AgregarMantencion() {
 
     const cargarCitas = async () => {
         try {
-            const response = await axios.get('http://localhost/Tracelink/Mantenimiento/obtener_citas.php');
+            const response = await axios.get('http://ec2-54-221-134-204.compute-1.amazonaws.com/Mantenimiento/obtener_citas.php');
             setCitas(response.data);
         } catch (error) {
             console.error('Error al obtener los datos de citas:', error);
@@ -62,7 +62,7 @@ function AgregarMantencion() {
 
     const cargarVehiculos = async () => {
         try {
-            const response = await axios.get('http://localhost/Tracelink/Mantenimiento/Vehiculos.php');
+            const response = await axios.get('http://ec2-54-221-134-204.compute-1.amazonaws.com/Mantenimiento/Vehiculos.php');
             setVehiculos(response.data);
         } catch (error) {
             console.error('Error al obtener los datos de vehículos:', error);
@@ -72,7 +72,7 @@ function AgregarMantencion() {
 
     const cargarMecanicos = async () => {
         try {
-            const response = await axios.get('http://localhost/Tracelink/Mantenimiento/obtenerMecanicos.php');
+            const response = await axios.get('http://ec2-54-221-134-204.compute-1.amazonaws.com/Mantenimiento/obtenerMecanicos.php');
             setMecanicos(response.data);
         } catch (error) {
             console.error('Error al obtener los datos de mecánicos:', error);
@@ -112,7 +112,7 @@ function AgregarMantencion() {
     const handleSubmitEditar = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost/Tracelink/Mantenimiento/editar_mantencion.php', {
+            const response = await axios.post('http://ec2-54-221-134-204.compute-1.amazonaws.com/Mantenimiento/editar_mantencion.php', {
                 idMantencion: mantencionSeleccionada.idMantencion,
                 fecha: editarMantenimiento.fecha,
                 descripcion: editarMantenimiento.descripcion
@@ -135,7 +135,7 @@ function AgregarMantencion() {
     const handleDelete = async (mantencionId) => {
         try {
             const response = await axios.post(
-                'http://localhost/Tracelink/Mantenimiento/eliminar_mantencion.php',
+                'http://ec2-54-221-134-204.compute-1.amazonaws.com/Mantenimiento/eliminar_mantencion.php',
                 { idMantencion: mantencionId },
                 { headers: { 'Content-Type': 'application/json' } }
             );
@@ -168,7 +168,7 @@ function AgregarMantencion() {
     
         if (fechaDisponible && mecanicoDisponible) {
             try {
-                await axios.post('http://localhost/Tracelink/Mantenimiento/AgregarMantencion.php', {
+                await axios.post('http://ec2-54-221-134-204.compute-1.amazonaws.com/Mantenimiento/AgregarMantencion.php', {
                     idCita: nuevoMantenimiento.idCita,
                     fecha: nuevoMantenimiento.fecha,
                     descripcion: nuevoMantenimiento.descripcion,
@@ -215,7 +215,7 @@ function AgregarMantencion() {
 
     const cargarCitasDisponibles = async (idCita, fecha) => {
         try {
-            const response = await axios.get(`http://localhost/Tracelink/Mantenimiento/obtener_citas.php?idCita=${idCita}&fecha`);
+            const response = await axios.get(`http://ec2-54-221-134-204.compute-1.amazonaws.com/Mantenimiento/obtener_citas.php?idCita=${idCita}&fecha`);
             setCitasDisponibles(response.data);
         } catch (error) {
             console.error('Error al obtener las citas disponibles:', error);
